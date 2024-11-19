@@ -119,3 +119,12 @@ li {
   position: relative;
   width: 40vw;
 }
+
+.findAndCancel{
+  position: absolute;
+  top: 100px;
+  right: 50px;
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  padding: 10px 20px;
+}

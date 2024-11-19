@@ -14,6 +14,7 @@
   --color2: #FF2E63;
   --color3: #252A34;
   --color4: #08D9D6;
+  --color_text: #0F0F0F;
   --border-color: #eaeaea;
 }
 /* 
@@ -50,11 +51,28 @@ a:hover {
 
 button {
   background-color: var(--color2);
-  color: #ffffff;
+  color: var(--color1);
   border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 10px 20px; /* Add padding to ensure space around the text */
+  gap: 8px;
+  border-radius: 8px;
+  width: auto;
+  height: auto;
+  min-width: 100px;
+  min-height: 50px;
 }
+
+.btn_secondary {
+  background-color: var(--color4);
+  color: var(--color3);
+}
+
+.btn_dark {
+  background-color: var(--color3);
+  color: var(--color1);
+}
+
+.btn
 
 /* button:hover {
   background-color: var(--color2);
@@ -94,6 +112,22 @@ li {
   }
 }
 
+.centering-div {
+  font: 20px Arial;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin: 10px;
+  padding: 10px 50px;
+}
+
+.div-horiz {
+  flex-direction: row;
+}
+
 .top-left-button {
   position: absolute;
   top: 20px;
@@ -113,6 +147,12 @@ li {
   flex-direction: column; /* Stack items vertically */
   align-items: flex-start; /* Align items to the start (left) */
   padding: 10px 20px;
+}
+
+.loginImg {
+  width: 72px;
+  height: 72px;
+  margin-right: 10px;
 }
 
 .table {

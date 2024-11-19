@@ -6,11 +6,11 @@ import '@/app/globals.css';
 function ConsumerLogin() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <Link href="/">
-        <button className="top-left-button">
+      <div className="top-left-button">
+        <Link href="/">
           <img src="../logo.png" alt="Home Button" className="logo" />
-        </button>
-      </Link>
+        </Link>
+      </div>
 
       <h1>Tables4u - consumer Login Page</h1>
       <nav>

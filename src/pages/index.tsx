@@ -11,7 +11,7 @@ export default function Home() {
       
       <div className="top-left-button">
         <Link href="/">
-          <img src="logo.png" alt="Home Button" className="logo" />
+          <img src="../logo.png" alt="Home Button" className="logo" />
         </Link>
       </div>
 

@@ -9,9 +9,12 @@ export const handler = async (event) => {
         database: "tables4u"
     });
 
-    const GetActiveRests = () => {
+    const numberToList = parseInt(event.numberToList) || 5; // Default to 5 records
+
+
+    const GetActiveRests = (limit) => {
         return new Promise((resolve, reject) => {
-            pool.query("SELECT * FROM Restaurants WHERE isActive = 1", (error, rows) => {
+            pool.query("SELECT * FROM Restaurants WHERE isActive = 1 LIMIT ?", [limit], (error, rows) => {
                 if (error) {
                     return reject(error);
                 }
@@ -24,7 +27,7 @@ export const handler = async (event) => {
 
     try {
         // Wait for the query result
-        const rows = await GetActiveRests();
+        const rows = await GetActiveRests(numberToList);
         console.log('Query result:', rows);
 
         response = {

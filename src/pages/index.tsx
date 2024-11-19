@@ -3,9 +3,9 @@
 import React from "react";
 import Link from "next/link";
 import '@/app/globals.css';
+import RestaurantTable from "@/app/components/RestaurantTable";
 
-
-function Home() {
+export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="top-left-container">
@@ -23,12 +23,10 @@ function Home() {
             </ul>
           </nav>
         </div>
-        
-        <h1>Tables4u</h1>
 
+        <h1>Tables4u</h1>
+        <RestaurantTable />
       </div>
     </main>
   );
 }
-
-export default Home;

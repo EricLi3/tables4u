@@ -9,7 +9,7 @@ export const handler = async (event) => {
         database: "tables4u"
     });
 
-    const numberToList = event.numberToList || 5; // Default to 5 records
+    const numberToList = parseInt(event.numberToList) || 5; // Default to 5 records
 
 
     const GetActiveRests = (limit) => {

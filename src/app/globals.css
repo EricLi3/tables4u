@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f9f9f9; /* Light background */
+  --foreground: #333333; /* Darker text for better contrast */
+  --primary-color: #0070f3; /* Primary color for links and buttons */
+  --secondary-color: #ff4081; /* Secondary color for accents */
+  --border-color: #eaeaea; /* Light border color */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground: #121212;
+    --background: #e0e0e0;
+    --border-color: #333333;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: "Inter", Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+h1 {
+  font-size: 30px;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: var(--secondary-color);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  margin: 10px 0;
+}
+
+/* .top-left-container {
+  position: absolute;
+} */
+.top-left-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.logo {
+  width: 100px; /* Adjust size as needed */
+  height: 100px; /* Adjust size as needed */
+}
+
+.loginNav {
+  position: absolute;
+  top: 110px; /* Adjust to be below the logo */
+  left: 0;
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: flex-start; /* Align items to the start (left) */
+  padding: 10px 20px;
+}

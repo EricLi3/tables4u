@@ -128,3 +128,10 @@ li {
   flex-direction: column; /* Stack items vertically */
   padding: 10px 20px;
 }
+.createRest{
+  position: absolute;
+  top: 250px;
+  left: 0px;
+  display: flex;
+  padding: 10px 20px;
+}

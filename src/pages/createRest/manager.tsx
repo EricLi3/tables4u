@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import '@/app/globals.css';
 
-function ConsumerLogin() {
+function ManagerLogin() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="top-left-button">
@@ -12,7 +12,7 @@ function ConsumerLogin() {
         </Link>
       </div>
 
-      <h1>Tables4u - consumer Login Page</h1>
+      <h1>Tables4u - Manager Login Page</h1>
       <nav>
         <ul>
           {/* <li><Link href="/login/admin">Admin Login</Link></li>
@@ -24,4 +24,4 @@ function ConsumerLogin() {
   );
 }
 
-export default ConsumerLogin;
+export default ManagerLogin;

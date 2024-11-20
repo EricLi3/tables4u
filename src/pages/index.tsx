@@ -2,7 +2,6 @@
 
 import React from "react";
 import Link from "next/link";
-import { Button } from "@mui/material";
 import "@/app/globals.css";
 
 // Custom components
@@ -112,7 +111,7 @@ export default function Home() {
           </Link>
         </div>
 
-        <Link href="/createRestaurant">
+        <Link href="/createRest/editRest">
           <button className="btn_dark">Create Restaurant</button>
         </Link>
       </div>

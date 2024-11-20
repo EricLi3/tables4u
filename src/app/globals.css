@@ -61,29 +61,52 @@ button {
   border: none;
   padding: 10px 20px;
   /* Add padding to ensure space around the text */
+
+}
+
+.btn_primary {
+  background-color: var(--color2);
+  color: var(--color1);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  
+  font-size: 20px;
   gap: 8px;
   border-radius: 8px;
   width: auto;
   height: auto;
   min-width: 100px;
   min-height: 50px;
-
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
-  border-radius: 8px;
-  
-  font-size: 20px;
 }
-
-
 
 .btn_secondary {
   background-color: var(--color4);
   color: var(--color3);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  
+  font-size: 20px;
+  gap: 8px;
+  border-radius: 8px;
+  width: auto;
+  height: auto;
+  min-width: 100px;
+  min-height: 50px;
 }
 
 .btn_dark {
   background-color: var(--color3);
   color: var(--color1);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  
+  font-size: 20px;
+  gap: 8px;
+  border-radius: 8px;
+  width: auto;
+  height: auto;
+  min-width: 100px;
+  min-height: 50px;
 }
 
 h1,
@@ -142,11 +165,15 @@ li {
   padding: 8px;
 }
 
+.icon-padding {
+  margin: 4px 0px; 
+  padding-left: 4px;
+}
 
 .top-left-button {
   position: absolute;
   top: 20px;
-  left: 25px;
+  left: 45px;
 }
 
 .logo {
@@ -184,11 +211,8 @@ li {
 
 .findAndCancel{
   position: absolute;
-  top: 100px;
-  right: 50px;
-  display: flex;
-  flex-direction: column; /* Stack items vertically */
-  padding: 10px 20px;
+  top: 40px;
+  right: 40px;
 }
 
 .createRest{

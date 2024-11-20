@@ -1,7 +1,8 @@
 import React from "react";
 import Link from "next/link";
 
-import '@/app/globals.css';
+import "@/app/globals.css";
+import TextField from "@mui/material/TextField";
 
 function ConsumerLogin() {
   return (
@@ -12,14 +13,25 @@ function ConsumerLogin() {
         </Link>
       </div>
 
-      <h1>Tables4u - consumer Login Page</h1>
-      <nav>
-        <ul>
-          {/* <li><Link href="/login/admin">Admin Login</Link></li>
-          <li><Link href="/login/manager">Manager Login</Link></li>
-          <li><Link href="/login/consumer">Consumer Login</Link></li> */}
-        </ul>
-      </nav>
+      <div className="centering-div login-fields">
+        <TextField
+          required
+          id="outlined-required"
+          color="secondary"
+          label="Your Email"
+        />
+
+        <TextField
+          required
+          id="outlined-required"
+          color="secondary"
+          label="Confirmation Code"
+        />
+
+        <Link href="/findReservation">
+          <button className="btn_secondary">Find Reservation</button>
+        </Link>
+      </div>
     </main>
   );
 }

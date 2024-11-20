@@ -1,6 +1,6 @@
 import React from "react";
 // import Link from "next/link";
-import '@/app/globals.css';
+import "@/app/globals.css";
 
 import axios from "axios";
 
@@ -17,10 +17,9 @@ import {
   Collapse,
   Box,
   Typography,
-  Button
+  Button,
 } from "@mui/material";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
-
 
 const instance = axios.create({
   baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/initial",
@@ -65,7 +64,8 @@ function Row({ restaurant }: { restaurant: Restaurant }) {
                 Details
               </Typography>
               <Typography variant="body2">
-                Opening Hours: {restaurant.openingHour} - {restaurant.closingHour}
+                Opening Hours: {restaurant.openingHour} -{" "}
+                {restaurant.closingHour}
               </Typography>
               {/* Button to reserve here */}
             </Box>
@@ -84,7 +84,8 @@ export default function RestaurantTable() {
 
   const fetchRestaurants = (numToList: number) => {
     setLoading(true);
-    instance.post("/listActiveRests", { numberToList: numToList })
+    instance
+      .post("/listActiveRests", { numberToList: numToList })
       .then((response) => {
         try {
           const data = JSON.parse(response.data.body); // Parse the response body
@@ -117,7 +118,6 @@ export default function RestaurantTable() {
   const handleLoadMore = () => {
     setNumberToList((prev) => prev + 5); // Increment by 5
   };
-
 
   if (loading) {
     return <div>Loading...</div>;
@@ -155,16 +155,14 @@ export default function RestaurantTable() {
       </TableContainer>
 
       <Box display="flex" justifyContent="center" marginTop={2}>
-        <Button
-          variant="contained"
-          color="primary"
+        <button
+          className="btn_primary"
           onClick={handleLoadMore}
           disabled={loading}
         >
           Load More
-        </Button>
+        </button>
       </Box>
     </Box>
-
   );
 }

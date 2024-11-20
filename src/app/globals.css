@@ -142,7 +142,7 @@ li {
     flex-direction: row;
   }
 }
-
+/* Comment */
 .centering-div {
   display: flex;
   flex-direction: column;
@@ -213,5 +213,13 @@ li {
   position: absolute;
   top: 40px;
   right: 40px;
+}
+
+.createRest{
+  position: absolute;
+  top: 250px;
+  left: 0px;
+  display: flex;
+  padding: 10px 20px;
 }
 

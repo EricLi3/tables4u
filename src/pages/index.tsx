@@ -32,6 +32,7 @@ export default function Home() {
 
       <div className="table">
         <h1>Tables4u</h1>
+        <br></br>
         <div>
           <label>Number of People</label>
           <Slider

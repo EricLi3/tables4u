@@ -1,8 +1,8 @@
 import React from "react";
 import Link from "next/link";
+import {TextField} from "@mui/material";
 
 import "@/app/globals.css";
-import TextField from "@mui/material/TextField";
 
 function AdminLogin() {
   return (

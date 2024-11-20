@@ -9,7 +9,7 @@ import '@/app/globals.css';
 import "./editRest.css";
 
 
-function editRest() {
+function EditRest() {
 
     const [tablesAndSeats, setTablesAndSeats] = useState<{ table: string; seats: number }[]>([]);
 
@@ -143,4 +143,4 @@ function editRest() {
     );
 }
 
-export default editRest;
+export default EditRest;

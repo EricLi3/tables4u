@@ -4,7 +4,7 @@ import { Box, TextField, Button } from "@mui/material";
 
 import '@/app/globals.css';
 
-function ManagerLogin() {
+function AdminLogin() {
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
             <div className="top-left-button">
@@ -46,4 +46,4 @@ function ManagerLogin() {
     );
 }
 
-export default ManagerLogin;
+export default AdminLogin;

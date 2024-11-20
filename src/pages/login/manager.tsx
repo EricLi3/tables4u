@@ -5,6 +5,7 @@ import '@/app/globals.css';
 import TextField from "@mui/material/TextField";
 
 function ManagerLogin() {
+
   return (
     <main className="flex  w-screen h-screen flex-col items-center justify-between p-24">
       <div className="top-left-button">
@@ -36,6 +37,7 @@ function ManagerLogin() {
       </div>
     </main>
   );
+
 }
 
 export default ManagerLogin;

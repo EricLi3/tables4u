@@ -19,6 +19,7 @@ export default function Home() {
 
       <div className="table">
         <h1>Tables4u</h1>
+        <br></br>
         <RestaurantTable />
       </div>
 
@@ -54,18 +55,29 @@ export default function Home() {
         </Link>
       </div>
 
+      <div className="createRest">
+        <Link href="/createRest/editRest" passHref>
+          <Button
+            variant="contained"
+            color="warning">
+            Create Restaurant
+          </Button>
+        </Link>
+      </div>
+
+
       <div className="findAndCancel">
-      <Button
-        variant="contained"
-        color="secondary">
-        Find Reservation
-      </Button>
-      <br></br>
-      <Button
-        variant="contained"
-        color="error">
-        Cancel Reservation
-      </Button>
+        <Button
+          variant="contained"
+          color="secondary">
+          Find Reservation
+        </Button>
+        <br></br>
+        <Button
+          variant="contained"
+          color="error">
+          Cancel Reservation
+        </Button>
       </div>
     </main>
   );

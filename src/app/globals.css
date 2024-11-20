@@ -119,7 +119,7 @@ li {
     flex-direction: row;
   }
 }
-
+/* Comment */
 .centering-div {
   display: flex;
   flex-direction: column;

@@ -36,7 +36,7 @@ export default function Home() {
       </div>
 
       <div className="createRest">
-        <Link href="/createRest/manager" passHref>
+        <Link href="/createRest/editRest" passHref>
           <Button
             variant="contained"
             color="warning">

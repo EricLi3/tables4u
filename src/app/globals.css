@@ -166,8 +166,7 @@ li {
 }
 
 .icon-padding {
-  margin: 4px 0px; 
-  padding-left: 4px;
+  margin: 0px 0px 2px 4px;
 }
 
 .top-left-button {
@@ -198,6 +197,7 @@ li {
   width: 40vw;
 }
 
+/* TODO: make the login pages background box use the Box component */
 .login-fields {
   background-color: var(--gray);
   border-radius: 24px;

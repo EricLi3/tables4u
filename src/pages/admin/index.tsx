@@ -1,5 +1,3 @@
-// const numberToList = parseInt(event.rest_uuid);
-
 // http://localhost:3000/admin
 
 import React from "react";
@@ -7,6 +5,7 @@ import React from "react";
 import "@/app/globals.css";
 
 import axios from "axios";
+
 
 import { useState, useEffect } from "react";
 import {
@@ -23,6 +22,8 @@ import {
   Typography,
 } from "@mui/material";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 
 const instance = axios.create({
   baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/initial",
@@ -58,6 +59,9 @@ function Row({ restaurant }: { restaurant: Restaurant }) {
           {restaurant.restName}
         </TableCell>
         <TableCell>{restaurant.address}</TableCell>
+        <button className="btn_primary">
+          <DeleteIcon className="icon-padding" />
+        </button>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -70,7 +74,9 @@ function Row({ restaurant }: { restaurant: Restaurant }) {
                 Opening Hours: {restaurant.openingHour} -{" "}
                 {restaurant.closingHour}
               </Typography>
-              {/* Button to reserve here */}
+              <button className="btn_primary">
+                Delete Reservation
+              </button>
             </Box>
           </Collapse>
         </TableCell>

@@ -134,8 +134,8 @@ export default function RestaurantTable() {
           <TableHead>
             <TableRow>
               <TableCell />
-              <TableCell>Restaurant Name</TableCell>
-              <TableCell>Address</TableCell>
+              <TableCell><b>Restaurant Name</b></TableCell>
+              <TableCell><b>Address</b></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

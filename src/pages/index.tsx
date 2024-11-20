@@ -55,9 +55,9 @@ export default function Home() {
             />
 
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker 
-                label="Reservation Date" 
-                value={dayjs()} 
+              <DatePicker
+                label="Reservation Date"
+                value={dayjs()}
                 format="ddd DD/MM/YYYY"
               />
 
@@ -67,8 +67,8 @@ export default function Home() {
                 views={["hours"]}
                 ampm={false}
                 defaultValue={dayjs().set("minute", 0)}
-                minTime={dayjs().set("hour", 0)} //TODO: Set minTime to restaurant opening hour
-                maxTime={dayjs().set("hour", 23)} //TODO: Set maxTime to restaurant closing hour
+                minTime={dayjs().set("hour", 0).set("minute", 0)} //TODO: Set minTime to restaurant opening hour
+                maxTime={dayjs().set("hour", 23).set("minute", 0)} //TODO: Set maxTime to restaurant closing hour
               />
             </LocalizationProvider>
           </div>

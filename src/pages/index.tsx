@@ -49,22 +49,11 @@ export default function Home() {
 
         </div>
 
-        <Link href="/login/consumer">Find Reservation</Link>
-        <Link href="/createRestaurant">
+        {/* <Link href="/login/consumer">Find Reservation</Link> */}
+        <Link href="/createRest/editRest">
           <button className="btn_dark">Create Restaurant</button>
         </Link>
       </div>
-
-      <div className="createRest">
-        <Link href="/createRest/editRest" passHref>
-          <Button
-            variant="contained"
-            color="warning">
-            Create Restaurant
-          </Button>
-        </Link>
-      </div>
-
 
       <div className="findAndCancel">
         <Button

@@ -111,7 +111,7 @@ export default function Home() {
           </Link>
         </div>
 
-        <Link href="/createRest/editRest">
+        <Link href="/createRest">
           <button className="btn_dark">Create Restaurant</button>
         </Link>
       </div>

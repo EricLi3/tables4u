@@ -87,7 +87,8 @@ export default function RestaurantTable() {
       .post("/listActiveRests", { numberToList: numToList })
       .then((response) => {
         try {
-          const data = JSON.parse(response.data.body); // Parse the response body
+          const body = response.data.body;
+          const data = body ? JSON.parse(body) : []; // Parse the response body if defined
           if (Array.isArray(data)) {
             setRestaurants(data);
           } else {

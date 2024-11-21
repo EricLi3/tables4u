@@ -38,7 +38,7 @@ function AdminLogin() {
         console.log(token); // Log the token to check
 
         // Store the JWT token in localStorage
-        localStorage.setItem("jwtToken", token);
+        sessionStorage.setItem("jwtToken", token);
 
         // Redirect to the admin dashboard page
         router.push("/admin");

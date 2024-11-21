@@ -6,7 +6,6 @@ import { Add, Save } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 
-
 // For time and date picking
 // import { Search } from "@mui/icons-material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -36,8 +35,15 @@ function EditRest() {
     tablesAndSeats: [],
   });
 
+  
+  const [restName, setRestName] = useState("");
+  const [restAddress, setRestAddress] = useState("");
+  const [restOpeningHour, setRestOpeningHour] = useState(0);
+  const [restClosingHour, setRestClosingHour] = useState(0);
   const [newTable, setNewTable] = useState("");
   const [newSeats, setNewSeats] = useState("1");
+  const [newPassword, setNewPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleAddTable = () => {
     if (newTable && newSeats) {
@@ -49,6 +55,16 @@ function EditRest() {
       setNewSeats("1");
     }
   };
+  
+  const handleDeleteTable = (index: number) => {
+    setTablesAndSeats(tablesAndSeats.filter((_, i) => i !== index));
+  };
+
+  const handleChange = (field: string, value: any) => {
+    setRestaurantData((prevData) => ({ ...prevData, [field]: value }));
+  };
+
+  // --------------------------------
 
   // Fetch existing data on component mount
   useEffect(() => {
@@ -79,13 +95,43 @@ function EditRest() {
     fetchRestaurantData();
   }, [restUUID]);
 
-  const handleDeleteTable = (index: number) => {
-    setTablesAndSeats(tablesAndSeats.filter((_, i) => i !== index));
+
+  // --------------------------------
+
+  const instance = axios.create({
+    baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/editRest",
+  });
+
+  const handleSaveChanges = (
+    restUUID: String,
+    restName: String,
+    restAddress: String,
+    startTime: Number,
+    endTime: Number,
+    benches: { table: string; seats: number }[],
+    newPassword: String
+  ) => {
+    instance
+      .post("/", {
+        restUUID,
+        restName,
+        restAddress,
+        startTime,
+        endTime,
+        benches,
+        newPassword,
+      })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
-  const handleChange = (field: string, value: any) => {
-    setRestaurantData((prevData) => ({ ...prevData, [field]: value }));
-  };
+
+
+  // ---------------------------------------
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -135,9 +181,14 @@ function EditRest() {
               format="HH:mm"
               views={["hours"]}
               ampm={false}
-              defaultValue={dayjs().set("hour", 8).set("minute", 0)}
               minTime={dayjs().set("hour", 0).set("minute", 0)} //TODO: Set minTime to restaurant opening hour
               maxTime={dayjs().set("hour", 23).set("minute", 0)} //TODO: Set maxTime to restaurant closing hour
+              value={dayjs().set("hour", restOpeningHour).set("minute", 0)}
+              onAccept={(date) => {
+                if (date) {
+                  setRestOpeningHour(date.hour());
+                }
+              }}
             />
 
             <MobileTimePicker
@@ -148,6 +199,12 @@ function EditRest() {
               defaultValue={dayjs().set("hour", 17).set("minute", 0)}
               minTime={dayjs().set("hour", 0).set("minute", 0)} //TODO: Set minTime to restaurant opening hour
               maxTime={dayjs().set("hour", 23).set("minute", 0)} //TODO: Set maxTime to restaurant closing hour
+              value={dayjs().set("hour", restClosingHour).set("minute", 0)}
+              onAccept={(date) => {
+                if (date) {
+                  setRestClosingHour(date.hour());
+                }
+              }}
             />
           </LocalizationProvider>
         </div>
@@ -218,6 +275,9 @@ function EditRest() {
           variant="outlined"
           fullWidth
           margin="normal"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          className="mb-4"
         />
 
         <div className="saveAndDelete">

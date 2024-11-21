@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Box, TextField, Button, IconButton } from "@mui/material";
 import { Add, Save } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import axios from "axios";
 
 // For time and date picking
 // import { Search } from "@mui/icons-material";
@@ -18,9 +19,15 @@ function EditRest() {
   const [tablesAndSeats, setTablesAndSeats] = useState<
     { table: string; seats: number }[]
   >([]);
-
+  
+  const [restName, setRestName] = useState("");
+  const [restAddress, setRestAddress] = useState("");
+  const [restOpeningHour, setRestOpeningHour] = useState(0);
+  const [restClosingHour, setRestClosingHour] = useState(0);
   const [newTable, setNewTable] = useState("");
   const [newSeats, setNewSeats] = useState("1");
+  const [newPassword, setNewPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleAddTable = () => {
     if (newTable && newSeats) {
@@ -36,6 +43,49 @@ function EditRest() {
   const handleDeleteTable = (index: number) => {
     setTablesAndSeats(tablesAndSeats.filter((_, i) => i !== index));
   };
+
+  const instance = axios.create({
+    baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/editRest",
+  });
+
+  // const handleSaveChanges = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+
+  //   // Validate input fields
+  //   if (!restName || !restAddress) {
+  //     setError("Please fill in all fields");
+  //     return;
+  //   }
+
+  //   try {
+  //     // Send login request to the backend API
+  //     const response = await instance.post("/authAdmin", { restName, restAddress });
+
+  //     // Parse the 'body' string to convert it into an object
+  //     const body = JSON.parse(response.data.body);
+
+  //     // Check if the response contains a valid token
+  //     if (body && body.token) {
+  //       const { token } = body;
+  //       console.log(token); // Log the token to check
+
+  //       // Store the JWT token in localStorage
+  //       localStorage.setItem("jwtToken", token);
+
+  //       // Redirect to the admin dashboard page
+  //       router.push("/admin");
+  //     } else {
+  //       setError("Invalid login credentials");
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to fetch JWT:", error);
+  //     setError("Failed to fetch JWT. Please try again later.");
+  //   }
+  // };
+
+
+
+  // ---------------------------------------
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -63,13 +113,19 @@ function EditRest() {
           variant="outlined"
           fullWidth
           margin="normal"
+          value={restName}
+          onChange={(e) => setRestName(e.target.value)}
+          className="mb-4"
         />
         <TextField
           label="Restaurant Address"
           type="username"
           variant="outlined"
           fullWidth
+          value={restAddress}
+          onChange={(e) => setRestAddress(e.target.value)}
           margin="normal"
+          className="mb-4"
         />
 
         <div className="centering-div div-horiz">
@@ -80,9 +136,14 @@ function EditRest() {
               format="HH:mm"
               views={["hours"]}
               ampm={false}
-              defaultValue={dayjs().set("hour", 8).set("minute", 0)}
               minTime={dayjs().set("hour", 0).set("minute", 0)} //TODO: Set minTime to restaurant opening hour
               maxTime={dayjs().set("hour", 23).set("minute", 0)} //TODO: Set maxTime to restaurant closing hour
+              value={dayjs().set("hour", restOpeningHour).set("minute", 0)}
+              onAccept={(date) => {
+                if (date) {
+                  setRestOpeningHour(date.hour());
+                }
+              }}
             />
 
             <MobileTimePicker
@@ -93,6 +154,12 @@ function EditRest() {
               defaultValue={dayjs().set("hour", 17).set("minute", 0)}
               minTime={dayjs().set("hour", 0).set("minute", 0)} //TODO: Set minTime to restaurant opening hour
               maxTime={dayjs().set("hour", 23).set("minute", 0)} //TODO: Set maxTime to restaurant closing hour
+              value={dayjs().set("hour", restClosingHour).set("minute", 0)}
+              onAccept={(date) => {
+                if (date) {
+                  setRestClosingHour(date.hour());
+                }
+              }}
             />
           </LocalizationProvider>
         </div>
@@ -163,6 +230,9 @@ function EditRest() {
           variant="outlined"
           fullWidth
           margin="normal"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          className="mb-4"
         />
 
         <div className="saveAndDelete">

@@ -4,7 +4,7 @@
 // password: securepass1
 
 import React from "react";
-// import Link from "next/link";
+import Link from "next/link";
 import "@/app/globals.css";
 
 import axios from "axios";
@@ -34,8 +34,6 @@ const instance = axios.create({
 
 interface Restaurant {
   restUUID: string;
-  userName: string;
-  pass: string;
   restName: string;
   address: string;
   openingHour: string;
@@ -43,7 +41,8 @@ interface Restaurant {
   isActive: number;
 }
 
-function Row({ restaurant }: { restaurant: Restaurant }) {
+
+function Row({ restaurant, deleteRestaurant }: { restaurant: Restaurant, deleteRestaurant: (restUUID: string) => void }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -62,9 +61,11 @@ function Row({ restaurant }: { restaurant: Restaurant }) {
           {restaurant.restName}
         </TableCell>
         <TableCell>{restaurant.address}</TableCell>
-        <button className="btn_primary">
+
+        <button className="btn_primary" onClick={() => deleteRestaurant(restaurant.restUUID)}>
           <DeleteIcon className="icon-padding" />
         </button>
+
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -122,6 +123,28 @@ export default function RestaurantTable() {
       });
   };
 
+  const deleteRestaurant = (uuidToDelete: string) => {
+    instance
+      .post("/deleteRestAdmin", { rest_uuid: uuidToDelete })
+      .then((response) => {
+        try {
+          const body = response.data.body;
+          console.log(body);
+
+          setRestaurants((prevRestaurants) =>
+            prevRestaurants.filter((restaurant) => restaurant.restUUID !== uuidToDelete)
+          );
+        } catch (error) {
+          console.error("Failed to parse response body:", error);
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to fetch restaurant:", error);
+      })
+      .finally(() => {
+      });
+  };
+
   // Effect to load restaurants initially
   useEffect(() => {
     fetchRestaurants(numberToList);
@@ -141,6 +164,13 @@ export default function RestaurantTable() {
   }
 
   return (
+    <main className="flex w-screen h-screen flex-col items-center justify-between p-24">
+
+    <div className="top-left-button">
+        <Link href="/">
+          <img src="logo.png" alt="Home Button" className="logo" />
+        </Link>
+      </div>
     <Box>
       <TableContainer component={Paper}>
         <Table>
@@ -154,7 +184,7 @@ export default function RestaurantTable() {
           <TableBody>
             {restaurants?.length > 0 ? (
               restaurants.map((restaurant) => (
-                <Row key={restaurant.restUUID} restaurant={restaurant} />
+                <Row key={restaurant.restUUID} restaurant={restaurant} deleteRestaurant={deleteRestaurant} />
               ))
             ) : (
               <TableRow>
@@ -177,5 +207,6 @@ export default function RestaurantTable() {
         </button>
       </Box>
     </Box>
+    </main>
   );
 }

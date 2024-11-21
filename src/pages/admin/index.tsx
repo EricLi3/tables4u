@@ -1,5 +1,8 @@
 // http://localhost:3000/admin
 
+// usename: admin1
+// password: securepass1
+
 import React from "react";
 // import Link from "next/link";
 import "@/app/globals.css";

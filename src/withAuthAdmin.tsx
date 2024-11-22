@@ -25,7 +25,7 @@ const withAuthAdmin = (WrappedComponent: React.ComponentType) => {
           } else {
             router.push("/login/admin");
           }
-        } catch (error) {
+        } catch {
           router.push("/login/admin");
         }
       };

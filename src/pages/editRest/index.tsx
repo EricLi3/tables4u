@@ -9,10 +9,10 @@ import axios from "axios";
 
 // For time and date picking
 // import { Search } from "@mui/icons-material";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { MobileTimePicker } from "@mui/x-date-pickers/MobileTimePicker";
-import dayjs from "dayjs";
+// import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+// import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+// import { MobileTimePicker } from "@mui/x-date-pickers/MobileTimePicker";
+// import dayjs from "dayjs";
 import withAuthManager from "@/withAuthManager";
 
 import "@/app/globals.css";
@@ -32,7 +32,18 @@ function EditRest() {
   const { restUUID } = router.query;
 
 
-  const [restaurantData, setRestaurantData] = useState({
+  interface TableAndSeats {
+    benchName: string;
+    numSeats: number;
+  }
+
+  const [restaurantData, setRestaurantData] = useState<{
+    name: string;
+    address: string;
+    openingTime: number;
+    closingTime: number;
+    tablesAndSeats: TableAndSeats[];
+  }>({
     name: "",
     address: "",
     openingTime: 8,
@@ -104,7 +115,10 @@ function EditRest() {
     }
   };
   const handleDeleteTable = (index: number) => {
-    setTablesAndSeats(tablesAndSeats.filter((_, i) => i !== index));
+    setRestaurantData((prevData) => ({
+      ...prevData,
+      tablesAndSeats: prevData.tablesAndSeats.filter((_, i) => i !== index),
+    }));
   };
 
   const handleChange = (field: string, value: string) => {
@@ -151,21 +165,26 @@ function EditRest() {
           onChange={(e) => handleChange("address", e.target.value)}
         />
 
-        <div className="centering-div div-horiz">
+        <div className="centering-div div-horiz" style={{ width: "100%" }}>
           <TextField
             label="Opening Time"
             type="number"
             value={restaurantData.openingTime}
             onChange={handleOpeningTimeChange}
-            inputProps={{ min: 0, max: 23 }}
+            slotProps={{ htmlInput: { min: 0, max: 23 } }}
+            sx={{ width: "70%" }} // Adjust the width
+
           />
           <TextField
             label="Closing Time"
             type="number"
             value={restaurantData.closingTime}
             onChange={handleClosingTimeChange}
-            inputProps={{ min: 0, max: 23 }}
+            slotProps={{ htmlInput: { min: 0, max: 23 } }}
+            sx={{ marginRight: 2, width: "70%" }} // Adjust the width and margin
+
           />
+          
         </div>
 
         <div className="InputTablesAndSeats">
@@ -198,20 +217,21 @@ function EditRest() {
           className="TablesAndSeats"
           style={{ height: "auto", minHeight: "50px" }}
         >
-          {tablesAndSeats.map((item, index) => (
+          {restaurantData.tablesAndSeats.map((item, index) => (
             <div key={index} className="table-item">
-              <span>{item.table}</span>
-              <span>{item.seats} seats</span>
+              <span>{item.benchName}</span>
+              <span>{item.numSeats} seats</span>
               <Button
                 variant="contained"
                 color="primary"
                 className="button"
                 startIcon={<DeleteIcon />}
                 onClick={() => handleDeleteTable(index)}
-              ></Button>
+              />
             </div>
           ))}
         </div>
+
         <br></br>
       </Box>
       <br></br>

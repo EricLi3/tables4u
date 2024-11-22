@@ -88,7 +88,7 @@ function EditRest() {
     setTablesAndSeats(tablesAndSeats.filter((_, i) => i !== index));
   };
 
-  const handleChange = (field: string, value: any) => {
+  const handleChange = (field: string, value: string) => {
     setRestaurantData((prevData) => ({ ...prevData, [field]: value }));
   };
 

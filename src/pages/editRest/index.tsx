@@ -18,6 +18,10 @@ import withAuthManager from "@/withAuthManager";
 import "@/app/globals.css";
 import "./editRest.css";
 
+const instance = axios.create({
+  baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/initial",
+});
+
 function EditRest() {
   const router = useRouter();
 
@@ -56,21 +60,22 @@ function EditRest() {
       if (!restUUID) return; // Wait for restUUID to be available
 
       try {
-        const response = await axios.post(
-          'https://jz4oihez68.execute-api.us-east-2.amazonaws.com/initial/rest',
-          {rest_uuid: restUUID,} // Include rest_uuid in the body
-          
-        );
-        const data = response.data;
-        console.log(data)
-        
-        setRestaurantData({
-          name: data.restName || "",
-          address: data.address || "",
-          openingTime: dayjs(data.openingHour) || dayjs().set("hour", 8).set("minute", 0),
-          closingTime: dayjs(data.closingHour) || dayjs().set("hour", 17).set("minute", 0),
-          tablesAndSeats: data.tablesAndSeats || [],
-        });
+        const response = await instance.post("/rest", { rest_uuid: restUUID });
+        const data = JSON.parse(response.data.body); // Parse the response body as JSON
+
+        if (Array.isArray(data) && data.length > 0) {
+          const restaurant = data[0]; // Assuming you want the first restaurant in the array
+
+          setRestaurantData({
+            name: restaurant.restName || "",
+            address: restaurant.address || "",
+            openingTime: dayjs().set("hour", restaurant.openingHour).set("minute", 0) || dayjs().set("hour", 8).set("minute", 0),
+            closingTime: dayjs().set("hour", restaurant.closingHour).set("minute", 0) || dayjs().set("hour", 17).set("minute", 0),
+            tablesAndSeats: restaurant.tablesAndSeats || [],
+          });
+
+          console.log("Restaurant Name:", restaurant.restName);
+        }
       } catch (error) {
         console.error("Error fetching restaurant data:", error);
       }

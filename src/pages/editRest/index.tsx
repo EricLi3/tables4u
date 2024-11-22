@@ -35,8 +35,8 @@ function EditRest() {
   const [restaurantData, setRestaurantData] = useState({
     name: "",
     address: "",
-    openingTime: dayjs().set("hour", 8).set("minute", 0),
-    closingTime: dayjs().set("hour", 17).set("minute", 0),
+    openingTime: 8,
+    closingTime: 17,
     tablesAndSeats: [],
   });
 
@@ -61,17 +61,17 @@ function EditRest() {
 
       try {
         const response = await instance.post("/rest", { rest_uuid: restUUID });
-        const data = JSON.parse(response.data.body); // Parse the response body as JSON
+        const data = response.data.body ? JSON.parse(response.data.body) : {}; // Parse the response body as JSON if defined
 
-        if (Array.isArray(data) && data.length > 0) {
-          const restaurant = data[0]; // Assuming you want the first restaurant in the array
+        if (data && data.restaurant && Array.isArray(data.restaurant) && data.restaurant.length > 0) {
+          const restaurant = data.restaurant[0]; // Assuming you want the first restaurant in the array
 
           setRestaurantData({
             name: restaurant.restName || "",
             address: restaurant.address || "",
-            openingTime: dayjs().set("hour", restaurant.openingHour).set("minute", 0) || dayjs().set("hour", 8).set("minute", 0),
-            closingTime: dayjs().set("hour", restaurant.closingHour).set("minute", 0) || dayjs().set("hour", 17).set("minute", 0),
-            tablesAndSeats: restaurant.tablesAndSeats || [],
+            openingTime: restaurant.openingHour || 8,
+            closingTime: restaurant.closingHour || 17,
+            tablesAndSeats: data.benches || [], // Assuming benches represent tables and seats
           });
 
           console.log("Restaurant Name:", restaurant.restName);
@@ -84,6 +84,25 @@ function EditRest() {
     fetchRestaurantData();
   }, [restUUID]);
 
+  const handleOpeningTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = parseInt(event.target.value, 10);
+    if (newValue >= 0 && newValue <= 23) {
+      setRestaurantData((prevData) => ({
+        ...prevData,
+        openingTime: newValue,
+      }));
+    }
+  };
+
+  const handleClosingTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = parseInt(event.target.value, 10);
+    if (newValue >= 0 && newValue <= 23) {
+      setRestaurantData((prevData) => ({
+        ...prevData,
+        closingTime: newValue,
+      }));
+    }
+  };
   const handleDeleteTable = (index: number) => {
     setTablesAndSeats(tablesAndSeats.filter((_, i) => i !== index));
   };
@@ -133,28 +152,20 @@ function EditRest() {
         />
 
         <div className="centering-div div-horiz">
-          <br />
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <MobileTimePicker
-              label="Opening Time"
-              format="HH:mm"
-              views={["hours"]}
-              ampm={false}
-              defaultValue={dayjs().set("hour", 8).set("minute", 0)}
-              minTime={dayjs().set("hour", 0).set("minute", 0)} //TODO: Set minTime to restaurant opening hour
-              maxTime={dayjs().set("hour", 23).set("minute", 0)} //TODO: Set maxTime to restaurant closing hour
-            />
-
-            <MobileTimePicker
-              label="Close Time"
-              format="HH:mm"
-              views={["hours"]}
-              ampm={false}
-              defaultValue={dayjs().set("hour", 17).set("minute", 0)}
-              minTime={dayjs().set("hour", 0).set("minute", 0)} //TODO: Set minTime to restaurant opening hour
-              maxTime={dayjs().set("hour", 23).set("minute", 0)} //TODO: Set maxTime to restaurant closing hour
-            />
-          </LocalizationProvider>
+          <TextField
+            label="Opening Time"
+            type="number"
+            value={restaurantData.openingTime}
+            onChange={handleOpeningTimeChange}
+            inputProps={{ min: 0, max: 23 }}
+          />
+          <TextField
+            label="Closing Time"
+            type="number"
+            value={restaurantData.closingTime}
+            onChange={handleClosingTimeChange}
+            inputProps={{ min: 0, max: 23 }}
+          />
         </div>
 
         <div className="InputTablesAndSeats">

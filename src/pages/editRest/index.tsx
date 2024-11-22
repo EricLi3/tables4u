@@ -19,13 +19,11 @@ import "./editRest.css";
 
 function EditRest() {
   const router = useRouter();
+  const restUUID = router.query.restUUID as string;
 
   const [tablesAndSeats, setTablesAndSeats] = useState<
     { table: string; seats: number }[]
   >([]);
-
-  const { restUUID } = router.query;
-
 
   const [restaurantData, setRestaurantData] = useState({
     name: "",
@@ -38,12 +36,13 @@ function EditRest() {
   
   const [restName, setRestName] = useState("");
   const [restAddress, setRestAddress] = useState("");
-  const [restOpeningHour, setRestOpeningHour] = useState(0);
-  const [restClosingHour, setRestClosingHour] = useState(0);
+  const [startTime, setstartTime] = useState(0);
+  const [endTime, setendTime] = useState(0);
   const [newTable, setNewTable] = useState("");
   const [newSeats, setNewSeats] = useState("1");
   const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState("");
+  
 
   const handleAddTable = () => {
     if (newTable && newSeats) {
@@ -102,15 +101,7 @@ function EditRest() {
     baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/editRest",
   });
 
-  const handleSaveChanges = (
-    restUUID: String,
-    restName: String,
-    restAddress: String,
-    startTime: Number,
-    endTime: Number,
-    benches: { table: string; seats: number }[],
-    newPassword: String
-  ) => {
+  const handleSaveChanges = (restUUID: String, restName: String, restAddress: String, startTime: Number, endTime: Number, benches: { table: string; seats: number }[], newPassword: String) => {
     instance
       .post("/", {
         restUUID,
@@ -128,8 +119,6 @@ function EditRest() {
         console.log(error);
       });
   };
-
-
 
   // ---------------------------------------
 
@@ -183,10 +172,10 @@ function EditRest() {
               ampm={false}
               minTime={dayjs().set("hour", 0).set("minute", 0)} //TODO: Set minTime to restaurant opening hour
               maxTime={dayjs().set("hour", 23).set("minute", 0)} //TODO: Set maxTime to restaurant closing hour
-              value={dayjs().set("hour", restOpeningHour).set("minute", 0)}
+              value={dayjs().set("hour", startTime).set("minute", 0)}
               onAccept={(date) => {
                 if (date) {
-                  setRestOpeningHour(date.hour());
+                  setstartTime(date.hour());
                 }
               }}
             />
@@ -199,10 +188,10 @@ function EditRest() {
               defaultValue={dayjs().set("hour", 17).set("minute", 0)}
               minTime={dayjs().set("hour", 0).set("minute", 0)} //TODO: Set minTime to restaurant opening hour
               maxTime={dayjs().set("hour", 23).set("minute", 0)} //TODO: Set maxTime to restaurant closing hour
-              value={dayjs().set("hour", restClosingHour).set("minute", 0)}
+              value={dayjs().set("hour", endTime).set("minute", 0)}
               onAccept={(date) => {
                 if (date) {
-                  setRestClosingHour(date.hour());
+                  setendTime(date.hour());
                 }
               }}
             />

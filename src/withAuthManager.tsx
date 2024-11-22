@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 
-const withAuthManager = (WrappedComponent: React.ComponentType) => {
-  const withAuthManager = (props: JSX.IntrinsicAttributes) => {
+const WithAuthManager = (WrappedComponent: React.ComponentType) => {
+  const WithAuthManager = (props: JSX.IntrinsicAttributes) => {
     const router = useRouter();
 
     useEffect(() => {
@@ -15,9 +15,9 @@ const withAuthManager = (WrappedComponent: React.ComponentType) => {
     return <WrappedComponent {...props} />;
   };
 
-  withAuthManager.displayName = `withAuthManager(${WrappedComponent.displayName || WrappedComponent.name || "Component"})`;
+  WithAuthManager.displayName = `withAuthManager(${WrappedComponent.displayName || WrappedComponent.name || "Component"})`;
 
-  return withAuthManager;
+  return WithAuthManager;
 };
 
-export default withAuthManager;
+export default WithAuthManager;

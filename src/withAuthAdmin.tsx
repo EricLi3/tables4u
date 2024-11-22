@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 
-const withAuthAdmin = (WrappedComponent: React.ComponentType) => {
+const WithAuthAdmin = (WrappedComponent: React.ComponentType) => {
   const WithAuthAdmin = (props: JSX.IntrinsicAttributes) => {
     const router = useRouter();
 
@@ -20,4 +20,4 @@ const withAuthAdmin = (WrappedComponent: React.ComponentType) => {
   return WithAuthAdmin;
 };
 
-export default withAuthAdmin;
+export default WithAuthAdmin;

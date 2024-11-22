@@ -33,15 +33,19 @@ function ManagerLogin() {
       const body = JSON.parse(response.data.body);
 
       // Check if the response contains a valid token
-      if (body && body.token) {
-        const { token } = body;
+      if (body && body.token && body.restUUID) {
+        const { token, restUUID } = body;
         console.log(token); // Log the token to check
+        console.log("restUUID:", restUUID); // Log the restUUID to check
 
         // Store the JWT token in localStorage
         sessionStorage.setItem("jwtToken", token);
-        
-        // Redirect to the admin dashboard page
-        router.push("/editRest");
+
+        // Redirect to the admin dashboard page with restUUID as a query parameter
+        router.push({
+          pathname: "/editRest",
+          query: { restUUID },
+        });
       } else {
         setError("Invalid login credentials");
       }

@@ -26,7 +26,7 @@ import {
 } from "@mui/material";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import withAuth from "@/withAuth";
+import withAuthAdmin from "@/withAuthAdmin";
 
 
 const instance = axios.create({
@@ -211,4 +211,4 @@ function RestaurantTable() {
     </main>
   );
 }
-export default withAuth(RestaurantTable); // Wrap the component with the HOC
+export default withAuthAdmin(RestaurantTable); // Wrap the component with the HOC

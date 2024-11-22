@@ -6,6 +6,7 @@ import "@/app/globals.css";
 
 // Custom components
 import RestaurantTable from "@/app/components/RestaurantTable";
+import createRest from "@/pages/editRest/createRest";
 
 // Material UI components
 import MenuIcon from "@mui/icons-material/Menu";
@@ -111,8 +112,8 @@ export default function Home() {
           </Link>
         </div>
 
-        <Link href="/createRest">
-          <button className="btn_dark">Create Restaurant</button>
+        <Link href="/editRest">
+          <button className="btn_dark" onClick={createRest}>Create Restaurant</button>
         </Link>
       </div>
 

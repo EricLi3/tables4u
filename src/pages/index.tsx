@@ -111,10 +111,7 @@ export default function Home() {
             </div>
           </Link>
         </div>
-
-        <Link href="/editRest">
-          <button className="btn_dark" onClick={createRest}>Create Restaurant</button>
-        </Link>
+        <button className="btn_dark" onClick={createRest}>Create Restaurant</button>
       </div>
 
       <div className="findAndCancel centering-div">

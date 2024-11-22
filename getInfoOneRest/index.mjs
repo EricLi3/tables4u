@@ -23,16 +23,33 @@ export const handler = async (event) => {
         });
     };
 
+    const GetBenches = (rest_uuid) => {
+        return new Promise((resolve, reject) => {
+            pool.query("SELECT * FROM Benches WHERE restUUID=?", [rest_uuid], (error, rows) => {
+                if (error) {
+                    return reject(error);
+                }
+                return resolve(rows); // Return rows if successful
+            });
+        });
+    };
+
     let response;
 
     try {
         // Wait for the query result
-        const rows = await GetRest(rest_uuid);
-        console.log('Query result:', rows);
+        const restaurantRows = await GetRest(rest_uuid);
+        const benchesRows = await GetBenches(rest_uuid);
+
+        console.log('Restaurant query result:', restaurantRows);
+        console.log('Benches query result:', benchesRows);
 
         response = {
             statusCode: 200,
-            body: JSON.stringify(rows)
+            body: JSON.stringify({
+                restaurant: restaurantRows,
+                benches: benchesRows
+            })
         };
     } catch (error) {
         console.error("ERROR:", error);

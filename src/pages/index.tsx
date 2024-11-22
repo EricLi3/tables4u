@@ -6,7 +6,7 @@ import "@/app/globals.css";
 
 // Custom components
 import RestaurantTable from "@/app/components/RestaurantTable";
-import createRest from "@/pages/editRest/createRest";
+import CreateRest  from "@/app/components/CreateRest";
 
 // Material UI components
 import MenuIcon from "@mui/icons-material/Menu";
@@ -111,7 +111,7 @@ export default function Home() {
             </div>
           </Link>
         </div>
-        <button className="btn_dark" onClick={createRest}>Create Restaurant</button>
+        <CreateRest />
       </div>
 
       <div className="findAndCancel centering-div">

@@ -169,6 +169,8 @@ function EditRest() {
           type="username"
           variant="outlined"
           fullWidth
+          value={restAddress}
+          onChange={(e) => setRestAddress(e.target.value)}
           margin="normal"
           value={restaurantData.address}
           onChange={(e) => handleChange("address", e.target.value)}

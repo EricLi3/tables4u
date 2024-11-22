@@ -38,14 +38,14 @@ function EditRest() {
   const [error, setError] = useState("");
 
   const [tablesAndSeats, setTablesAndSeats] = useState<
-    { table: string; seats: number }[]
+    { name: string; numSeats: number }[]
   >([]);
 
   const handleAddTable = () => {
     if (newTable && newSeats) {
       setTablesAndSeats([
         ...tablesAndSeats,
-        { table: newTable, seats: parseInt(newSeats) },
+        { name: newTable, numSeats: parseInt(newSeats) },
       ]);
       setNewTable("");
       setNewSeats("1");
@@ -85,7 +85,7 @@ function EditRest() {
           tablesAndSeats: restaurant.tablesAndSeats || [],
           newPassword: "",
         });
-
+        setTablesAndSeats(restaurant.tablesAndSeats || []);
         console.log("Restaurant Name:", restaurant.restName);
       }
     } catch (error) {
@@ -100,18 +100,28 @@ function EditRest() {
   // --------------------------------
 
   const handleSaveChanges = () => {
+    if (!restUUID || !restaurantData.name || !restaurantData.address) return;
+
+    if (tablesAndSeats.length < 1) {
+      alert("A restaurant must have at least one table");
+      return;
+    }
+
+    //slightly different approach to the original code
     instance
       .post("/editRest", {
         restUUID: restUUID,
-        name: restaurantData.name,
-        address: restaurantData.address,
+        restName: restaurantData.name,
+        restAddress: restaurantData.address,
         openingTime: restaurantData.openingTime.hour(),
         closingTime: restaurantData.closingTime.hour(),
-        tablesAndSeats: tablesAndSeats,
+        tables: tablesAndSeats,
         newPassword: restaurantData.newPassword,
       })
       .then((response) => {
         console.log(response);
+        //print a success message to the user
+        console.log("Changes saved successfully");
       })
       .catch((error) => {
         console.log(error);
@@ -219,9 +229,9 @@ function EditRest() {
         >
           {tablesAndSeats.map((item, index) => (
             <div key={index} className="tableItem">
-              <span className="spanWidth">{item.table}</span>
+              <span className="spanWidth">{item.name}</span>
               <span className="spanWidth">
-                {item.seats} {item.seats === 1 ? "seat" : "seats"}
+                {item.numSeats} {item.numSeats === 1 ? "seat" : "seats"}
               </span>
               <Button
                 variant="contained"

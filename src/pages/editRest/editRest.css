@@ -19,7 +19,7 @@
   height: auto;
 }
 
-.table-item {
+.tableItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -27,7 +27,11 @@
   border-bottom: 1px solid #ddd;
 }
 
-.table-item:last-child {
+.spanWidth {
+  min-width: 120px;
+}
+
+.tableItem:last-child {
   border-bottom: none;
 }
 

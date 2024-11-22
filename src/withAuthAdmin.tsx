@@ -6,7 +6,7 @@ const instance = axios.create({
   baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/initial",
 });
 
-const withAuthAdmin = (WrappedComponent: React.ComponentType) => {
+const WithAuthAdmin = (WrappedComponent: React.ComponentType) => {
   const WithAuthAdmin = (props: JSX.IntrinsicAttributes) => {
     const router = useRouter();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -45,4 +45,4 @@ const withAuthAdmin = (WrappedComponent: React.ComponentType) => {
   return WithAuthAdmin;
 };
 
-export default withAuthAdmin;
+export default WithAuthAdmin;

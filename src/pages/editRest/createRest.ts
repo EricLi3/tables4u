@@ -10,7 +10,6 @@ function createRest(){
       .then((response)=>{
         try {
           const body = response.data.body;
-          console.log(body);
           const data = body ? JSON.parse(body) : ""; // Parse the response body if defined
           if (data.username != "") {
             console.log("Successful creation")

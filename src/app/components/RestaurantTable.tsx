@@ -3,6 +3,7 @@ import React from "react";
 import "@/app/globals.css";
 
 import axios from "axios";
+import ReservationList from "./ReservationList";
 
 import { useState, useEffect } from "react";
 import {
@@ -66,6 +67,7 @@ function Row({ restaurant }: { restaurant: Restaurant }) {
                 Opening Hours: {restaurant.openingHour} -{" "}
                 {restaurant.closingHour}
               </Typography>
+              <ReservationList openingHour={Number(restaurant.openingHour)} closingHour={Number(restaurant.closingHour)}/>
               {/* Button to reserve here */}
             </Box>
           </Collapse>

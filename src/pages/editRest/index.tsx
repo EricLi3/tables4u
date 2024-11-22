@@ -65,13 +65,17 @@ function EditRest() {
   // Fetch existing data on component mount
   const fetchRestaurantData = async () => {
     if (!restUUID) return; // Wait for restUUID to be available
-
     try {
       const response = await instance.post("/rest", { rest_uuid: restUUID });
-      const data = JSON.parse(response.data.body); // Parse the response body as JSON
-
-      if (Array.isArray(data) && data.length > 0) {
-        const restaurant = data[0]; // Assuming you want the first restaurant in the array
+      const data = response.data.body ? JSON.parse(response.data.body) : {}; // Parse the response body as JSON if defined
+      console.log("Data:", data);
+      if (
+        data &&
+        data.restaurant &&
+        Array.isArray(data.restaurant) &&
+        data.restaurant.length > 0
+      ) {
+        const restaurant = data.restaurant[0]; // Assuming you want the first restaurant in the array
 
         setRestaurantData({
           name: restaurant.restName || "",
@@ -82,7 +86,7 @@ function EditRest() {
           closingTime:
             dayjs().set("hour", restaurant.closingHour).set("minute", 0) ||
             dayjs().set("hour", 17).set("minute", 0),
-          tablesAndSeats: restaurant.tablesAndSeats || [],
+          tablesAndSeats: data.benches || [],
           newPassword: "",
         });
         setTablesAndSeats(restaurant.tablesAndSeats || []);

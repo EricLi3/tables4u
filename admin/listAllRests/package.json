@@ -1,0 +1,18 @@
+{
+    "name": "listRest",
+    "version": "1.0.0",
+    "description": "Create a new Restraunt",
+    "main": "index.mjs",
+    "repository": "TBA",
+    "author": "Eric Li",
+    "license": "MIT",
+    "dependencies": {
+      "mysql": "^2.18.1"
+    },
+    "scripts": {
+      
+    },
+    "devDependencies": {
+      
+    }
+  }

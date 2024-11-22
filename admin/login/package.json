@@ -1,0 +1,17 @@
+{
+    "name": "lambda-login",
+    "version": "1.0.0",
+    "description": "AWS Lambda for user login with MySQL and JWT authentication",
+    "main": "index.mjs",
+    "author": "Eric Li",
+    "license": "MIT",
+    "scripts": {
+    },
+    "dependencies": {
+        "mysql": "^2.18.1",
+        "jsonwebtoken": "^9.0.0"
+    },
+    "devDependencies": {
+      
+    }
+}

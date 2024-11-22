@@ -1,0 +1,16 @@
+{
+    "name": "validateToken",
+    "version": "1.0.0",
+    "description": "JWT authentication",
+    "main": "index.mjs",
+    "author": "Eric Li",
+    "license": "MIT",
+    "scripts": {
+    },
+    "dependencies": {
+        "jsonwebtoken": "^9.0.0"
+    },
+    "devDependencies": {
+      
+    }
+}

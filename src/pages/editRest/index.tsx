@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Box, TextField, Button, IconButton } from "@mui/material";
 import { Add, Save } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -38,25 +39,25 @@ function EditRest() {
   const [restAddress, setRestAddress] = useState("");
   const [startTime, setstartTime] = useState(0);
   const [endTime, setendTime] = useState(0);
+
+  const [benches, setBenches] = useState<{ table: string; seats: number }[]>(
+    []
+  );
   const [newTable, setNewTable] = useState("");
   const [newSeats, setNewSeats] = useState("1");
   const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState("");
-  
 
   const handleAddTable = () => {
     if (newTable && newSeats) {
-      setTablesAndSeats([
-        ...tablesAndSeats,
-        { table: newTable, seats: parseInt(newSeats) },
-      ]);
+      setBenches([...benches, { table: newTable, seats: parseInt(newSeats) }]);
       setNewTable("");
       setNewSeats("1");
     }
   };
   
   const handleDeleteTable = (index: number) => {
-    setTablesAndSeats(tablesAndSeats.filter((_, i) => i !== index));
+    setBenches(benches.filter((_, i) => i !== index));
   };
 
   const handleChange = (field: string, value: any) => {
@@ -101,7 +102,15 @@ function EditRest() {
     baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/editRest",
   });
 
-  const handleSaveChanges = (restUUID: String, restName: String, restAddress: String, startTime: Number, endTime: Number, benches: { table: string; seats: number }[], newPassword: String) => {
+  const handleSaveChanges = (
+    restUUID: String,
+    restName: String,
+    restAddress: String,
+    startTime: Number,
+    endTime: Number,
+    benches: { table: string; seats: number }[],
+    newPassword: String
+  ) => {
     instance
       .post("/", {
         restUUID,
@@ -143,6 +152,10 @@ function EditRest() {
         }}
       >
         <h1>Edit Restaurant</h1>
+        {/* <form
+          onSubmit={handleSaveChanges}
+          className="flex flex-col items-center"
+        > */}
         <TextField
           label="Restaurant Name"
           variant="outlined"
@@ -198,7 +211,7 @@ function EditRest() {
           </LocalizationProvider>
         </div>
 
-        <div className="InputTablesAndSeats">
+        <div className="Inputbenches">
           <TextField
             label="Table Name"
             value={newTable}
@@ -224,11 +237,8 @@ function EditRest() {
           </IconButton>
         </div>
 
-        <div
-          className="TablesAndSeats"
-          style={{ height: "auto", minHeight: "50px" }}
-        >
-          {tablesAndSeats.map((item, index) => (
+        <div className="benches" style={{ height: "auto", minHeight: "50px" }}>
+          {benches.map((item, index) => (
             <div key={index} className="table-item">
               <span>{item.table}</span>
               <span>{item.seats} seats</span>
@@ -243,6 +253,7 @@ function EditRest() {
           ))}
         </div>
         <br></br>
+        {/* </form> */}
       </Box>
       <br></br>
       <Box
@@ -270,7 +281,21 @@ function EditRest() {
         />
 
         <div className="saveAndDelete">
-          <button className="btn_secondary">
+          <button 
+          // TODO: change the button to a include just a form, including the text fields
+            className="btn_secondary"
+            onClick={() =>
+              handleSaveChanges(
+                restUUID,
+                restName,
+                restAddress,
+                startTime,
+                endTime,
+                benches,
+                newPassword
+              )
+            }
+          >
             Save
             <Save className="icon-padding" />
           </button>

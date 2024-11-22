@@ -46,7 +46,10 @@ function Row({ restaurant }: { restaurant: Restaurant }) {
           <IconButton
             aria-label="expand row"
             size="small"
-            onClick={() => setOpen(!open)}
+            onClick={() => {
+              setOpen(!open);
+              
+            }}
           >
             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
           </IconButton>
@@ -67,7 +70,7 @@ function Row({ restaurant }: { restaurant: Restaurant }) {
                 Opening Hours: {restaurant.openingHour} -{" "}
                 {restaurant.closingHour}
               </Typography>
-              <ReservationList openingHour={Number(restaurant.openingHour)} closingHour={Number(restaurant.closingHour)}/>
+              <ReservationList openingHour={Number(restaurant.openingHour)} closingHour={Number(restaurant.closingHour)} restUUID={restaurant.restUUID} dateTime={"2024-11-21 12:00:00"}/>
               {/* Button to reserve here */}
             </Box>
           </Collapse>

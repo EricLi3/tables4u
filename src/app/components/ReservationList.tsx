@@ -23,6 +23,8 @@ export default function ReservationList({openingHour, closingHour, restUUID, dat
     const [blockedTimes, setBlockedTimes] = useState<String[]>([])
     const [loading, setLoading] = useState(false)
 
+    console.log(restUUID)
+
     const fetchRestaurantInfo=(restUUID:string,dateTime:string)=>{
         instance
         .post("/restaurantInfo",{restUUID: restUUID, dateTime: dateTime})
@@ -31,6 +33,7 @@ export default function ReservationList({openingHour, closingHour, restUUID, dat
             const body = response.data.body;
             const data = body ? JSON.parse(body) : [];
             if(Array.isArray(data)){
+                console.log(data);
             return data;
             }
         } catch (error) {
@@ -59,11 +62,11 @@ export default function ReservationList({openingHour, closingHour, restUUID, dat
 
     let list = []
     for(let i=0; i<closingHour-openingHour; i++){
-        list.push(<Grid2 key={i} size={1}><Box sx={{borderRadius: 1,bgcolor:setBoxColor(openingHour+i,blockedTimes)}}>\</Box></Grid2>);
+        list.push(<Grid2 key={i} size={1}><Box sx={{border: 1,borderRadius:1,bgcolor:setBoxColor(openingHour+i,blockedTimes)}}>&nbsp;</Box></Grid2>);
     }
 
     return(
-        <div className="centering-div div-horiz">
+        <div className="div-horiz">
             <Box>03/11</Box>
             <Grid2 container columns={closingHour-openingHour}>
                     {list.map((key)=>(

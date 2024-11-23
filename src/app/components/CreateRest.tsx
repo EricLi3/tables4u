@@ -1,10 +1,15 @@
 import axios from "axios";
+import React from "react";
+import { useRouter  } from "next/router";
 
 const instance = axios.create({
     baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/initial",
 });
 
-function createRest(){
+export default function CreateRest(){
+  const router = useRouter();
+
+  const handleClick = () =>{
     instance
       .get("/createRest")
       .then((response)=>{
@@ -13,11 +18,16 @@ function createRest(){
           const data = body ? JSON.parse(body) : ""; // Parse the response body if defined
           if (data.username != "") {
             console.log("Successful creation")
+            router.push(`/editRest?restUUID=${data.restUUID}`);
           }
+          
         } catch (error) {
           console.error("Restaurant Creation Failed", error);
         }
       })
-}
+  }
 
-export default createRest;
+  return(
+    <button className="btn_dark" onClick={handleClick}>Create Restaurant</button>
+  )
+}

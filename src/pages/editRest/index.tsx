@@ -17,6 +17,10 @@ import withAuthManager from "@/withAuthManager";
 import "@/app/globals.css";
 import "./editRest.css";
 
+const instance = axios.create({
+  baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/initial",
+});
+
 function EditRest() {
   const router = useRouter();
   const restUUID = router.query.restUUID as string;
@@ -130,6 +134,7 @@ function EditRest() {
       .catch((error) => {
         console.log(error);
       });
+
   };
 
   // ---------------------------------------

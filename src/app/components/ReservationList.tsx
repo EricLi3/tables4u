@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "next/link";
 import { useState, useEffect } from "react";
 
 import axios from "axios";
@@ -40,15 +39,14 @@ export default function ReservationList({
     };
 
     fetchRestaurantInfo(restUUID, dateTime);
-    console.log("fetching");
   }, [restUUID, dateTime]);
 
   const setBoxColor = (hour: number, blockedTimes: Array<String>) => {
     for (let i = 0; i < blockedTimes.length; i++) {
       if (blockedTimes[i].includes(String(hour))) {
-        return "#000000";
+        return "#0F0F0F";
       }
-    }
+    } 
     return "#FFFFFF";
   };
 
@@ -70,16 +68,16 @@ export default function ReservationList({
   }
 
   return (
-    <div className="div-horiz">
-      <Box>{dateTime.slice(0,10)}</Box>
-      <Grid2 container columns={closingHour - openingHour}>
-        {list.map((key) => (
-          <Grid2 size={1}>
-            <Box>{openingHour + Number(key.key)}</Box>
-          </Grid2>
-        ))}
-        {list}
-      </Grid2>
+    <div >
+      <Box>{dateTime.slice(5,10)}</Box>
+        <Grid2 container columns={closingHour - openingHour}>
+            {list.map((key) => (
+            <Grid2 size={1}>
+                <Box>{openingHour + Number(key.key)}</Box>
+            </Grid2>
+            ))}
+            {list}
+        </Grid2>
     </div>
   );
 }

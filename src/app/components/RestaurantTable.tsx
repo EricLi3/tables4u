@@ -66,9 +66,6 @@ function Row({ restaurant,dateTime }: { restaurant: Restaurant, dateTime:string 
                 <Typography variant="h6" gutterBottom component="div">
                     Details
                 </Typography>
-                <Typography variant="body2">
-                    Opening Hours: {restaurant.openingHour} - {restaurant.closingHour}
-                </Typography>
                 <ReservationList openingHour={Number(restaurant.openingHour)} closingHour={Number(restaurant.closingHour)} restUUID={restaurant.restUUID} dateTime={dateTime}/>
             </Box>
         </Collapse>

@@ -59,7 +59,6 @@ export default function Home() {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Reservation Date"
-                value={dayjs()}
                 format="ddd DD/MM/YYYY"
                 onChange={(newdate) => setDateTime(newdate ? newdate?.toISOString() : "")}
               />

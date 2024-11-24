@@ -39,7 +39,7 @@ export const handler = async (event) => {
 
         response = {
             statusCode: 200,
-            body: JSON.stringify({ message: 'Activation Succesfull' })
+            body: JSON.stringify({ message: 'Reservation Succesfull' })
         };
     } catch (error) {
         console.error("ERROR:", error);

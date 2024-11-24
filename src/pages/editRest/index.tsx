@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Box, TextField, Button, IconButton } from "@mui/material";
 import { Add, Save } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
-
 
 // For time and date picking
 // import { Search } from "@mui/icons-material";
@@ -33,98 +32,138 @@ const instance = axios.create({
 
 function EditRest() {
   const router = useRouter();
+  const restUUID = router.query.restUUID as string;
 
-  const [tablesAndSeats, setTablesAndSeats] = useState<
-    { table: string; seats: number }[]
-  >([]);
+  const [newTable, setNewTable] = useState("");
+  const [newSeats, setNewSeats] = useState("1");
+  const [error, setError] = useState("");
 
-  const { restUUID } = router.query;
-
-
-  const [restaurantData, setRestaurantData] = useState({
+  const [restaurantData, setRestaurantData] = useState<{
+    name: string;
+    address: string;
+    openingTime: dayjs.Dayjs;
+    closingTime: dayjs.Dayjs;
+    tablesAndSeats: { benchName: string; numSeats: number }[];
+    newPassword: string;
+  }>({
     name: "",
     address: "",
     openingTime: dayjs().set("hour", 8).set("minute", 0),
     closingTime: dayjs().set("hour", 17).set("minute", 0),
     tablesAndSeats: [],
+    newPassword: "",
   });
 
-  const [newTable, setNewTable] = useState("");
-  const [newSeats, setNewSeats] = useState("1");
+  const handleChange = (field: string, value: any) => {
+    setRestaurantData((prevData) => ({ ...prevData, [field]: value }));
+  };
 
   const handleAddTable = () => {
     if (newTable && newSeats) {
-      setTablesAndSeats([
-        ...tablesAndSeats,
-        { table: newTable, seats: parseInt(newSeats) },
-      ]);
+      setRestaurantData((prevData) => ({
+        ...prevData,
+        tablesAndSeats: [
+          ...prevData.tablesAndSeats,
+          { benchName: newTable, numSeats: parseInt(newSeats) },
+        ],
+      }));
       setNewTable("");
       setNewSeats("1");
     }
   };
 
+  const handleDeleteTable = (index: number) => {
+    setRestaurantData((prevData) => {
+      const newTablesAndSeats = [...prevData.tablesAndSeats];
+      newTablesAndSeats.splice(index, 1);
+      return { ...prevData, tablesAndSeats: newTablesAndSeats };
+    });
+  };
+
+  // --------------------------------
+
   // Fetch existing data on component mount
-  useEffect(() => {
-    const fetchRestaurantData = async () => {
-      if (!restUUID) return; // Wait for restUUID to be available
+  const fetchRestaurantData = async () => {
+    if (!restUUID) return; // Wait for restUUID to be available
+    try {
+      const response = await instance.post("/rest", { rest_uuid: restUUID });
+      const data = response.data.body ? JSON.parse(response.data.body) : {}; // Parse the response body as JSON if defined
+      console.log("Data:", data);
+      if (
+        data &&
+        data.restaurant &&
+        Array.isArray(data.restaurant) &&
+        data.restaurant.length > 0
+      ) {
+        const restaurant = data.restaurant[0]; // Assuming you want the first restaurant in the array
 
-      try {
-        const response = await instance.post("/rest", { rest_uuid: restUUID });
-        const data = JSON.parse(response.data.body); // Parse the response body as JSON
+        setRestaurantData({
+          name: restaurant.restName || "",
+          address: restaurant.address || "",
+          openingTime:
+            dayjs().set("hour", restaurant.openingHour).set("minute", 0) ||
+            dayjs().set("hour", 8).set("minute", 0),
+          closingTime:
+            dayjs().set("hour", restaurant.closingHour).set("minute", 0) ||
+            dayjs().set("hour", 17).set("minute", 0),
+          tablesAndSeats: data.benches || [],
+          newPassword: "",
+        });
 
-        if (Array.isArray(data) && data.length > 0) {
-          const restaurant = data[0]; // Assuming you want the first restaurant in the array
-
-          setRestaurantData({
-            name: restaurant.restName || "",
-            address: restaurant.address || "",
-            openingTime: dayjs().set("hour", restaurant.openingHour).set("minute", 0) || dayjs().set("hour", 8).set("minute", 0),
-            closingTime: dayjs().set("hour", restaurant.closingHour).set("minute", 0) || dayjs().set("hour", 17).set("minute", 0),
-            tablesAndSeats: restaurant.tablesAndSeats || [],
-          });
-
-          console.log("Restaurant Name:", restaurant.restName);
-        }
-      } catch (error) {
-        console.error("Error fetching restaurant data:", error);
+        console.log("Restaurant Name:", restaurant.restName);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching restaurant data:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchRestaurantData();
   }, [restUUID]);
 
-  const handleDeleteTable = (index: number) => {
-    setTablesAndSeats(tablesAndSeats.filter((_, i) => i !== index));
-  };
+  // --------------------------------
 
-  const handleChange = (field: string, value: string) => {
-    setRestaurantData((prevData) => ({ ...prevData, [field]: value }));
-  };
+  const handleSaveChanges = () => {
+    if (!restUUID || !restaurantData.name || !restaurantData.address) return;
 
-  const deleteRestaurant = (uuidToDelete: string) => {
+    if (restaurantData.tablesAndSeats.length < 1) {
+      alert("A restaurant must have at least one table");
+      return;
+    }
+
+    //slightly different approach to the original code
     instance
-      .post("/deleteRestAdmin", { rest_uuid: uuidToDelete })
+      .post("/editRest", {
+        restUUID: restUUID,
+        restName: restaurantData.name,
+        restAddress: restaurantData.address,
+        openingTime: restaurantData.openingTime.hour(),
+        closingTime: restaurantData.closingTime.hour(),
+        tables: restaurantData.tablesAndSeats,
+        newPassword: restaurantData.newPassword,
+      })
       .then((response) => {
-        try {
-          const body = response.data.body;
-          console.log(body);
-
-        } catch (error) {
-          console.error("Failed to parse response body:", error);
-        }
+        console.log(response);
+        //print a success message to the user
+        console.log("Changes saved successfully");
+        alert("Changes saved successfully");
       })
       .catch((error) => {
-        console.error("Failed to fetch restaurant:", error);
-      })
-      .finally(() => {
+        console.log(error);
       });
   };
+
+  // ---------------------------------------
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="top-left-button">
         <Link href="/">
           <img src="../logo.png" alt="Home Button" className="logo" />
+        </Link>
+        <br />
+        <Link href="/dashboardRest">
+          <button className="btn_dark">Back to Dashboard</button>
         </Link>
       </div>
       <Box
@@ -148,7 +187,6 @@ function EditRest() {
           margin="normal"
           value={restaurantData.name}
           onChange={(e) => handleChange("name", e.target.value)}
-
         />
         <TextField
           label="Restaurant Address"
@@ -168,9 +206,10 @@ function EditRest() {
               format="HH:mm"
               views={["hours"]}
               ampm={false}
-              defaultValue={dayjs().set("hour", 8).set("minute", 0)}
-              minTime={dayjs().set("hour", 0).set("minute", 0)} //TODO: Set minTime to restaurant opening hour
-              maxTime={dayjs().set("hour", 23).set("minute", 0)} //TODO: Set maxTime to restaurant closing hour
+              minTime={dayjs().set("hour", 0).set("minute", 0)}
+              maxTime={restaurantData.closingTime}
+              value={restaurantData.openingTime}
+              onAccept={(date) => handleChange("openingTime", date)}
             />
 
             <MobileTimePicker
@@ -179,8 +218,10 @@ function EditRest() {
               views={["hours"]}
               ampm={false}
               defaultValue={dayjs().set("hour", 17).set("minute", 0)}
-              minTime={dayjs().set("hour", 0).set("minute", 0)} //TODO: Set minTime to restaurant opening hour
-              maxTime={dayjs().set("hour", 23).set("minute", 0)} //TODO: Set maxTime to restaurant closing hour
+              minTime={restaurantData.openingTime}
+              maxTime={dayjs().set("hour", 23).set("minute", 0)}
+              value={restaurantData.closingTime}
+              onAccept={(date) => handleChange("closingTime", date)}
             />
           </LocalizationProvider>
         </div>
@@ -206,7 +247,7 @@ function EditRest() {
             margin="normal"
           />
 
-          <IconButton onClick={handleAddTable} color="primary">
+          <IconButton onClick={handleAddTable} color="primary" className="pt-4">
             <Add />
           </IconButton>
         </div>
@@ -215,10 +256,12 @@ function EditRest() {
           className="TablesAndSeats"
           style={{ height: "auto", minHeight: "50px" }}
         >
-          {tablesAndSeats.map((item, index) => (
-            <div key={index} className="table-item">
-              <span>{item.table}</span>
-              <span>{item.seats} seats</span>
+          {restaurantData.tablesAndSeats.map((item, index) => (
+            <div key={index} className="tableItem">
+              <span className="spanWidth">{item.benchName}</span>
+              <span className="spanWidth">
+                {item.numSeats} {item.numSeats === 1 ? "seat" : "seats"}
+              </span>
               <Button
                 variant="contained"
                 color="primary"
@@ -251,15 +294,21 @@ function EditRest() {
           variant="outlined"
           fullWidth
           margin="normal"
+          value={restaurantData.newPassword}
+          onChange={(e) => handleChange("newPassword", e.target.value)}
+          className="mb-4"
         />
 
         <div className="saveAndDelete">
-          <button className="btn_secondary">
+          <button className="btn_secondary" onClick={() => handleSaveChanges()}>
             Save
             <Save className="icon-padding" />
           </button>
-          <button className="btn_secondary" onClick={() => deleteRestaurant(restUUID as string)}>
-            Delete
+          <button
+            className="btn_secondary"
+            onClick={() => fetchRestaurantData()}
+          >
+            Discard
             <DeleteIcon className="icon-padding" />
           </button>
         </div>

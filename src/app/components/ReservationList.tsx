@@ -20,10 +20,7 @@ import {
 
 
 export default function ReservationList({openingHour, closingHour, restUUID, dateTime}: {openingHour : number, closingHour:number, restUUID: string, dateTime: string}){
-    const [blockedTimes, setBlockedTimes] = useState<String[]>([])
-    const [loading, setLoading] = useState(false)
-
-    console.log(restUUID)
+    let blockedTimes:String[] = [];
 
     const fetchRestaurantInfo=(restUUID:string,dateTime:string)=>{
         instance
@@ -34,7 +31,7 @@ export default function ReservationList({openingHour, closingHour, restUUID, dat
             const data = body ? JSON.parse(body) : [];
             if(Array.isArray(data)){
                 console.log(data);
-            return data;
+                return data;
             }
         } catch (error) {
             console.log("Error fetching reservation info");
@@ -55,10 +52,8 @@ export default function ReservationList({openingHour, closingHour, restUUID, dat
         return '#FFFFFF'
     }
 
-    useEffect(() => {
-        setBlockedTimes(fetchRestaurantInfo(restUUID,dateTime));
-        console.log(blockedTimes);
-      },[]);
+    blockedTimes = fetchRestaurantInfo(restUUID,dateTime);
+    console.log(restUUID);
 
     let list = []
     for(let i=0; i<closingHour-openingHour; i++){

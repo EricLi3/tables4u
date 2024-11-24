@@ -4,6 +4,7 @@ import "@/app/globals.css";
 
 import axios from "axios";
 import ReservationList from "./ReservationList";
+import ReservationCollapse from "./ReservationCollapse";
 
 import { useState, useEffect } from "react";
 import {
@@ -61,19 +62,7 @@ function Row({ restaurant }: { restaurant: Restaurant }) {
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={1}>
-              <Typography variant="h6" gutterBottom component="div">
-                Details
-              </Typography>
-              <Typography variant="body2">
-                Opening Hours: {restaurant.openingHour} -{" "}
-                {restaurant.closingHour}
-              </Typography>
-              <ReservationList openingHour={Number(restaurant.openingHour)} closingHour={Number(restaurant.closingHour)} restUUID={restaurant.restUUID} dateTime={"2024-11-21 12:00:00"}/>
-              {/* Button to reserve here */}
-            </Box>
-          </Collapse>
+          <ReservationCollapse openingHour={Number(restaurant.openingHour)} closingHour={Number(restaurant.closingHour)} restUUID={restaurant.restUUID} dateTime={"2024-11-20 12:00:00"} open={open}/>
         </TableCell>
       </TableRow>
     </>

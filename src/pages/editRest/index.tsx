@@ -22,14 +22,14 @@ const instance = axios.create({
   baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/initial",
 });
 
-interface Restaurant {
-  restUUID: string;
-  restName: string;
-  address: string;
-  openingHour: string;
-  closingHour: string;
-  isActive: number;
-}
+// interface Restaurant {
+//   restUUID: string;
+//   restName: string;
+//   address: string;
+//   openingHour: string;
+//   closingHour: string;
+//   isActive: number;
+// }
 
 function EditRest() {
   const router = useRouter();

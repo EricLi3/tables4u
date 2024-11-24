@@ -37,7 +37,7 @@ interface Restaurant {
   isActive: number;
 }
 
-function Row({ restaurant }: { restaurant: Restaurant }) {
+function Row({ restaurant,dateTime }: { restaurant: Restaurant, dateTime:string }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -62,14 +62,19 @@ function Row({ restaurant }: { restaurant: Restaurant }) {
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <ReservationCollapse openingHour={Number(restaurant.openingHour)} closingHour={Number(restaurant.closingHour)} restUUID={restaurant.restUUID} dateTime={"2024-11-20 12:00:00"} open={open}/>
+          <ReservationCollapse 
+            openingHour={Number(restaurant.openingHour)} 
+            closingHour={Number(restaurant.closingHour)} 
+            restUUID={restaurant.restUUID} 
+            dateTime={dateTime} 
+            open={open}/>
         </TableCell>
       </TableRow>
     </>
   );
 }
 
-export default function RestaurantTable() {
+export default function RestaurantTable({dateTime = '2024-11-24T21:00:00.000-0500'}) {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -135,7 +140,7 @@ export default function RestaurantTable() {
           <TableBody>
             {restaurants?.length > 0 ? (
               restaurants.map((restaurant) => (
-                <Row key={restaurant.restUUID} restaurant={restaurant} />
+                <Row key={restaurant.restUUID} restaurant={restaurant} dateTime={dateTime}/>
               ))
             ) : (
               <TableRow>

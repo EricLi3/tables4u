@@ -40,6 +40,7 @@ export default function ReservationList({
     };
 
     fetchRestaurantInfo(restUUID, dateTime);
+    console.log("fetching");
   }, [restUUID, dateTime]);
 
   const setBoxColor = (hour: number, blockedTimes: Array<String>) => {
@@ -51,13 +52,11 @@ export default function ReservationList({
     return "#FFFFFF";
   };
 
-  console.log(restUUID);
-
   let list = [];
   for (let i = 0; i < closingHour - openingHour; i++) {
     list.push(
       <Grid2 key={i} size={1}>
-        <Box
+        <Box key={i}
           sx={{
             border: 1,
             borderRadius: 1,
@@ -72,7 +71,7 @@ export default function ReservationList({
 
   return (
     <div className="div-horiz">
-      <Box>03/11</Box>
+      <Box>{dateTime.slice(0,10)}</Box>
       <Grid2 container columns={closingHour - openingHour}>
         {list.map((key) => (
           <Grid2 size={1}>

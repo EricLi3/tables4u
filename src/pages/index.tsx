@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import "@/app/globals.css";
 
@@ -21,6 +21,8 @@ import dayjs from "dayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 export default function Home() {
+  const [dateTime,setDateTime] = useState<string>("");
+
   return (
     <main className="flex w-screen h-screen flex-col items-center justify-between p-24">
       <div className="top-left-button">
@@ -59,6 +61,7 @@ export default function Home() {
                 label="Reservation Date"
                 value={dayjs()}
                 format="ddd DD/MM/YYYY"
+                onChange={(newdate) => setDateTime(newdate ? newdate?.toISOString() : "")}
               />
 
               <MobileTimePicker
@@ -84,7 +87,7 @@ export default function Home() {
           </div>
         </div>
 
-        <RestaurantTable />
+        <RestaurantTable dateTime={dateTime}/>
       </div>
 
       <div className="loginNav centering-div">

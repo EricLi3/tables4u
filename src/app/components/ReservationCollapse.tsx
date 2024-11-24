@@ -8,7 +8,7 @@ export default function ReservationCollapse({openingHour, closingHour, restUUID,
 
     const createRestList = () => {
     if (open) {
-        setRestList(<ReservationList openingHour={Number(openingHour)} closingHour={Number(closingHour)} restUUID={restUUID} dateTime={"2024-11-20 12:00:00"}/>);
+        setRestList(<ReservationList openingHour={Number(openingHour)} closingHour={Number(closingHour)} restUUID={restUUID} dateTime={dateTime}/>);
         console.log("Object created:", restList);
     }
     };

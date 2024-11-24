@@ -25,7 +25,18 @@ function EditRest() {
   const router = useRouter();
   const restUUID = router.query.restUUID as string;
 
-  const [restaurantData, setRestaurantData] = useState({
+  const [newTable, setNewTable] = useState("");
+  const [newSeats, setNewSeats] = useState("1");
+  const [error, setError] = useState("");
+
+  const [restaurantData, setRestaurantData] = useState<{
+    name: string;
+    address: string;
+    openingTime: dayjs.Dayjs;
+    closingTime: dayjs.Dayjs;
+    tablesAndSeats: { benchName: string; numSeats: number }[];
+    newPassword: string;
+  }>({
     name: "",
     address: "",
     openingTime: dayjs().set("hour", 8).set("minute", 0),
@@ -33,38 +44,34 @@ function EditRest() {
     tablesAndSeats: [],
     newPassword: "",
   });
+
   const handleChange = (field: string, value: any) => {
     setRestaurantData((prevData) => ({ ...prevData, [field]: value }));
   };
 
-  const [newTable, setNewTable] = useState("");
-  const [newSeats, setNewSeats] = useState("1");
-  const [error, setError] = useState("");
-
-  const [tablesAndSeats, setTablesAndSeats] = useState<
-    { name: string; numSeats: number }[]
-  >([]);
-
   const handleAddTable = () => {
     if (newTable && newSeats) {
-      setTablesAndSeats([
-        ...tablesAndSeats,
-        { name: newTable, numSeats: parseInt(newSeats) },
-      ]);
+      setRestaurantData((prevData) => ({
+        ...prevData,
+        tablesAndSeats: [
+          ...prevData.tablesAndSeats,
+          { benchName: newTable, numSeats: parseInt(newSeats) },
+        ],
+      }));
       setNewTable("");
       setNewSeats("1");
     }
   };
 
   const handleDeleteTable = (index: number) => {
-    setTablesAndSeats(tablesAndSeats.filter((_, i) => i !== index));
+    setRestaurantData((prevData) => {
+      const newTablesAndSeats = [...prevData.tablesAndSeats];
+      newTablesAndSeats.splice(index, 1);
+      return { ...prevData, tablesAndSeats: newTablesAndSeats };
+    });
   };
 
   // --------------------------------
-
-  const instance = axios.create({
-    baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/initial",
-  });
 
   // Fetch existing data on component mount
   const fetchRestaurantData = async () => {
@@ -93,7 +100,6 @@ function EditRest() {
           tablesAndSeats: data.benches || [],
           newPassword: "",
         });
-        setTablesAndSeats(restaurant.tablesAndSeats || []);
         console.log("Restaurant Name:", restaurant.restName);
       }
     } catch (error) {
@@ -110,7 +116,7 @@ function EditRest() {
   const handleSaveChanges = () => {
     if (!restUUID || !restaurantData.name || !restaurantData.address) return;
 
-    if (tablesAndSeats.length < 1) {
+    if (restaurantData.tablesAndSeats.length < 1) {
       alert("A restaurant must have at least one table");
       return;
     }
@@ -123,7 +129,7 @@ function EditRest() {
         restAddress: restaurantData.address,
         openingTime: restaurantData.openingTime.hour(),
         closingTime: restaurantData.closingTime.hour(),
-        tables: tablesAndSeats,
+        tables: restaurantData.tablesAndSeats,
         newPassword: restaurantData.newPassword,
       })
       .then((response) => {
@@ -134,7 +140,6 @@ function EditRest() {
       .catch((error) => {
         console.log(error);
       });
-
   };
 
   // ---------------------------------------
@@ -236,9 +241,9 @@ function EditRest() {
           className="TablesAndSeats"
           style={{ height: "auto", minHeight: "50px" }}
         >
-          {tablesAndSeats.map((item, index) => (
+          {restaurantData.tablesAndSeats.map((item, index) => (
             <div key={index} className="tableItem">
-              <span className="spanWidth">{item.name}</span>
+              <span className="spanWidth">{item.benchName}</span>
               <span className="spanWidth">
                 {item.numSeats} {item.numSeats === 1 ? "seat" : "seats"}
               </span>

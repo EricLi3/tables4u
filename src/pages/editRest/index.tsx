@@ -36,7 +36,7 @@ function EditRest() {
 
   const [newTable, setNewTable] = useState("");
   const [newSeats, setNewSeats] = useState("1");
-  const [error, setError] = useState("");
+  // const [error, setError] = useState("");
 
   const [restaurantData, setRestaurantData] = useState<{
     name: string;
@@ -54,7 +54,7 @@ function EditRest() {
     newPassword: "",
   });
 
-  const handleChange = (field: string, value: any) => {
+  const handleChange = (field: string, value: string | dayjs.Dayjs) => {
     setRestaurantData((prevData) => ({ ...prevData, [field]: value }));
   };
 
@@ -209,7 +209,7 @@ function EditRest() {
               minTime={dayjs().set("hour", 0).set("minute", 0)}
               maxTime={restaurantData.closingTime}
               value={restaurantData.openingTime}
-              onAccept={(date) => handleChange("openingTime", date)}
+              onAccept={(date) => handleChange("openingTime", date || dayjs())}
             />
 
             <MobileTimePicker
@@ -221,7 +221,7 @@ function EditRest() {
               minTime={restaurantData.openingTime}
               maxTime={dayjs().set("hour", 23).set("minute", 0)}
               value={restaurantData.closingTime}
-              onAccept={(date) => handleChange("closingTime", date)}
+              onAccept={(date) => handleChange("closingTime", date || dayjs())}
             />
           </LocalizationProvider>
         </div>

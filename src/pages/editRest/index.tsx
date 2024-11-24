@@ -22,6 +22,15 @@ const instance = axios.create({
   baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/initial",
 });
 
+// interface Restaurant {
+//   restUUID: string;
+//   restName: string;
+//   address: string;
+//   openingHour: string;
+//   closingHour: string;
+//   isActive: number;
+// }
+
 function EditRest() {
   const router = useRouter();
 
@@ -90,6 +99,25 @@ function EditRest() {
 
   const handleChange = (field: string, value: string) => {
     setRestaurantData((prevData) => ({ ...prevData, [field]: value }));
+  };
+
+  const deleteRestaurant = (uuidToDelete: string) => {
+    instance
+      .post("/deleteRestAdmin", { rest_uuid: uuidToDelete })
+      .then((response) => {
+        try {
+          const body = response.data.body;
+          console.log(body);
+
+        } catch (error) {
+          console.error("Failed to parse response body:", error);
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to fetch restaurant:", error);
+      })
+      .finally(() => {
+      });
   };
 
   return (
@@ -230,7 +258,7 @@ function EditRest() {
             Save
             <Save className="icon-padding" />
           </button>
-          <button className="btn_secondary">
+          <button className="btn_secondary" onClick={() => deleteRestaurant(restUUID as string)}>
             Delete
             <DeleteIcon className="icon-padding" />
           </button>

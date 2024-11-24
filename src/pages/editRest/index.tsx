@@ -100,6 +100,7 @@ function EditRest() {
           tablesAndSeats: data.benches || [],
           newPassword: "",
         });
+
         console.log("Restaurant Name:", restaurant.restName);
       }
     } catch (error) {
@@ -136,6 +137,7 @@ function EditRest() {
         console.log(response);
         //print a success message to the user
         console.log("Changes saved successfully");
+        alert("Changes saved successfully");
       })
       .catch((error) => {
         console.log(error);
@@ -149,6 +151,10 @@ function EditRest() {
       <div className="top-left-button">
         <Link href="/">
           <img src="../logo.png" alt="Home Button" className="logo" />
+        </Link>
+        <br />
+        <Link href="/dashboardRest">
+          <button className="btn_dark">Back to Dashboard</button>
         </Link>
       </div>
       <Box

@@ -22,8 +22,7 @@ export const handler = async (event) => {
         };
     }
 
-    const query = 'SELECT * FROM Restaurants WHERE userName = ?';
-    
+    const query = 'SELECT userName, pass, restUUID FROM Restaurants WHERE userName = ?';
 
     const queryPromise = (query, params) => {
         return new Promise((resolve, reject) => {
@@ -56,13 +55,18 @@ export const handler = async (event) => {
             };
         }
 
+        // Generate a JWT token including the `restUUID`
         const token = jwt.sign({ userUUID: user.restUUID, userName: user.userName }, JWT_SECRET, {
             expiresIn: '1h',
         });
 
         return {
             statusCode: 200,
-            body: JSON.stringify({ message: 'Login successful', token }),
+            body: JSON.stringify({ 
+                message: 'Login successful', 
+                token, 
+                restUUID: user.restUUID 
+            }),
         };
     } catch (err) {
         console.error('Error:', err);

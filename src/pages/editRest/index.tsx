@@ -122,17 +122,15 @@ function EditRest() {
 
   // --------------------------------
 
-  const handleSaveChanges = () => {
+  const handleSaveChanges = async () => {
     if (!restUUID || !restaurantData.name || !restaurantData.address) return;
 
     if (restaurantData.tablesAndSeats.length < 1) {
       alert("A restaurant must have at least one table");
       return;
     }
-
-    //slightly different approach to the original code
-    instance
-      .post("/editRest", {
+    try {
+      const response = await instance.post("/editRest", {
         restUUID: restUUID,
         restName: restaurantData.name,
         restAddress: restaurantData.address,
@@ -140,16 +138,20 @@ function EditRest() {
         closingTime: restaurantData.closingTime.hour(),
         tables: restaurantData.tablesAndSeats,
         newPassword: restaurantData.newPassword,
-      })
-      .then((response) => {
-        console.log(response);
-        //print a success message to the user
-        console.log("Changes saved successfully");
-        alert("Changes saved successfully");
-      })
-      .catch((error) => {
-        console.log(error);
       });
+      console.log(response);
+      console.log("Changes saved successfully");
+      alert("Changes saved successfully");
+    } catch (error) {
+      console.error("Error saving changes:", error);
+    }
+  };
+
+  const handleToDashboard = () => {
+    router.push({
+      pathname: "/dashboardRest",
+      query: { restUUID },
+    });
   };
 
   // ---------------------------------------
@@ -161,9 +163,9 @@ function EditRest() {
           <img src="../logo.png" alt="Home Button" className="logo" />
         </Link>
         <br />
-        <Link href="/dashboardRest">
-          <button className="btn_dark">Back to Dashboard</button>
-        </Link>
+        <button className="btn_dark" onClick={handleToDashboard}>
+          Back to Dashboard
+        </button>
       </div>
       <Box
         sx={{

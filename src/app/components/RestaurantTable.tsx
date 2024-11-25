@@ -3,6 +3,7 @@ import React from "react";
 import "@/app/globals.css";
 
 import axios from "axios";
+import ReservationList from "./ReservationList";
 
 import { useState, useEffect } from "react";
 import {
@@ -35,7 +36,7 @@ interface Restaurant {
   isActive: number;
 }
 
-function Row({ restaurant }: { restaurant: Restaurant }) {
+function Row({ restaurant,dateTime }: { restaurant: Restaurant, dateTime:string }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -45,7 +46,10 @@ function Row({ restaurant }: { restaurant: Restaurant }) {
           <IconButton
             aria-label="expand row"
             size="small"
-            onClick={() => setOpen(!open)}
+            onClick={() => {
+              setOpen(!open);
+              
+            }}
           >
             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
           </IconButton>
@@ -59,23 +63,19 @@ function Row({ restaurant }: { restaurant: Restaurant }) {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
-              <Typography variant="h6" gutterBottom component="div">
-                Details
-              </Typography>
-              <Typography variant="body2">
-                Opening Hours: {restaurant.openingHour} -{" "}
-                {restaurant.closingHour}
-              </Typography>
-              {/* Button to reserve here */}
+                <Typography variant="h6" gutterBottom component="div">
+                    Details
+                </Typography>
+                <ReservationList openingHour={Number(restaurant.openingHour)} closingHour={Number(restaurant.closingHour)} restUUID={restaurant.restUUID} dateTime={dateTime}/>
             </Box>
-          </Collapse>
+        </Collapse>
         </TableCell>
       </TableRow>
     </>
   );
 }
 
-export default function RestaurantTable() {
+export default function RestaurantTable({dateTime = '2024-11-24T21:00:00.000-0500'}) {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -141,7 +141,7 @@ export default function RestaurantTable() {
           <TableBody>
             {restaurants?.length > 0 ? (
               restaurants.map((restaurant) => (
-                <Row key={restaurant.restUUID} restaurant={restaurant} />
+                <Row key={restaurant.restUUID} restaurant={restaurant} dateTime={dateTime}/>
               ))
             ) : (
               <TableRow>

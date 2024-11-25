@@ -18,7 +18,7 @@ export default function CreateRest(){
           const data = body ? JSON.parse(body) : ""; // Parse the response body if defined
           if (data.username != "") {
             console.log("Successful creation")
-            alert("username: " + data.username + "password: " + data.password);
+            alert("username: " + data.username + "\npassword: " + data.password);
 
             router.push(`/editRest?restUUID=${data.restUUID}`);
           }

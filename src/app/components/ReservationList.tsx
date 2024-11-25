@@ -68,10 +68,10 @@ export default function ReservationList({
   }
 
   return (
-    <div >
-      <Box>{dateTime.slice(5,10)}</Box>
-        <Grid2 container columns={closingHour - openingHour}>
-            {list.map((key) => (
+    <div className="centering-div div-horiz">
+        <Box>{dateTime.slice(5,10)}</Box>
+        <Grid2 container columns={closingHour - openingHour} width={1}>
+            {list.slice(0,closingHour-openingHour).map((key) => (
             <Grid2 size={1}>
                 <Box>{openingHour + Number(key.key)}</Box>
             </Grid2>

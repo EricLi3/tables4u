@@ -43,7 +43,7 @@ function ManagerLogin() {
 
         // Redirect to the admin dashboard page with restUUID as a query parameter
         router.push({
-          pathname: "/editRest",
+          pathname: "/dashboardRest",
           query: { restUUID },
         });
       } else {

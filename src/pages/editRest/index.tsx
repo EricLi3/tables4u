@@ -139,9 +139,13 @@ function EditRest() {
         tables: restaurantData.tablesAndSeats,
         newPassword: restaurantData.newPassword,
       });
-      console.log(response);
-      console.log("Changes saved successfully");
-      alert("Changes saved successfully");
+      if (response.data.statusCode === 200) {
+        console.log("Changes saved successfully");
+        alert("Changes saved successfully");
+      } else {
+        console.error("Error saving changes:", response.data.error);
+        alert("Error saving changes: " + response.data.error);
+      }
     } catch (error) {
       console.error("Error saving changes:", error);
     }

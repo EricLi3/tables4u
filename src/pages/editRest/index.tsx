@@ -67,7 +67,7 @@ function EditRest() {
         ],
       }));
       setNewTable("");
-      setNewSeats("1");
+      setNewSeats(newSeats);
     }
   };
 

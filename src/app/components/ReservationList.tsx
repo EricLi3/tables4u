@@ -8,8 +8,8 @@ const instance = axios.create({
 });
 
 import "@/app/globals.css";
-import { Grid2, Paper } from "@mui/material";
-import { Box, Container } from "@mui/system";
+import { Grid2 } from "@mui/material";
+import { Box } from "@mui/system";
 
 export default function ReservationList({
   openingHour,
@@ -22,7 +22,7 @@ export default function ReservationList({
   restUUID: string;
   dateTime: string;
 }) {
-  const [blockedTimes, setBlockedTimes] = useState<String[]>([]);
+  const [blockedTimes, setBlockedTimes] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchRestaurantInfo = async (restUUID: string, dateTime: string) => {
@@ -34,14 +34,15 @@ export default function ReservationList({
           setBlockedTimes(data);
         }
       } catch (error) {
-        console.log("Error fetching reservation info");
+        console.log("Error fetching reservation info \n");
+        console.log(error)
       }
     };
 
     fetchRestaurantInfo(restUUID, dateTime);
   }, [restUUID, dateTime]);
 
-  const setBoxColor = (hour: number, blockedTimes: Array<String>) => {
+  const setBoxColor = (hour: number, blockedTimes: Array<string>) => {
     for (let i = 0; i < blockedTimes.length; i++) {
       if (blockedTimes[i].includes(String(hour))) {
         return "#0F0F0F";
@@ -50,7 +51,7 @@ export default function ReservationList({
     return "#FFFFFF";
   };
 
-  let list = [];
+  const list = [];
   for (let i = 0; i < closingHour - openingHour; i++) {
     list.push(
       <Grid2 key={i} size={1}>
@@ -69,15 +70,15 @@ export default function ReservationList({
 
   return (
     <div className="centering-div div-horiz">
-        <Box>{dateTime.slice(5,10)}</Box>
-        <Grid2 container columns={closingHour - openingHour} width={1}>
-            {list.slice(0,closingHour-openingHour).map((key) => (
-            <Grid2 size={1}>
-                <Box>{openingHour + Number(key.key)}</Box>
-            </Grid2>
-            ))}
-            {list}
-        </Grid2>
+      <Box>{dateTime.slice(5, 10)}</Box>
+      <Grid2 container columns={closingHour - openingHour} width={1}>
+        {list.slice(0, closingHour - openingHour).map((key) => (
+          <Grid2 key={key.key} size={1}>
+            <Box>{openingHour + Number(key.key)}</Box>
+          </Grid2>
+        ))}
+        {list}
+      </Grid2>
     </div>
   );
 }

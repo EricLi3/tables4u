@@ -45,7 +45,6 @@ function DashboardRest() {
 
   const [isActive, setIsActive] = useState(false);
 
-
   // Fetch existing data on component mount
   const fetchRestaurantData = async () => {
     if (!restUUID) return; // Wait for restUUID to be available
@@ -89,14 +88,16 @@ function DashboardRest() {
 
   const activateRestaurant = async () => {
     try {
-      const response = await instance.post("/activateRest", { rest_uuid: restUUID });
+      const response = await instance.post("/activateRest", {
+        rest_uuid: restUUID,
+      });
       console.log("Activated restaurant:", response);
       alert("Restaurant activated successfully!");
     } catch (error) {
       console.error("Failed to activate restaurant:", error);
       alert("Failed to activate restaurant. Please try again later.");
     }
-  }
+  };
 
   // --------------------------------
 
@@ -122,7 +123,7 @@ function DashboardRest() {
 
     //delete the restaurant
     instance
-      .post("/deleteRest", { restUUID })
+      .post("/deleteRestAdmin", { rest_uuid: restUUID })
       .then((response) => {
         console.log("Deleted restaurant:", response);
         router.push("/"); // Redirect to the home page

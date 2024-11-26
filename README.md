@@ -20,4 +20,4 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 To clone the project, use ssh link. 
 
-
+Bröther, may you have a good time coding! 🚀

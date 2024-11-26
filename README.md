@@ -18,6 +18,6 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-To clone the project, use ssh link. 
+To clone the project, use ssh link because HTTP doesn't work. 
 
 Bröther, may you have a good time coding! 🚀

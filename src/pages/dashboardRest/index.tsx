@@ -1,8 +1,8 @@
-import React, { useState, useEffect, act } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import { Search } from "@mui/icons-material";
 import axios from "axios";
 
@@ -23,7 +23,7 @@ const instance = axios.create({
 
 //this is going to be a dashboard with a couple of buttons: activate, open-restaurant, close-restaurant, edit, delete, and a date search field with a search button
 
-function dashboardRest() {
+function DashboardRest() {
   const router = useRouter();
   const restUUID = router.query.restUUID as string;
 
@@ -229,4 +229,4 @@ function dashboardRest() {
   );
 }
 
-export default withAuthManager(dashboardRest);
+export default withAuthManager(DashboardRest);

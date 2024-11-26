@@ -22,7 +22,7 @@ export default function ReservationList({
   restUUID: string;
   dateTime: string;
 }) {
-  const [blockedTimes, setBlockedTimes] = useState<string[]>([]);
+  const [blockedTimes, setBlockedTimes] = useState<number[]>([]);
 
   useEffect(() => {
     const fetchRestaurantInfo = async (restUUID: string, dateTime: string) => {
@@ -42,9 +42,9 @@ export default function ReservationList({
     fetchRestaurantInfo(restUUID, dateTime);
   }, [restUUID, dateTime]);
 
-  const setBoxColor = (hour: number, blockedTimes: Array<string>) => {
+  const setBoxColor = (hour: number, blockedTimes: Array<number>) => {
     for (let i = 0; i < blockedTimes.length; i++) {
-      if (blockedTimes[i].includes(String(hour))) {
+      if (blockedTimes[i] == hour) {
         return "#0F0F0F";
       }
     } 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, act } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -43,6 +43,9 @@ function dashboardRest() {
     newPassword: "",
   });
 
+  const [isActive, setIsActive] = useState(false);
+
+
   // Fetch existing data on component mount
   const fetchRestaurantData = async () => {
     if (!restUUID) return; // Wait for restUUID to be available
@@ -71,6 +74,8 @@ function dashboardRest() {
           newPassword: "",
         });
 
+        setIsActive(restaurant.isActive === 1);
+
         console.log("Restaurant Name:", restaurant.restName);
       }
     } catch (error) {
@@ -81,6 +86,17 @@ function dashboardRest() {
   useEffect(() => {
     fetchRestaurantData();
   }, [restUUID]);
+
+  const activateRestaurant = async () => {
+    try {
+      const response = await instance.post("/activateRest", { rest_uuid: restUUID });
+      console.log("Activated restaurant:", response);
+      alert("Restaurant activated successfully!");
+    } catch (error) {
+      console.error("Failed to activate restaurant:", error);
+      alert("Failed to activate restaurant. Please try again later.");
+    }
+  }
 
   // --------------------------------
 
@@ -93,6 +109,7 @@ function dashboardRest() {
 
   const handleActivate = () => {
     // Activate the restaurant
+    activateRestaurant();
   };
 
   const handleOpenClose = () => {
@@ -182,6 +199,7 @@ function dashboardRest() {
           <button className="btn_secondary" onClick={handleOpenClose}>
             Re-open
           </button>
+          <br></br>
           <button className="btn_secondary" onClick={handleOpenClose}>
             Close
           </button>
@@ -194,9 +212,11 @@ function dashboardRest() {
             justifyContent: "space-between",
           }}
         >
-          <button className="btn_dark" onClick={handleActivate}>
-            Activate
-          </button>
+          {!isActive && (
+            <button className="btn_dark" onClick={handleActivate}>
+              Activate
+            </button>
+          )}
           <button className="btn_secondary" onClick={handleEdit}>
             Edit
           </button>

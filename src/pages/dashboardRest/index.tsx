@@ -218,9 +218,12 @@ function DashboardRest() {
               Activate
             </button>
           )}
+          {!isActive && (
           <button className="btn_secondary" onClick={handleEdit}>
             Edit
           </button>
+          )}
+          
           <button className="btn_primary icon-center" onClick={handleDelete}>
             <DeleteIcon />
           </button>

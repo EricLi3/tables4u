@@ -1,15 +1,15 @@
 import React from "react";
 import { useState, useEffect } from "react";
-
 import axios from "axios";
-
-const instance = axios.create({
-  baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/initial",
-});
+import { useRouter } from "next/router";
 
 import "@/app/globals.css";
 import { Grid2 } from "@mui/material";
 import { Box } from "@mui/system";
+
+const instance = axios.create({
+  baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/initial",
+});
 
 export default function ReservationList({
   openingHour,
@@ -22,7 +22,9 @@ export default function ReservationList({
   restUUID: string;
   dateTime: string;
 }) {
+  const router = useRouter();
   const [blockedTimes, setBlockedTimes] = useState<number[]>([]);
+  const [clickedBoxes, setClickedBoxes] = useState<number[]>([]);
 
   useEffect(() => {
     const fetchRestaurantInfo = async (restUUID: string, dateTime: string) => {
@@ -42,28 +44,42 @@ export default function ReservationList({
     fetchRestaurantInfo(restUUID, dateTime);
   }, [restUUID, dateTime]);
 
-  const setBoxColor = (hour: number, blockedTimes: Array<number>) => {
-    for (let i = 0; i < blockedTimes.length; i++) {
-      if (blockedTimes[i] == hour) {
-        return "#0F0F0F";
-      }
-    } 
-    return "#FFFFFF";
+  const setBoxColor = (hour: number, blockedTimes: Array<number>, clickedBoxes: Array<number>) => {
+    if (clickedBoxes.includes(hour)) {
+      return "#000000"; // Black color for clicked boxes
+    }
+    return blockedTimes.includes(hour) ? "#0F0F0F" : "#FFFFFF";
+  };
+
+  const handleBoxClick = (hour: number) => {
+    setClickedBoxes((prev) => [...prev, hour]);
+    router.push({
+      pathname: "/confirmReservation",
+      query: {
+        restUUID,
+        time: hour,
+        tableSize: 4, // Replace with actual table size as needed
+      },
+    });
   };
 
   const list = [];
   for (let i = 0; i < closingHour - openingHour; i++) {
     list.push(
       <Grid2 key={i} size={1}>
+        {/* use useRouter book to pass the data to the next page */}
         <Box key={i}
           sx={{
             border: 1,
             borderRadius: 1,
-            bgcolor: setBoxColor(openingHour + i, blockedTimes),
+            bgcolor: setBoxColor(openingHour + i, blockedTimes, clickedBoxes),
+            cursor: "pointer", // Add cursor pointer to indicate clickable
           }}
+          onClick={() => handleBoxClick(openingHour + i)} // Call handleBoxClick on click
         >
           &nbsp;
         </Box>
+
       </Grid2>
     );
   }

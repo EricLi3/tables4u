@@ -61,7 +61,11 @@ button {
   border: none;
   padding: 10px 20px;
   /* Add padding to ensure space around the text */
+}
 
+button:disabled {
+  background-color: var(--gray);
+  color: var(--color3);
 }
 
 .btn_primary {

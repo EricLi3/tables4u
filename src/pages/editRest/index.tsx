@@ -273,6 +273,7 @@ function EditRest() {
                 className="button"
                 startIcon={<DeleteIcon />}
                 onClick={() => handleDeleteTable(index)}
+                disabled={isActive} // Disable button when isActive is true
               ></Button>
             </div>
           ))}
@@ -305,13 +306,14 @@ function EditRest() {
         />
 
         <div className="saveAndDelete">
-          <button className="btn_secondary" onClick={() => handleSaveChanges()}>
+          <button className="btn_secondary" onClick={() => handleSaveChanges()} disabled={isActive}>
             Save
             <Save className="icon-padding" />
           </button>
           <button
             className="btn_secondary"
             onClick={() => fetchRestaurantData()}
+            disabled={isActive}
           >
             Discard
             <DeleteIcon className="icon-padding" />

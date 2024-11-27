@@ -6,7 +6,7 @@ import "@/app/globals.css";
 
 // Custom components
 import RestaurantTable from "@/app/components/RestaurantTable";
-import CreateRest  from "@/app/components/CreateRest";
+import CreateRest from "@/app/components/CreateRest";
 
 // Material UI components
 import MenuIcon from "@mui/icons-material/Menu";
@@ -22,7 +22,7 @@ import dayjs from "dayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 export default function Home() {
-  const [dateTime,setDateTime] = useState<string>("");
+  const [dateTime, setDateTime] = useState(dayjs());
 
   return (
     <main className="flex w-screen h-screen flex-col items-center justify-between p-24">
@@ -61,7 +61,8 @@ export default function Home() {
               <DatePicker
                 label="Reservation Date"
                 format="ddd DD/MM/YYYY"
-                onChange={(newdate) => setDateTime(newdate ? newdate?.toISOString() : "")}
+                value={dateTime}
+                onChange={(newdate) => setDateTime(newdate ?? dayjs())}
               />
 
               <MobileTimePicker
@@ -70,7 +71,7 @@ export default function Home() {
                 views={["hours"]}
                 ampm={false}
                 defaultValue={dayjs().set("minute", 0)}
-                minTime={dayjs().set("hour", 0).set("minute", 0)} 
+                minTime={dayjs().set("hour", 0).set("minute", 0)}
                 maxTime={dayjs().set("hour", 23).set("minute", 0)} //TODO: Set maxTime to restaurant closing hour
               />
             </LocalizationProvider>
@@ -87,7 +88,7 @@ export default function Home() {
           </div>
         </div>
 
-        <RestaurantTable dateTime={dateTime}/>
+        <RestaurantTable dateTime={dateTime.format()} />
       </div>
 
       <div className="loginNav centering-div">

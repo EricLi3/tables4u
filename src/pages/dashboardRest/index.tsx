@@ -207,11 +207,10 @@ function DashboardRest() {
           <h2>{restaurantData.address}</h2>
           <h2>Opening time: {restaurantData.openingTime.format("HH:mm")}</h2>
           <h2>Closing time: {restaurantData.closingTime.format("HH:mm")}</h2>
-          <ReservationListBenches openingHour={restaurantData.openingTime.hour()} closingHour={restaurantData.closingTime.hour()} restUUID={restUUID} dateTime={selectedDay.toISOString()}/>
         </div>
 
         <div style={{ gridColumn: "1 / span 1", gridRow: "2 / span 1" }}>
-          {/*ReservationTableThingy */}
+          <ReservationListBenches openingHour={restaurantData.openingTime.hour()} closingHour={restaurantData.closingTime.hour()} restUUID={restUUID} dateTime={selectedDay.toISOString()}/>
         </div>
         <div
           style={{

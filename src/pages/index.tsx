@@ -88,8 +88,12 @@ export default function Home() {
                 label="Reservation Time"
                 format="HH:mm"
                 value={reservationTime ? dayjs(reservationTime, "HH:mm") : null}
-                onChange={(newTime) =>{
-                  if(newTime) {
+                views={["hours"]}
+                ampm={false}
+                defaultValue={dayjs().set("minute", 0)}
+
+                onChange={(newTime) => {
+                  if (newTime) {
                     setReservationTime(newTime.format("HH:mm"))
                   }
                 }}

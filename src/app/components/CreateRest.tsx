@@ -1,35 +1,35 @@
 import axios from "axios";
 import React from "react";
-import { useRouter  } from "next/router";
+import { useRouter } from "next/router";
+
 
 const instance = axios.create({
-    baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/initial",
+  baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/initial",
 });
 
-export default function CreateRest(){
+export default function CreateRest() {
   const router = useRouter();
 
-  const handleClick = () =>{
+  const handleClick = () => {
     instance
       .get("/createRest")
-      .then((response)=>{
+      .then((response) => {
         try {
           const body = response.data.body;
           const data = body ? JSON.parse(body) : ""; // Parse the response body if defined
           if (data.username != "") {
-            console.log("Successful creation")
+            console.log("Successful creation");
             alert("Your new username: " + data.username + "\n📎Your new password: " + data.password);
-
             router.push(`/editRest?restUUID=${data.restUUID}`);
           }
-          
+
         } catch (error) {
           console.error("Restaurant Creation Failed", error);
         }
       })
   }
 
-  return(
+  return (
     <button className="btn_dark" onClick={handleClick}>Create Restaurant</button>
   )
 }

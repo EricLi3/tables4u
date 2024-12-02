@@ -1,4 +1,4 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -16,7 +16,6 @@ import withAuthManager from "@/withAuthManager";
 //reservation table for the restaurant
 
 import "@/app/globals.css";
-import { render } from "react-dom";
 
 const instance = axios.create({
   baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/initial",

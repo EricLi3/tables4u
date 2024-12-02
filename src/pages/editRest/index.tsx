@@ -35,7 +35,7 @@ function EditRest() {
 
   const [newTable, setNewTable] = useState("");
   const [newSeats, setNewSeats] = useState("1");
-  // const [error, setError] = useState("");
+  const [isActive, setIsActive] = useState(false);
 
   const [restaurantData, setRestaurantData] = useState<{
     name: string;

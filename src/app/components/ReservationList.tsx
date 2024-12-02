@@ -6,6 +6,9 @@ import { useRouter } from "next/router";
 import "@/app/globals.css";
 import { Grid2 } from "@mui/material";
 import { Box } from "@mui/system";
+// ascess global state. 
+import { useReservation } from "@/app/context/ReservationContext";
+
 
 const instance = axios.create({
   baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/initial",
@@ -25,6 +28,9 @@ export default function ReservationList({
   const router = useRouter();
   const [blockedTimes, setBlockedTimes] = useState<number[]>([]);
   const [clickedBoxes, setClickedBoxes] = useState<number[]>([]);
+
+  const { numberOfPeople, reservationDate, reservationTime } = useReservation();
+
 
   useEffect(() => {
     const fetchRestaurantInfo = async (restUUID: string, dateTime: string) => {
@@ -58,8 +64,10 @@ export default function ReservationList({
       pathname: "/confirmReservation",
       query: {
         restUUID,
-        time: hour,
         tableSize: 4, // Replace with actual table size as needed
+        numberOfPeople,
+        reservationDate,
+        reservationTime,
       },
     });
   };

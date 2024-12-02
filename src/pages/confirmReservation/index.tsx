@@ -83,8 +83,10 @@ function ConfirmReservation() {
       <div className="centering-div login-fields">
         <h1>{restaurantInfo.name}</h1>
         <p>{restaurantInfo.address}</p>
-        <br></br>
-        <p>Group Size: {router.query.tableSize}</p>
+        <p>Day: {router.query.reservationDate}</p>
+        <p>Time: {router.query.reservationTime}</p>
+        <p>Table Size <b>(TO CHANGE)</b>: {router.query.tableSize}</p>
+        <p>Group Size: {router.query.numberOfPeople}</p>
 
         <br></br>
 

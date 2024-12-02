@@ -51,6 +51,7 @@ export default function ReservationList({
     return blockedTimes.includes(hour) ? "#0F0F0F" : "#FFFFFF";
   };
 
+  // Initialized Reservation proccess. Ports with neccessary data to the confirmationReservatin page
   const handleBoxClick = (hour: number) => {
     setClickedBoxes((prev) => [...prev, hour]);
     router.push({

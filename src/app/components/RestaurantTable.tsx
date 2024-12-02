@@ -37,7 +37,7 @@ interface Restaurant {
   isActive: number;
 }
 
-function Row({ restaurant,dateTime }: { restaurant: Restaurant, dateTime:string }) {
+function Row({ restaurant, dateTime }: { restaurant: Restaurant, dateTime:string }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -139,19 +139,21 @@ export default function RestaurantTable({dateTime = '2024-11-24T21:00:00.000-050
               <TableCell><b>Address</b></TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
+            <TableBody>
             {restaurants?.length > 0 ? (
-              restaurants.map((restaurant) => (
-                <Row key={restaurant.restUUID} restaurant={restaurant} dateTime={dateTime}/>
+              restaurants
+              .sort((a, b) => a.restUUID.localeCompare(b.restUUID)) // Sort by restUUID
+              .map((restaurant) => (
+                <Row key={restaurant.restUUID} restaurant={restaurant} dateTime={dateTime} />
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={3} align="center">
-                  No restaurants available.
-                </TableCell>
+              <TableCell colSpan={3} align="center">
+                No restaurants available.
+              </TableCell>
               </TableRow>
             )}
-          </TableBody>
+            </TableBody>
         </Table>
       </TableContainer>
 

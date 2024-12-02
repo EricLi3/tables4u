@@ -43,9 +43,11 @@ function DashboardRest() {
     tablesAndSeats: [],
     newPassword: "",
   });
-  
-  const [isActive, setIsActive] = useState(false);
 
+
+  const [isActive, setIsActive] = useState(true);
+  const [isDayOpen, setIsDayOpen] = useState(true);
+  const [selectedDay, setSelectedDay] = useState(dayjs());
 
   // Fetch existing data on component mount
   const fetchRestaurantData = async () => {
@@ -84,20 +86,24 @@ function DashboardRest() {
     }
   };
 
+  // Fetch existing data on component mount
   useEffect(() => {
     fetchRestaurantData();
   }, [restUUID]);
 
   const activateRestaurant = async () => {
     try {
-      const response = await instance.post("/activateRest", { rest_uuid: restUUID });
+      const response = await instance.post("/activateRest", {
+        rest_uuid: restUUID,
+      });
       console.log("Activated restaurant:", response);
+      setIsActive(true);
       alert("Restaurant activated successfully!");
     } catch (error) {
       console.error("Failed to activate restaurant:", error);
       alert("Failed to activate restaurant. Please try again later.");
     }
-  }
+  };
 
   // --------------------------------
 
@@ -113,8 +119,22 @@ function DashboardRest() {
     activateRestaurant();
   };
 
-  const handleOpenClose = () => {
+  const handleOpenClose = (setOpen: boolean) => {
     // Open or close the restaurant
+    // post the day and open/close status
+    instance
+      .post("/toggleOpenDay", {
+        restUUID: restUUID,
+        dateTime: selectedDay.format(),
+        open: setOpen,
+      })
+      .then((response) => {
+        console.log("Opened/closed restaurant:", response);
+        setIsDayOpen(setOpen);
+      })
+      .catch((error) => {
+        console.error("Failed to open/close restaurant:", error);
+      });
   };
 
   const handleDelete = () => {
@@ -123,7 +143,7 @@ function DashboardRest() {
 
     //delete the restaurant
     instance
-      .post("/deleteRest", { restUUID })
+      .post("/deleteRestAdmin", { rest_uuid: restUUID })
       .then((response) => {
         console.log("Deleted restaurant:", response);
         router.push("/"); // Redirect to the home page
@@ -147,6 +167,9 @@ function DashboardRest() {
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             label="Reservations at"
+
+            value={selectedDay}
+            onChange={(newValue) => setSelectedDay(newValue ?? dayjs())}
             format="ddd DD/MM/YYYY"
           />
         </LocalizationProvider>
@@ -178,7 +201,9 @@ function DashboardRest() {
             flexDirection: "column",
           }}
         >
-          <h1>{restaurantData.name} </h1>
+          <h1>
+            {isActive ? "✅" : "❌"} {restaurantData.name}{" "}
+          </h1>
           <h2>{restaurantData.address}</h2>
           <h2>Opening time: {restaurantData.openingTime.format("HH:mm")}</h2>
           <h2>Closing time: {restaurantData.closingTime.format("HH:mm")}</h2>
@@ -197,11 +222,19 @@ function DashboardRest() {
             gap: 1,
           }}
         >
-          <button className="btn_secondary" onClick={handleOpenClose}>
+          <button
+            className="btn_secondary"
+            onClick={() => handleOpenClose(true)}
+            disabled={isDayOpen}
+          >
             Re-open
           </button>
           <br></br>
-          <button className="btn_secondary" onClick={handleOpenClose}>
+          <button
+            className="btn_secondary"
+            onClick={() => handleOpenClose(false)}
+            disabled={!isDayOpen}
+          >
             Close
           </button>
         </div>
@@ -213,14 +246,22 @@ function DashboardRest() {
             justifyContent: "space-between",
           }}
         >
-          {!isActive && (
-            <button className="btn_dark" onClick={handleActivate}>
-              Activate
-            </button>
-          )}
-          <button className="btn_secondary" onClick={handleEdit}>
+          <button
+            className="btn_dark"
+            onClick={handleActivate}
+            disabled={isActive}
+          >
+            Activate
+          </button>
+
+          <button
+            className="btn_secondary"
+            onClick={handleEdit}
+            disabled={isActive}
+          >
             Edit
           </button>
+
           <button className="btn_primary icon-center" onClick={handleDelete}>
             <DeleteIcon />
           </button>

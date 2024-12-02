@@ -1,8 +1,3 @@
-// http://localhost:3000/admin
-
-// usename: admin1
-// password: securepass1
-
 import React from "react";
 import Link from "next/link";
 import "@/app/globals.css";
@@ -45,7 +40,12 @@ interface Restaurant {
 
 function Row({ restaurant, deleteRestaurant }: { restaurant: Restaurant, deleteRestaurant: (restUUID: string) => void }) {
   const [open, setOpen] = useState(false);
+  const [isActive, setIsActive] = useState(true);
 
+  useEffect(() => {
+    setIsActive(restaurant.isActive === 1);
+  }, [restaurant.isActive]);
+  
   return (
     <>
       <TableRow>
@@ -60,6 +60,7 @@ function Row({ restaurant, deleteRestaurant }: { restaurant: Restaurant, deleteR
         </TableCell>
         <TableCell component="th" scope="row">
           {restaurant.restName}
+          {isActive ? "✅" : "❌"}
         </TableCell>
         <TableCell>{restaurant.address}</TableCell>
 
@@ -96,6 +97,7 @@ function RestaurantTable() {
   const [error, setError] = useState<string | null>(null);
   const [numberToList, setNumberToList] = useState(5);
 
+
   const fetchRestaurants = (numToList: number) => {
     setLoading(true);
     instance
@@ -110,6 +112,7 @@ function RestaurantTable() {
             console.error("Unexpected data format:", data);
             setRestaurants([]);
           }
+
         } catch (error) {
           console.error("Failed to parse response body:", error);
           setRestaurants([]);

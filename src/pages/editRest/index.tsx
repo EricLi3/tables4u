@@ -35,7 +35,7 @@ function EditRest() {
 
   const [newTable, setNewTable] = useState("");
   const [newSeats, setNewSeats] = useState("1");
-  const [isActive, setIsActive] = useState(false);
+  // const [isActive, setIsActive] = useState(false);
 
   const [restaurantData, setRestaurantData] = useState<{
     name: string;
@@ -273,7 +273,7 @@ function EditRest() {
                 className="button"
                 startIcon={<DeleteIcon />}
                 onClick={() => handleDeleteTable(index)}
-                disabled={isActive} // Disable button when isActive is true
+                // disabled={isActive} // Disable button when isActive is true
               ></Button>
             </div>
           ))}
@@ -306,14 +306,14 @@ function EditRest() {
         />
 
         <div className="saveAndDelete">
-          <button className="btn_secondary" onClick={() => handleSaveChanges()} disabled={isActive}>
+          <button className="btn_secondary" onClick={() => handleSaveChanges()} disabled={false}>
             Save
             <Save className="icon-padding" />
           </button>
           <button
             className="btn_secondary"
             onClick={() => fetchRestaurantData()}
-            disabled={isActive}
+            // disabled={isActive}
           >
             Discard
             <DeleteIcon className="icon-padding" />

@@ -207,7 +207,7 @@ function DashboardRest() {
           <h2>{restaurantData.address}</h2>
           <h2>Opening time: {restaurantData.openingTime.format("HH:mm")}</h2>
           <h2>Closing time: {restaurantData.closingTime.format("HH:mm")}</h2>
-          {/*<ReservationListBenches openingHour={Number(restaurantData.openingTime)} closingHour={Number(restaurantData.closingTime)} restUUID={restUUID} dateTime={dateTime}/>*/}
+          <ReservationListBenches openingHour={restaurantData.openingTime.hour()} closingHour={restaurantData.closingTime.hour()} restUUID={restUUID} dateTime={selectedDay.toISOString()}/>
         </div>
 
         <div style={{ gridColumn: "1 / span 1", gridRow: "2 / span 1" }}>

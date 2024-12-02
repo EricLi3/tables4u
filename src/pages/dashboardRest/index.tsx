@@ -5,6 +5,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { Box } from "@mui/material";
 import { Search } from "@mui/icons-material";
 import axios from "axios";
+import ReservationListBenches from "../../app/components/ReservationListBenches"
 
 // For date picking
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -26,7 +27,7 @@ const instance = axios.create({
 function DashboardRest() {
   const router = useRouter();
   const restUUID = router.query.restUUID as string;
-
+  
   const [restaurantData, setRestaurantData] = useState<{
     name: string;
     address: string;
@@ -42,7 +43,7 @@ function DashboardRest() {
     tablesAndSeats: [],
     newPassword: "",
   });
-
+  
   const [isActive, setIsActive] = useState(false);
 
 
@@ -146,7 +147,6 @@ function DashboardRest() {
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             label="Reservations at"
-            value={dayjs()}
             format="ddd DD/MM/YYYY"
           />
         </LocalizationProvider>
@@ -182,6 +182,7 @@ function DashboardRest() {
           <h2>{restaurantData.address}</h2>
           <h2>Opening time: {restaurantData.openingTime.format("HH:mm")}</h2>
           <h2>Closing time: {restaurantData.closingTime.format("HH:mm")}</h2>
+          {/*<ReservationListBenches openingHour={Number(restaurantData.openingTime)} closingHour={Number(restaurantData.closingTime)} restUUID={restUUID} dateTime={dateTime}/>*/}
         </div>
 
         <div style={{ gridColumn: "1 / span 1", gridRow: "2 / span 1" }}>

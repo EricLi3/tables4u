@@ -22,7 +22,7 @@ export default function ReservationList({
   restUUID: string;
   dateTime: string;
 }) {
-  let blockedTimes = {};
+  const [blockedTimes, setBlockedTimes] = useState({open: true,body: [{name: "", time: [""]}]})
 
   useEffect(() => {
     const fetchRestaurantInfo = async (restUUID: string, dateTime: string) => {
@@ -30,9 +30,8 @@ export default function ReservationList({
         const response = await instance.post("/seeDayBlocked", { restUUID, dateTime });
         const body = response.data.body;
         const data = body ? JSON.parse(body) : [];
-        blockedTimes = data;
-        console.log(blockedTimes);
-        console.log(Object.values(blockedTimes))
+        setBlockedTimes(data);
+        console.log(data);
 
       } catch (error) {
         console.log("Error fetching reservation info \n");
@@ -43,9 +42,11 @@ export default function ReservationList({
     fetchRestaurantInfo(restUUID, dateTime);
   }, [restUUID, dateTime]);
 
-  const setBoxColor = (hour: number, blockedTimes: Array<number>) => {
-    for (let i = 0; i < blockedTimes.length; i++) {
-      if (blockedTimes[i] == hour) {
+  useEffect(()=>(void 0),[blockedTimes]);
+
+  const setBoxColor = (hour: number, times: {name: String, time: Array<String>}) => {
+    for (let i = 0; i < times.time.length; i++) {
+      if (times.time[i] == String(hour)) {
         return "#0F0F0F";
       }
     } 
@@ -53,11 +54,10 @@ export default function ReservationList({
   };
 
   const list = [];
-  const tempTableNames=["T1","T2","T3","T4"]
-  for (let j = 0; j < 4; j++) {
+  for (let j = 0; j < blockedTimes.body.length; j++) {
     list.push(
       <Grid2 key = {25*(j+1)-1} size={1}>
-        <Box key = {25*(j+1)-1}>{tempTableNames[j]}</Box>
+        <Box key = {25*(j+1)-1}>{blockedTimes.body[j].name}</Box>
       </Grid2>
     )
     for (let i = 0; i < closingHour - openingHour; i++) {
@@ -67,7 +67,7 @@ export default function ReservationList({
             sx={{
               border: 1,
               borderRadius: 1,
-              bgcolor: setBoxColor(openingHour + i, Object.values(blockedTimes)),
+              bgcolor: setBoxColor(openingHour + i, blockedTimes.body[j]),
             }}
           >
             &nbsp;

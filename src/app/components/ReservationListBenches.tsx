@@ -44,7 +44,7 @@ export default function ReservationList({
 
   useEffect(()=>(void 0),[blockedTimes]);
 
-  const setBoxColor = (hour: number, times: {name: String, time: Array<String>}) => {
+  const setBoxColor = (hour: number, times: {name: string, time: Array<string>}) => {
     for (let i = 0; i < times.time.length; i++) {
       if (times.time[i] == String(hour)) {
         return "#0F0F0F";

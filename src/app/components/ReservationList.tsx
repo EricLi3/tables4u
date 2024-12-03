@@ -64,7 +64,7 @@ export default function ReservationList({
       pathname: "/confirmReservation",
       query: {
         restUUID,
-        tableSize: 4, // Replace with actual table size as needed
+        // tableSize: 4, // Replace with actual table size as needed
         numberOfPeople,
         reservationDate,
         reservationTime,

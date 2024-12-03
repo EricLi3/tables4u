@@ -7,6 +7,7 @@ import "@/app/globals.css";
 import TextField from "@mui/material/TextField";
 
 import axios from "axios";
+import { Email } from "@mui/icons-material";
 
 const instance = axios.create({
   baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/initial",
@@ -79,6 +80,10 @@ function ConfirmReservation() {
     address: "",
   });
 
+  const [email, setEmail] = useState("");
+  const [reservationDateTime, setReservationDateTime] = useState("");
+  const [startTime, setStartTime] = useState<number | null>(null);
+
   useEffect(() => {
     const fetchRestaurantInfo = async () => {
       if (!restUUID) return;
@@ -104,6 +109,16 @@ function ConfirmReservation() {
 
     fetchRestaurantInfo();
   }, [restUUID]);
+  
+  useEffect(() => {
+    const reservationDate = router.query.reservationDate as string;
+    const reservationTime = router.query.reservationTime as string;
+    if (reservationDate && reservationTime) {
+      setReservationDateTime(`${reservationDate} ${reservationTime}`);
+      const [hours] = reservationTime.split(":").map(Number);
+      setStartTime(hours);
+    }
+  }, [router.query.reservationDate, router.query.reservationTime]);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -128,6 +143,8 @@ function ConfirmReservation() {
           id="outlined-required"
           color="secondary"
           label="Your Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
 
         <br />
@@ -141,19 +158,19 @@ function ConfirmReservation() {
               const fetchAndCreateReservation = async () => {
                 const data = await findOpenTable(restUUID, router.query.numberOfPeople as string); // modify to get benchUUID of a bench that can be reserved. 
                 const benchUUID = JSON.parse(data.body)[0].benchUUID as string;
-                const reservationDateTime = "2024-11-21 12:00:00"; // Hardcoded value for reservation time
-                const startTime = 12; // Start time as a string
-                const email = "test@example.com"; // Replace with actual email input
+                // const reservationDateTime = "2024-11-21 12:00:00"; // Hardcoded value for reservation time
+                // const startTime = 12;
+                const e_mail = email; // Replace with actual email input
                 const confirmationCode = generateConfirmationCode(); // Example, generate dynamically if needed
                 const groupSize = parseInt(router.query.numberOfPeople as string); // Convert to number
 
-                createReservation(  
+                createReservation(
                   reservationUUID,
                   restUUID,
                   benchUUID,
                   reservationDateTime,
-                  startTime,
-                  email,
+                  startTime!,
+                  e_mail,
                   confirmationCode,
                   groupSize
                 );
@@ -165,7 +182,7 @@ function ConfirmReservation() {
             Reserve
           </button>
           <span style={{ margin: "0 10px" }}></span>
-          <button className="btn_primary" onClick={() => {}}>
+          <button className="btn_primary" onClick={() => { }}>
             Cancel
           </button>
         </div>

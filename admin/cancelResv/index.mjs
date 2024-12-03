@@ -8,18 +8,19 @@ export const handler = async (event) => {
         password: "Netro7887",
         database: "tables4u"
     });
+    // TODO: Change me.
+    const deleted_reservation_uuid = event.reservation_uuid;
 
-    const rest_uuid = event.rest_uuid;
-    const group_size = event.group_size; 
 
-
-    const ReserveBench = (rest_uuid, group_size) => {
+    const deleteReservation = (restID) => {
         return new Promise((resolve, reject) => {
-            pool.query("SELECT * FROM Benches WHERE restUUID = ? AND isReserved = 0 AND numSeats <= ? LIMIT 1", [rest_uuid, group_size], (error, rows) => {
+            const query = `DELETE FROM Reservations WHERE reservationUUID=?`;
+            
+            pool.query(query, [restID], (error, result) => {
                 if (error) {
                     return reject(error);
                 }
-                return resolve(rows); // Return rows if successful
+                return resolve(result);
             });
         });
     };
@@ -27,13 +28,12 @@ export const handler = async (event) => {
     let response;
 
     try {
-        // Wait for the query result
-        const rows = await ReserveBench(rest_uuid, group_size);
-        console.log('Query result:', rows);
+        // Execute delete queries sequentially
+        await deleteReservation('Reservations', deleted_reservation_uuid);
 
         response = {
             statusCode: 200,
-            body: JSON.stringify(rows)
+            body: JSON.stringify({ message: 'Deletion successful' })
         };
     } catch (error) {
         console.error("ERROR:", error);

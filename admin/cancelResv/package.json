@@ -1,0 +1,13 @@
+{
+    "name": "admin-delete-reservation",
+    "version": "1.0.0",
+    "description": "AWS Lambda for admin delete resevervation with MySQL",
+    "main": "index.mjs",
+    "author": "Eric Li",
+    "license": "MIT",
+    "scripts": {},
+    "dependencies": {
+        "mysql": "^2.18.1"
+    },
+    "devDependencies": {}
+}

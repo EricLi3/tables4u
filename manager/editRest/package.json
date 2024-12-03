@@ -1,0 +1,19 @@
+{
+    "name": "editRest",
+    "version": "1.0.0",
+    "description": "Save changes to a restaurant",
+    "main": "index.mjs",
+    "repository": "TBA",
+    "author": "Jakub Jandus",
+    "license": "MIT",
+    "dependencies": {
+      "mysql": "^2.18.1",
+      "uuid": "^11.0.3"
+    },
+    "scripts": {
+
+    },
+    "devDependencies": {
+
+    }
+  }

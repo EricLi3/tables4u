@@ -4,22 +4,87 @@ import { useRouter } from "next/router";
 
 import "@/app/globals.css";
 import TextField from "@mui/material/TextField";
+import dayjs from "dayjs";
+import DeleteIcon from "@mui/icons-material/Delete";
+import axios from "axios";
+
+const instance = axios.create({
+  baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/initial",
+});
 
 function ConsumerLogin() {
   const router = useRouter();
   const [email, setEmail] = React.useState("");
   const [confCode, setConfCode] = React.useState("");
+  const [showBox, setShowBox] = React.useState(false);
+
+  const [reservationData, setReservationData] = React.useState({
+    restUUID: "",
+    restName: "Alice's Restaurant",
+    restAddr: "Buy me a hot cocoa",
+    reservationTime: dayjs(),
+    groupSize: 1,
+  });
 
   const handleClick = () => {
     if (email === "" || confCode === "") {
       alert("Please fill in all fields");
       return;
     }
-    router.push("/findReservation?email=" + email + "&confCode=" + confCode);
+
+    setShowBox(true);
   };
 
+  const handleDelete = () => {
+    setEmail("");
+    setConfCode("");
+    setShowBox(false);
+  };
+
+  // Fetch existing data on component mount
+  const fetchReservationData = async () => {
+    try {
+      const response = await instance.post("/findReservation", {
+        email: email,
+        confCode: confCode,
+      });
+      const data = response.data.body ? JSON.parse(response.data.body) : {}; // Parse the response body as JSON if defined
+      console.log("Data:", data);
+      {
+        const reservation = data[0]; // Assuming you want the first restaurant in the array
+        setReservationData({
+          restUUID: reservation.restUUID,
+          restName: reservation.restName,
+          restAddr: reservation.restAddr,
+          reservationTime: reservation.reservationTime,
+          groupSize: reservation.groupSize,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching restaurant data:", error);
+    }
+  };
+
+  const cancelReservation = async () => {
+    try {
+      const response = await instance.post("/cancelReservation", {
+        email: email,
+        confCode: confCode,
+      });
+
+      console.log("Reservation cancelled:", response);
+      alert("Reservation cancelled successfully!");
+      router.push("/");
+    } catch (error) {
+      console.error("Failed to cancel reservation:", error);
+      alert("Failed to cancel reservation. Please try again later.");
+    }
+  };
+
+  // --------------------------------
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex min-h-screen flex-col items-center gap-24 p-24">
       <div className="top-left-button">
         <Link href="/">
           <img src="../logo.png" alt="Home Button" className="logo" />
@@ -49,6 +114,26 @@ function ConsumerLogin() {
           Find Reservation
         </button>
       </div>
+
+      {showBox && (
+        <div className="centering-div div-horiz login-fields">
+          <div className="m-4 p-2">
+            <h2>{reservationData.restName}</h2>
+            <p>{reservationData.restAddr}</p>
+          </div>
+          <div className="m-4 p-2">
+            <h2>{reservationData.reservationTime.format("DD/MM/YYYY")}</h2>
+            <p>Time: {reservationData.reservationTime.format("HH:mm")}</p>
+            <p>Group Size: {reservationData.groupSize}</p>
+          </div>
+          <button
+            className="btn_primary m-4 p-1"
+            onClick={() => handleDelete()}
+          >
+            <DeleteIcon />
+          </button>
+        </div>
+      )}
     </main>
   );
 }

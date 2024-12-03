@@ -9,13 +9,15 @@ export const handler = async (event) => {
         database: "tables4u"
     });
 
-    const resev_uuid = event.resev_uuid;
+    const e_mail = event.email;
+    const confirmation_code = event.confirmation_code;
 
 
-    const deleteReservation = (resv_uuid) => {
+
+    const deleteReservation = (e_mail, confirmation_code) => {
         return new Promise((resolve, reject) => {
-            const query = "DELETE FROM Reservations WHERE reservationUUID=?";
-            pool.query(query, [resv_uuid], (error, result) => {
+            const query = "DELETE FROM Reservations WHERE email=? AND confirmationCode=?";
+            pool.query(query, [e_mail, confirmation_code], (error, result) => {
                 if (error) {
                     return reject(error);
                 }
@@ -28,7 +30,7 @@ export const handler = async (event) => {
 
     try {
         // Execute delete queries sequentially
-        await deleteReservation(resev_uuid);
+        await deleteReservation(e_mail, confirmation_code);
 
         response = {
             statusCode: 200,

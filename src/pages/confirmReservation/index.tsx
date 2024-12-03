@@ -108,7 +108,7 @@ function ConfirmReservation() {
 
     fetchRestaurantInfo();
   }, [restUUID]);
-  
+
   useEffect(() => {
     const reservationDate = router.query.reservationDate as string;
     const reservationTime = router.query.reservationTime as string;
@@ -156,7 +156,28 @@ function ConfirmReservation() {
               const restUUID = router.query.restUUID as string;
               const fetchAndCreateReservation = async () => {
                 const data = await findOpenTable(restUUID, router.query.numberOfPeople as string); // modify to get benchUUID of a bench that can be reserved. 
-                const benchUUID = JSON.parse(data.body)[0].benchUUID as string;
+                if (!data || !data.body) {
+                  alert("No table available");
+                  router.push("/");
+                  return;
+                }
+
+                let benchUUID: string;
+                try {
+                  const parsedData = JSON.parse(data.body);
+                  if (Array.isArray(parsedData) && parsedData.length > 0) {
+                    benchUUID = parsedData[0].benchUUID as string;
+                  } else {
+                    alert("NO table available");
+                    router.push("/");
+                    throw new Error("No available table found");
+                  }
+                } catch (error) {
+                  console.error("Failed to get benchUUID:", error);
+                  alert("NO table available");
+                  router.push("/");
+                  return;
+                }
                 // const reservationDateTime = "2024-11-21 12:00:00"; // Hardcoded value for reservation time
                 // const startTime = 12;
                 const e_mail = email; // Replace with actual email input

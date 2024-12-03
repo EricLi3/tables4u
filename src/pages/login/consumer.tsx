@@ -45,9 +45,7 @@ function ConsumerLogin() {
   };
 
   const handleDelete = () => {
-    setEmail("");
-    setConfCode("");
-    setShowBox(false);
+    cancelReservation();
   };
 
   // Fetch existing data on component mount
@@ -134,7 +132,9 @@ function ConsumerLogin() {
             <p>{reservationData.restAddr}</p>
           </div>
           <div className="m-4 p-2">
-            <h2>{reservationData.reservationDateTime.format("ddd DD/MM/YYYY")}</h2>
+            <h2>
+              {reservationData.reservationDateTime.format("ddd DD/MM/YYYY")}
+            </h2>
             <p>Time: {reservationData.reservationStartTime}:00 </p>
             <p>Group Size: {reservationData.groupSize}</p>
           </div>

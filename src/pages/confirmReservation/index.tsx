@@ -7,7 +7,6 @@ import "@/app/globals.css";
 import TextField from "@mui/material/TextField";
 
 import axios from "axios";
-import { Email } from "@mui/icons-material";
 
 const instance = axios.create({
   baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/initial",

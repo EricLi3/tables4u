@@ -34,7 +34,7 @@ export const handler = async (event) => {
 
         response = {
             statusCode: 200,
-            body: JSON.stringify({ message: 'Deletion Succesfull' })
+            body: JSON.stringify({ message: 'cancelled' })
         };
     } catch (error) {
         console.error("ERROR:", error);

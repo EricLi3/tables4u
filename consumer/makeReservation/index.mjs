@@ -31,12 +31,25 @@ export const handler = async (event) => {
         });
     };
 
+    // Function to update the bench to be reserved
+    const updateBenchStatus = (benchUUID) => {
+        return new Promise((resolve, reject) => {
+            const query = "UPDATE Benches SET isReserved = ? WHERE benchUUID = ?";
+            pool.query(query, [true, benchUUID], (error, result) => {
+                if (error) {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        });
+    };
+
     let response;
 
     try {
         // Execute delete queries sequentially
         await newReservation(reservation_uuid, rest_uuid, bench_uuid, reservation_date_time, start_time, e_mail, confirmation_code, group_size);
-
+        await updateBenchStatus(bench_uuid);
         response = {
             statusCode: 200,
             body: JSON.stringify({ message: 'Reservation Succesfull' })

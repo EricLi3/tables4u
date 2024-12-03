@@ -20,9 +20,11 @@ function ConsumerLogin() {
 
   const [reservationData, setReservationData] = React.useState({
     restUUID: "",
+    reservationUUID: "",
     restName: "Alice's Restaurant",
     restAddr: "Buy me a hot cocoa",
-    reservationTime: dayjs(),
+    reservationDateTime: dayjs(),
+    reservationStartTime: 12,
     groupSize: 1,
   });
 
@@ -32,7 +34,14 @@ function ConsumerLogin() {
       return;
     }
 
-    setShowBox(true);
+    fetchReservationData();
+
+    if (reservationData.restName === "") {
+      alert("No reservation found with the provided details");
+      return;
+    } else {
+      setShowBox(true);
+    }
   };
 
   const handleDelete = () => {
@@ -51,12 +60,15 @@ function ConsumerLogin() {
       const data = response.data.body ? JSON.parse(response.data.body) : {}; // Parse the response body as JSON if defined
       console.log("Data:", data);
       {
-        const reservation = data[0]; // Assuming you want the first restaurant in the array
+        const reservation = data.result[0]; // Assuming you want the first restaurant in the array
+        const restInfo = data.restInfo[0];
         setReservationData({
           restUUID: reservation.restUUID,
-          restName: reservation.restName,
-          restAddr: reservation.restAddr,
-          reservationTime: reservation.reservationTime,
+          reservationUUID: reservation.reservationUUID,
+          restName: restInfo.restName,
+          restAddr: restInfo.address,
+          reservationDateTime: dayjs(reservation.reservationDateTime),
+          reservationStartTime: reservation.startTime,
           groupSize: reservation.groupSize,
         });
       }
@@ -122,8 +134,8 @@ function ConsumerLogin() {
             <p>{reservationData.restAddr}</p>
           </div>
           <div className="m-4 p-2">
-            <h2>{reservationData.reservationTime.format("DD/MM/YYYY")}</h2>
-            <p>Time: {reservationData.reservationTime.format("HH:mm")}</p>
+            <h2>{reservationData.reservationDateTime.format("ddd DD/MM/YYYY")}</h2>
+            <p>Time: {reservationData.reservationStartTime}:00 </p>
             <p>Group Size: {reservationData.groupSize}</p>
           </div>
           <button

@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import "@/app/globals.css";
+// import { useRouter } from "next/router";
 
 import axios from "axios";
 
@@ -36,16 +37,59 @@ interface Restaurant {
   closingHour: string;
   isActive: number;
 }
-
+interface Reservation {
+  reservationUUID: string;
+  restUUID: string;
+  benchUUID: string;
+  reservationDateTime: string;
+  startTime: number;
+  email: string;
+  confirmationCode: string;
+  groupSize: number;
+}
 
 function Row({ restaurant, deleteRestaurant }: { restaurant: Restaurant, deleteRestaurant: (restUUID: string) => void }) {
+  // const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isActive, setIsActive] = useState(true);
+  const [reservations, setReservations] = useState<Reservation[]>([]);
 
   useEffect(() => {
     setIsActive(restaurant.isActive === 1);
   }, [restaurant.isActive]);
-  
+
+  // Fetch reservations for the restaurant
+  const fetchReservations = async () => {
+    try {
+      const response = await instance.post("/listReservations", { restUUID: restaurant.restUUID });
+      const data = response.data.body ? JSON.parse(response.data.body) : [];
+      setReservations(data);
+    } catch (error) {
+      console.error("Error fetching reservations:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (open) {
+      fetchReservations();
+    }
+  }, [open]);
+
+
+  const cancelReservation = async (email:string, confCode:string) => {
+    try {
+      const response = await instance.post("/cancelReservation", {
+        email: email,
+        confCode: confCode,
+      });
+
+      console.log("Reservation cancelled:", response);
+      alert("Reservation cancelled successfully!");
+    } catch (error) {
+      console.error("Failed to cancel reservation:", error);
+      alert("Failed to cancel reservation. Please try again later.");
+    }
+  };
   return (
     <>
       <TableRow>
@@ -79,10 +123,32 @@ function Row({ restaurant, deleteRestaurant }: { restaurant: Restaurant, deleteR
               <Typography variant="body2">
                 Opening Hours: {restaurant.openingHour} -{" "}
                 {restaurant.closingHour}
+
+                <Typography variant="h6" gutterBottom component="div">
+                  Reservations
+                </Typography>
+                {reservations.length > 0 ? (
+                  <ul>
+                    {reservations.map((reservation) => (
+                      <li key={reservation.reservationUUID}>
+                        {reservation.reservationDateTime} - {reservation.email} - {reservation.groupSize} people
+                        <button
+                          className="btn_primary"
+                          onClick={() => {
+                            cancelReservation(reservation.email, reservation.confirmationCode);
+                          }}
+                        >
+                          Delete Reservation
+                        </button>
+                      </li>
+
+                    ))}
+                  </ul>
+                ) : (
+                  <Typography>No reservations found.</Typography>
+                )}
+
               </Typography>
-              <button className="btn_primary">
-                Delete Reservation
-              </button>
             </Box>
           </Collapse>
         </TableCell>
@@ -170,47 +236,47 @@ function RestaurantTable() {
   return (
     <main className="flex w-screen h-screen flex-col items-center justify-between p-24">
 
-    <div className="top-left-button">
+      <div className="top-left-button">
         <Link href="/">
           <img src="logo.png" alt="Home Button" className="logo" />
         </Link>
       </div>
-    <Box>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell />
-              <TableCell><b>Restaurant Name</b></TableCell>
-              <TableCell><b>Address</b></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {restaurants?.length > 0 ? (
-              restaurants.map((restaurant) => (
-                <Row key={restaurant.restUUID} restaurant={restaurant} deleteRestaurant={deleteRestaurant} />
-              ))
-            ) : (
+      <Box>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
               <TableRow>
-                <TableCell colSpan={3} align="center">
-                  No restaurants available.
-                </TableCell>
+                <TableCell />
+                <TableCell><b>Restaurant Name</b></TableCell>
+                <TableCell><b>Address</b></TableCell>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {restaurants?.length > 0 ? (
+                restaurants.map((restaurant) => (
+                  <Row key={restaurant.restUUID} restaurant={restaurant} deleteRestaurant={deleteRestaurant} />
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={3} align="center">
+                    No restaurants available.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
-      <Box display="flex" justifyContent="center" marginTop={2}>
-        <button
-          className="btn_primary"
-          onClick={handleLoadMore}
-          disabled={loading}
-        >
-          Load More
-        </button>
+        <Box display="flex" justifyContent="center" marginTop={2}>
+          <button
+            className="btn_primary"
+            onClick={handleLoadMore}
+            disabled={loading}
+          >
+            Load More
+          </button>
+        </Box>
       </Box>
-    </Box>
     </main>
   );
 }

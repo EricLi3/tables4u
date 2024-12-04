@@ -11,7 +11,7 @@ import CreateRest from "@/app/components/CreateRest";
 // Material UI components
 import MenuIcon from "@mui/icons-material/Menu";
 import Slider from "@mui/material/Slider";
-import TextField from "@mui/material/TextField";
+import { Box, TextField } from "@mui/material";
 
 // For time and date picking
 import { Search } from "@mui/icons-material";
@@ -24,7 +24,6 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 // For global state management
 import { useReservation } from "@/app/context/ReservationContext";
 
-
 export default function Home() {
   // const [dateTime, setDateTime] = useState(dayjs());
 
@@ -36,7 +35,6 @@ export default function Home() {
     setReservationDate,
     setReservationTime,
   } = useReservation();
-
 
   return (
     <main className="flex w-screen h-screen flex-col items-center justify-between p-24">
@@ -70,17 +68,29 @@ export default function Home() {
               id="outlined-required"
               color="secondary"
               label="Restaurant Name"
+              sx={{
+                "& .MuiInputBase-root": {
+                  backgroundColor: "white",
+                  opacity: 0.9,
+                },
+              }}
             />
 
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Reservation Date"
                 format="ddd DD/MM/YYYY"
-                value={reservationDate ? dayjs(reservationDate) : null}
+                value={reservationDate ? dayjs(reservationDate) : dayjs()}
                 onChange={(newDate) => {
                   if (newDate) {
                     setReservationDate(newDate.format("YYYY-MM-DD"));
                   }
+                }}
+                sx={{
+                  "& .MuiInputBase-root": {
+                    backgroundColor: "white",
+                    opacity: 0.9,
+                  },
                 }}
               />
 
@@ -91,14 +101,19 @@ export default function Home() {
                 views={["hours"]}
                 ampm={false}
                 defaultValue={dayjs().set("minute", 0)}
-
                 onChange={(newTime) => {
                   if (newTime) {
-                    setReservationTime(newTime.format("HH:mm"))
+                    setReservationTime(newTime.format("HH:mm"));
                   }
                 }}
                 minTime={dayjs().set("hour", 0).set("minute", 0)}
                 maxTime={dayjs().set("hour", 23).set("minute", 0)}
+                sx={{
+                  "& .MuiInputBase-root": {
+                    backgroundColor: "white",
+                    opacity: 0.9,
+                  },
+                }}
               />
             </LocalizationProvider>
           </div>
@@ -114,9 +129,7 @@ export default function Home() {
           </div>
         </div>
 
-        <RestaurantTable
-          dateTime={`${reservationDate} ${reservationTime}`}
-        />
+        <RestaurantTable dateTime={`${reservationDate} ${reservationTime}`} />
       </div>
 
       <div className="loginNav centering-div">

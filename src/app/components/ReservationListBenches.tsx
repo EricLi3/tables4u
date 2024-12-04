@@ -11,16 +11,18 @@ import "@/app/globals.css";
 import { Grid2 } from "@mui/material";
 import { Box } from "@mui/system";
 
-export default function ReservationList({
+export default function ReservationListBenches({
   openingHour,
   closingHour,
   restUUID,
   dateTime,
+  sendDataToParent,
 }: {
   openingHour: number;
   closingHour: number;
   restUUID: string;
   dateTime: string;
+  sendDataToParent: (arg0: boolean)=>void
 }) {
   const [blockedTimes, setBlockedTimes] = useState({open: true,body: [{name: "", time: [""]}]})
 
@@ -42,7 +44,9 @@ export default function ReservationList({
     fetchRestaurantInfo(restUUID, dateTime);
   }, [restUUID, dateTime]);
 
-  useEffect(()=>(void 0),[blockedTimes]);
+  useEffect(()=>(
+    sendDataToParent(blockedTimes.open)
+  ),[blockedTimes]);
 
   const setBoxColor = (hour: number, times: {name: string, time: Array<string>}) => {
     for (let i = 0; i < times.time.length; i++) {

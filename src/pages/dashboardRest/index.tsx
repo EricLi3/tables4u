@@ -122,19 +122,21 @@ function DashboardRest() {
   const handleOpenClose = (setOpen: boolean) => {
     // Open or close the restaurant
     // post the day and open/close status
-    instance
-      .post("/toggleOpenDay", {
-        restUUID: restUUID,
-        dateTime: selectedDay.format(),
-        open: setOpen,
-      })
-      .then((response) => {
-        console.log("Opened/closed restaurant:", response);
-        setIsDayOpen(setOpen);
-      })
-      .catch((error) => {
-        console.error("Failed to open/close restaurant:", error);
-      });
+    if(dayjs().format('YYYYMMDD')!=selectedDay.format('YYYYMMDD')){
+      instance
+        .post("/toggleOpenDay", {
+          restUUID: restUUID,
+          dateTime: selectedDay.format(),
+          open: setOpen,
+        })
+        .then((response) => {
+          console.log("Opened/closed restaurant:", response);
+          setIsDayOpen(setOpen);
+        })
+        .catch((error) => {
+          console.error("Failed to open/close restaurant:", error);
+        });
+    }
   };
 
   const handleDelete = () => {
@@ -210,7 +212,7 @@ function DashboardRest() {
         </div>
 
         <div style={{ gridColumn: "1 / span 1", gridRow: "2 / span 1" }}>
-          <ReservationListBenches openingHour={restaurantData.openingTime.hour()} closingHour={restaurantData.closingTime.hour()} restUUID={restUUID} dateTime={selectedDay.toISOString()}/>
+          <ReservationListBenches openingHour={restaurantData.openingTime.hour()} closingHour={restaurantData.closingTime.hour()} restUUID={restUUID} dateTime={selectedDay.toISOString()} sendDataToParent={setIsDayOpen}/>
         </div>
         <div
           style={{

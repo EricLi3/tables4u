@@ -122,7 +122,7 @@ function DashboardRest() {
   const handleOpenClose = (setOpen: boolean) => {
     // Open or close the restaurant
     // post the day and open/close status
-    if(dayjs().format('YYYYMMDD')!=selectedDay.format('YYYYMMDD')){
+    if(selectedDay.isAfter(dayjs(),'day')){
       instance
         .post("/toggleOpenDay", {
           restUUID: restUUID,

@@ -37,7 +37,13 @@ interface Restaurant {
   isActive: number;
 }
 
-function Row({ restaurant, dateTime }: { restaurant: Restaurant, dateTime:string }) {
+function Row({
+  restaurant,
+  dateTime,
+}: {
+  restaurant: Restaurant;
+  dateTime: string;
+}) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -49,7 +55,6 @@ function Row({ restaurant, dateTime }: { restaurant: Restaurant, dateTime:string
             size="small"
             onClick={() => {
               setOpen(!open);
-              
             }}
           >
             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
@@ -64,19 +69,26 @@ function Row({ restaurant, dateTime }: { restaurant: Restaurant, dateTime:string
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
-                <Typography variant="h6" gutterBottom component="div">
-                    Details
-                </Typography>
-                <ReservationList openingHour={Number(restaurant.openingHour)} closingHour={Number(restaurant.closingHour)} restUUID={restaurant.restUUID} dateTime={dateTime}/>
+              <Typography variant="h6" gutterBottom component="div">
+                Details
+              </Typography>
+              <ReservationList
+                openingHour={Number(restaurant.openingHour)}
+                closingHour={Number(restaurant.closingHour)}
+                restUUID={restaurant.restUUID}
+                dateTime={dateTime}
+              />
             </Box>
-        </Collapse>
+          </Collapse>
         </TableCell>
       </TableRow>
     </>
   );
 }
 
-export default function RestaurantTable({dateTime = '2024-11-24T21:00:00.000-0500'}) {
+export default function RestaurantTable({
+  dateTime = "2024-11-24T21:00:00.000-0500",
+}) {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -130,30 +142,38 @@ export default function RestaurantTable({dateTime = '2024-11-24T21:00:00.000-050
 
   return (
     <Box>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ borderRadius: 3 }}>
         <Table>
           <TableHead>
             <TableRow>
               <TableCell />
-              <TableCell><b>Restaurant Name</b></TableCell>
-              <TableCell><b>Address</b></TableCell>
+              <TableCell>
+                <h2>Restaurant Name</h2>
+              </TableCell>
+              <TableCell>
+                <h2>Address</h2>
+              </TableCell>
             </TableRow>
           </TableHead>
-            <TableBody>
+          <TableBody>
             {restaurants?.length > 0 ? (
               restaurants
-              .sort((a, b) => a.restUUID.localeCompare(b.restUUID)) // Sort by restUUID
-              .map((restaurant) => (
-                <Row key={restaurant.restUUID} restaurant={restaurant} dateTime={dateTime} />
-              ))
+                .sort((a, b) => a.restUUID.localeCompare(b.restUUID)) // Sort by restUUID
+                .map((restaurant) => (
+                  <Row
+                    key={restaurant.restUUID}
+                    restaurant={restaurant}
+                    dateTime={dateTime}
+                  />
+                ))
             ) : (
               <TableRow>
-              <TableCell colSpan={3} align="center">
-                No restaurants available.
-              </TableCell>
+                <TableCell colSpan={3} align="center">
+                  No restaurants available.
+                </TableCell>
               </TableRow>
             )}
-            </TableBody>
+          </TableBody>
         </Table>
       </TableContainer>
 

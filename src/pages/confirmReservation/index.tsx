@@ -41,10 +41,10 @@ const createReservation = async (
     alert("Failed to create reservation. Please try again later.");
   }
 };
-
-const findOpenTable = async (rest_uuid: string, group_size: string) => {
+// TODO - Modify to take in Start and End time as parameters. 
+const findOpenTable = async (rest_uuid: string, group_size: string,  start_time: number, end_time: number) => {
   try {
-    const response = await instance.post("/findTable", { rest_uuid, group_size });
+    const response = await instance.post("/findTable", { rest_uuid, group_size, start_time, end_time });
     console.log("Open table found:", response.data);
     return response.data;
   } catch (error) {
@@ -132,7 +132,6 @@ function ConfirmReservation() {
         <p>{restaurantInfo.address}</p>
         <p>Day: {router.query.reservationDate}</p>
         <p>Time: {router.query.reservationTime}</p>
-        {/* <p>Table Size <b>(TO CHANGE)</b>: {router.query.tableSize}</p> */}
         <p>Group Size: {router.query.numberOfPeople}</p>
 
         <br />
@@ -155,14 +154,18 @@ function ConfirmReservation() {
               const reservationUUID = uuidv4();
               const restUUID = router.query.restUUID as string;
               const fetchAndCreateReservation = async () => {
-                const data = await findOpenTable(restUUID, router.query.numberOfPeople as string); // modify to get benchUUID of a bench that can be reserved. 
+                if (startTime === null) {
+                  alert("Invalid start time");
+                  return;
+                }
+                const data = await findOpenTable(restUUID, router.query.numberOfPeople as string, startTime, startTime + 1); // modify to get benchUUID of a bench that can be reserved. 
                 if (!data || !data.body) {
                   alert("No table available");
                   router.push("/");
                   return;
                 }
 
-                let benchUUID: string;
+                let benchUUID: string | undefined;
                 try {
                   const parsedData = JSON.parse(data.body);
                   if (Array.isArray(parsedData) && parsedData.length > 0) {
@@ -170,7 +173,7 @@ function ConfirmReservation() {
                   } else {
                     alert("NO table available");
                     router.push("/");
-                    throw new Error("No available table found");
+                    return;
                   }
                 } catch (error) {
                   console.error("Failed to get benchUUID:", error);
@@ -178,8 +181,13 @@ function ConfirmReservation() {
                   router.push("/");
                   return;
                 }
-                // const reservationDateTime = "2024-11-21 12:00:00"; // Hardcoded value for reservation time
-                // const startTime = 12;
+
+                if (!benchUUID) {
+                  alert("No table available");
+                  router.push("/");
+                  return;
+                }
+
                 const e_mail = email; // Replace with actual email input
                 const confirmationCode = generateConfirmationCode(); // Example, generate dynamically if needed
                 const groupSize = parseInt(router.query.numberOfPeople as string); // Convert to number

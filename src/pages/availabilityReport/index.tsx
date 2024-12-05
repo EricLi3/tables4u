@@ -90,6 +90,10 @@ function AvailabilityReport() {
     fetchRestaurantData();
   }, [restUUID]);
 
+  const makeDays = () => {
+    //TODO TODO
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -118,7 +122,11 @@ function AvailabilityReport() {
           alignItems: "left",
         }}
       >
-        <h1>Availability Report</h1>
+        <h1>
+          Availability Report: {dateRangeStart.format("DD/MM/YYYY")}
+          {" - "}
+          {dateRangeEnd.format("DD/MM/YYYY")}
+        </h1>
         <h2>{restaurantData.name}</h2>
         <h3>{restaurantData.address}</h3>
         <h4>
@@ -145,9 +153,16 @@ function AvailabilityReport() {
       <div className="centering-div">
         <DayAvailability
           date={dayjs().toISOString()}
+          state={false}
+          openingTime={0}
+          closingTime={23}
+          benchesAndReservations={[]}
+        />
+        <DayAvailability
+          date={dayjs().toISOString()}
           state={true}
-          openingTime={8}
-          closingTime={17}
+          openingTime={0}
+          closingTime={23}
           benchesAndReservations={[
             {
               benchName: "Table 1",

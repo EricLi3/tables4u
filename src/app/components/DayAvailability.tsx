@@ -62,6 +62,7 @@ export default function DayAvailability({
     return (
       <tr key={hour}>
         <td>{hour}</td>
+        <td></td>
         {benchesAndReservations.map((bench) => {
           const reservation = bench.reservations.find(
             (res) => res.time === hour
@@ -72,8 +73,8 @@ export default function DayAvailability({
             </td>
           );
         })}
-        <td>{totalPeople}</td>
-        <td>{totalSeats}</td>
+        <td></td>
+        <td>{totalSeats - totalPeople}</td>
         <td>{Math.round((totalPeople / totalSeats) * 100)}%</td>
         <td>
           {Math.round((tablesReserved / benchesAndReservations.length) * 100)}%
@@ -120,14 +121,15 @@ export default function DayAvailability({
         <thead>
           <tr>
             <th>Hour</th>
+            <th></th>
             {makeHeaders()}
-            <th>People Total</th>
+            <th></th>
             <th>Available Seats</th>
             <th>Utilization</th>
             <th>Availability</th>
           </tr>
         </thead>
-        <tbody>{makeRows()}</tbody>
+        {state && <tbody>{makeRows()}</tbody>}
       </table>
     </Box>
   );

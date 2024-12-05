@@ -122,6 +122,30 @@ export default function RestaurantTable({
       });
   };
 
+  //need to implement numToList, and update RestaurantTable whenever the button is clicked - it'll still default update
+  //using fetchRestaurants whenever anything changes, but clicking the button will filter it
+  const searchNameDate=(name:string,dateTime:string)=>{
+    let restaurants=[];
+    instance
+      .post("/searchNameDate", {restName:name,dateTime:dateTime,numSeats:0})
+      .then((response) => {
+        try {
+          const body = response.data.body;
+          const data = body ? JSON.parse(body) : [];
+          if (Array.isArray(data)) {
+            restaurants=data;
+          } else {
+            console.error("Unexpected data format:", data);
+          }
+        } catch (error) {
+          console.error("Failed to parse response body:", error);
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to fetch restaurants:", error);
+      })
+}
+
   // Effect to load restaurants initially
   useEffect(() => {
     fetchRestaurants(numberToList);

@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import "@/app/globals.css";
 
 // Custom components
 import RestaurantTable from "@/app/components/RestaurantTable";
 import CreateRest from "@/app/components/CreateRest";
+import {searchNameDate} from "@/app/components/searchNameDate";
 
 // Material UI components
 import MenuIcon from "@mui/icons-material/Menu";
@@ -35,6 +36,8 @@ export default function Home() {
     setReservationDate,
     setReservationTime,
   } = useReservation();
+
+  const [restName, setRestName] = useState("");
 
   return (
     <main className="flex w-screen h-screen flex-col items-center justify-between p-24">
@@ -74,6 +77,7 @@ export default function Home() {
                   opacity: 0.9,
                 },
               }}
+              onChange={(newName)=>{setRestName(newName.target.value)}}
             />
 
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -118,7 +122,8 @@ export default function Home() {
             </LocalizationProvider>
           </div>
           <div className="centering-div div-horiz">
-            <button className="btn_secondary">
+            <button className="btn_secondary"
+            onClick={()=>searchNameDate(restName,reservationDate)}>
               Name & Day
               <Search className="icon-padding" />
             </button>

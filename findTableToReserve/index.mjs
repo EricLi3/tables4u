@@ -11,20 +11,22 @@ export const handler = async (event) => {
 
     const rest_uuid = event.rest_uuid;
     const group_size = event.group_size;
-    const start_time = event.start_time; 
-    const end_time = event.end_time;     
+    const start_time = event.start_time;
+    const end_time = event.end_time;
 
     const ReserveBench = (rest_uuid, group_size, start_time, end_time) => {
         return new Promise((resolve, reject) => {
             const query = `
-                SELECT b.benchUUID, b.benchName, b.numSeats 
+                SELECT b.benchUUID, b.benchName, b.numSeats
                 FROM Benches b
-                LEFT JOIN Reservations r ON b.benchUUID = r.benchUUID 
-                    AND r.startTime BETWEEN ? AND ? 
+                LEFT JOIN Reservations r 
+                    ON b.benchUUID = r.benchUUID 
+                    AND r.startTime >= ? 
+                    AND r.startTime <= ?
                 WHERE b.restUUID = ?
                     AND b.numSeats >= ?
                     AND r.reservationUUID IS NULL
-                LIMIT 1;
+                    LIMIT 1;
             `;
 
             pool.query(query, [start_time, end_time, rest_uuid, group_size], (error, rows) => {

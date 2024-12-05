@@ -1,5 +1,6 @@
 // src/context/ReservationContext.tsx
 "use client"
+import dayjs from "dayjs";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 type ReservationContextType = {
@@ -15,9 +16,8 @@ const ReservationContext = createContext<ReservationContextType | undefined>(und
 
 export const ReservationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [numberOfPeople, setNumberOfPeople] = useState(4);
-  const [reservationDate, setReservationDate] = useState("");
-  const [reservationTime, setReservationTime] = useState("");
-
+  const [reservationDate, setReservationDate] = useState(""); //"2024-05-12"
+  const [reservationTime, setReservationTime] = useState(""); //dayjs().set("minute", 0).format("HH:mm")
 
   // Log the context values to ensure they are being passed
   console.log("ReservationProvider State:", {

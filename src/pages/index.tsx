@@ -58,7 +58,7 @@ export default function Home() {
             marks
             min={1}
             max={8}
-            onChange={(e, value) => setNumberOfPeople(value as number)}
+            onChange={(_e, value) => setNumberOfPeople(value as number)}
           />
         </div>
         {/* Search navigation */}
@@ -78,9 +78,9 @@ export default function Home() {
 
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
-                label="Reservation Date"
+                label="Pick Date"
                 format="ddd DD/MM/YYYY"
-                value={reservationDate ? dayjs(reservationDate) : dayjs()}
+                // value={dayjs(reservationDate)}
                 onChange={(newDate) => {
                   if (newDate) {
                     setReservationDate(newDate.format("YYYY-MM-DD"));
@@ -95,15 +95,16 @@ export default function Home() {
               />
 
               <MobileTimePicker
-                label="Reservation Time"
+                label="Choose Time"
                 format="HH:mm"
-                value={reservationTime ? dayjs(reservationTime, "HH:mm") : null}
+                // value={reservationTime ? dayjs(reservationTime, "HH:mm") : null}
                 views={["hours"]}
                 ampm={false}
-                defaultValue={dayjs().set("minute", 0)}
+                // defaultValue={dayjs().set("minute", 0)}
                 onChange={(newTime) => {
                   if (newTime) {
                     setReservationTime(newTime.format("HH:mm"));
+                    console.log(newTime)
                   }
                 }}
                 minTime={dayjs().set("hour", 0).set("minute", 0)}

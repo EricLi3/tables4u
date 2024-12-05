@@ -6,9 +6,9 @@ import { useRouter } from "next/router";
 import "@/app/globals.css";
 import { Grid2 } from "@mui/material";
 import { Box } from "@mui/system";
-// ascess global state. 
+import { Button } from "@mui/material";
+// access global state. 
 import { useReservation } from "@/app/context/ReservationContext";
-
 
 const instance = axios.create({
   baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/initial",
@@ -27,10 +27,9 @@ export default function ReservationList({
 }) {
   const router = useRouter();
   const [blockedTimes, setBlockedTimes] = useState<number[]>([]);
-  const [clickedBoxes, setClickedBoxes] = useState<number[]>([]);
+  const [clickedBox, setClickedBox] = useState<number | null>(null);
 
   const { numberOfPeople, reservationDate, reservationTime } = useReservation();
-
 
   useEffect(() => {
     const fetchRestaurantInfo = async (restUUID: string, dateTime: string) => {
@@ -43,31 +42,33 @@ export default function ReservationList({
         }
       } catch (error) {
         console.log("Error fetching reservation info \n");
-        console.log(error)
+        console.log(error);
       }
     };
 
     fetchRestaurantInfo(restUUID, dateTime);
   }, [restUUID, dateTime]);
 
-  const setBoxColor = (hour: number, blockedTimes: Array<number>, clickedBoxes: Array<number>) => {
-    if (clickedBoxes.includes(hour)) {
-      return "#000000"; // Black color for clicked boxes
+  const setBoxColor = (hour: number, blockedTimes: Array<number>, clickedBox: number | null) => {
+    if (clickedBox === hour) {
+      return "#000000"; // Black color for clicked box
     }
     return blockedTimes.includes(hour) ? "#0F0F0F" : "#FFFFFF";
   };
 
-  // Initialized Reservation proccess. Ports with neccessary data to the confirmationReservatin page
   const handleBoxClick = (hour: number) => {
-    setClickedBoxes((prev) => [...prev, hour]);
+    setClickedBox(hour);
+  };
+
+  const confirmReservation = () => {
     router.push({
       pathname: "/confirmReservation",
       query: {
         restUUID,
-        // tableSize: 4, // Replace with actual table size as needed
         numberOfPeople,
         reservationDate,
         reservationTime,
+        selectedTime: clickedBox, // Pass the selected time
       },
     });
   };
@@ -76,19 +77,18 @@ export default function ReservationList({
   for (let i = 0; i < closingHour - openingHour; i++) {
     list.push(
       <Grid2 key={i} size={1}>
-        {/* use useRouter book to pass the data to the next page */}
-        <Box key={i}
+        <Box
+          key={i}
           sx={{
             border: 1,
             borderRadius: 1,
-            bgcolor: setBoxColor(openingHour + i, blockedTimes, clickedBoxes),
-            cursor: "pointer", // Add cursor pointer to indicate clickable
+            bgcolor: setBoxColor(openingHour + i, blockedTimes, clickedBox),
+            cursor: "pointer",
           }}
-          onClick={() => handleBoxClick(openingHour + i)} // Call handleBoxClick on click
+          onClick={() => handleBoxClick(openingHour + i)}
         >
           &nbsp;
         </Box>
-
       </Grid2>
     );
   }
@@ -104,6 +104,13 @@ export default function ReservationList({
         ))}
         {list}
       </Grid2>
+      {clickedBox !== null && (
+        <Box mt={2}>
+            <Button variant="contained" color="primary" sx={{ maxWidth: "120px" }} onClick={confirmReservation}>
+            Confirm Reservation at {clickedBox}:00
+            </Button>
+        </Box>
+      )}
     </div>
   );
 }

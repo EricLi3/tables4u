@@ -7,7 +7,7 @@ import "@/app/globals.css";
 import { Grid2 } from "@mui/material";
 import { Box } from "@mui/system";
 import { Button } from "@mui/material";
-// access global state. 
+// access global state.
 import { useReservation } from "@/app/context/ReservationContext";
 
 const instance = axios.create({
@@ -34,7 +34,10 @@ export default function ReservationList({
   useEffect(() => {
     const fetchRestaurantInfo = async (restUUID: string, dateTime: string) => {
       try {
-        const response = await instance.post("/restaurantInfo", { restUUID, dateTime });
+        const response = await instance.post("/restaurantInfo", {
+          restUUID,
+          dateTime,
+        });
         const body = response.data.body;
         const data = body ? JSON.parse(body) : [];
         if (Array.isArray(data)) {
@@ -49,7 +52,11 @@ export default function ReservationList({
     fetchRestaurantInfo(restUUID, dateTime);
   }, [restUUID, dateTime]);
 
-  const setBoxColor = (hour: number, blockedTimes: Array<number>, clickedBox: number | null) => {
+  const setBoxColor = (
+    hour: number,
+    blockedTimes: Array<number>,
+    clickedBox: number | null
+  ) => {
     if (clickedBox === hour) {
       return "#000000"; // Black color for clicked box
     }
@@ -106,9 +113,14 @@ export default function ReservationList({
       </Grid2>
       {clickedBox !== null && (
         <Box mt={2}>
-            <Button variant="contained" color="primary" sx={{ maxWidth: "120px" }} onClick={confirmReservation}>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ maxWidth: "120px" }}
+            onClick={confirmReservation}
+          >
             Confirm Reservation at {clickedBox}:00
-            </Button>
+          </Button>
         </Box>
       )}
     </div>

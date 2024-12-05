@@ -1,7 +1,8 @@
+"use client";
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import "@/app/globals.css";
-// import { useRouter } from "next/router";
 
 import axios from "axios";
 
@@ -63,7 +64,7 @@ function Row({
   dateRangeStart: dayjs.Dayjs;
   dateRangeEnd: dayjs.Dayjs;
 }) {
-  // const router = useRouter();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isActive, setIsActive] = useState(true);
   const [reservations, setReservations] = useState<Reservation[]>([]);
@@ -105,6 +106,17 @@ function Row({
       alert("Failed to cancel reservation. Please try again later.");
     }
   };
+  const generateAvailabilityReport = () => {
+    router.push({
+      pathname: "/availabilityReport",
+      query: {
+        restUUID: restaurant.restUUID,
+        dateRangeStart: dateRangeStart.toISOString(),
+        dateRangeEnd: dateRangeEnd.toISOString(),
+      },
+    });
+  };
+
   return (
     <>
       <TableRow>
@@ -138,11 +150,26 @@ function Row({
                 Details
               </Typography>
               <Typography variant="body2">
-                Opening hours: {restaurant.openingHour} -{" "}
-                {restaurant.closingHour}
-                <Typography variant="h6" component="div">
-                  Reservations
-                </Typography>
+                Opening hours: {restaurant.openingHour}
+                {":00"} - {restaurant.closingHour}
+                {":00"}
+                <br />
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Typography variant="h6" component="div">
+                    Reservations
+                  </Typography>
+
+                  <button
+                    className="btn_secondary btn_small"
+                    onClick={generateAvailabilityReport}
+                  >
+                    Generate Availability Report
+                  </button>
+                </Box>
                 {reservations.filter((reservation) => {
                   const reservationDate = dayjs(
                     reservation.reservationDateTime
@@ -218,8 +245,12 @@ function RestaurantTable() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [numberToList, setNumberToList] = useState(5);
-  const [dateRangeStart, setDateRangeStart] = useState(dayjs());
-  const [dateRangeEnd, setDateRangeEnd] = useState(dayjs().add(7, "day"));
+  const [dateRangeStart, setDateRangeStart] = useState(
+    dayjs().set("hour", 0).set("minute", 0).set("second", 0)
+  );
+  const [dateRangeEnd, setDateRangeEnd] = useState(
+    dayjs().add(7, "day").set("hour", 0).set("minute", 0).set("second", 0)
+  );
 
   const fetchRestaurants = (numToList: number) => {
     setLoading(true);
@@ -333,7 +364,12 @@ function RestaurantTable() {
           />
         </LocalizationProvider>
 
-        <button className="btn_secondary">
+        <button
+          className="btn_secondary"
+          onClick={() =>
+            console.log("This is a placebo button for the user to smash")
+          }
+        >
           <Search />
         </button>
       </div>

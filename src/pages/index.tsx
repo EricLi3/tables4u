@@ -7,7 +7,6 @@ import "@/app/globals.css";
 // Custom components
 import RestaurantTable from "@/app/components/RestaurantTable";
 import CreateRest from "@/app/components/CreateRest";
-import {searchNameDate} from "@/app/components/searchNameDate";
 
 // Material UI components
 import MenuIcon from "@mui/icons-material/Menu";
@@ -38,6 +37,7 @@ export default function Home() {
   } = useReservation();
 
   const [restName, setRestName] = useState("");
+  const [searchNameDayTrigger, setSearchNameDayTrigger] = useState(false);
 
   return (
     <main className="flex w-screen h-screen flex-col items-center justify-between p-24">
@@ -123,7 +123,7 @@ export default function Home() {
           </div>
           <div className="centering-div div-horiz">
             <button className="btn_secondary"
-            onClick={()=>searchNameDate(restName,reservationDate)}>
+            onClick={()=>setSearchNameDayTrigger(!searchNameDayTrigger)}>
               Name & Day
               <Search className="icon-padding" />
             </button>
@@ -134,7 +134,7 @@ export default function Home() {
           </div>
         </div>
 
-        <RestaurantTable dateTime={`${reservationDate} ${reservationTime}`} />
+        <RestaurantTable dateTime={`${reservationDate} ${reservationTime}`} searchNameDayTrigger={searchNameDayTrigger} name={restName}/>
       </div>
 
       <div className="loginNav centering-div">

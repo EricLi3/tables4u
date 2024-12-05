@@ -88,6 +88,8 @@ function Row({
 
 export default function RestaurantTable({
   dateTime = "2024-11-24T21:00:00.000-0500",
+  searchNameDayTrigger=false,
+  name="",
 }) {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(true);
@@ -122,10 +124,9 @@ export default function RestaurantTable({
       });
   };
 
-  //need to implement numToList, and update RestaurantTable whenever the button is clicked - it'll still default update
-  //using fetchRestaurants whenever anything changes, but clicking the button will filter it
+  //need to implement numToList
   const searchNameDate=(name:string,dateTime:string)=>{
-    let restaurants=[];
+    setLoading(true);
     instance
       .post("/searchNameDate", {restName:name,dateTime:dateTime,numSeats:0})
       .then((response) => {
@@ -133,16 +134,21 @@ export default function RestaurantTable({
           const body = response.data.body;
           const data = body ? JSON.parse(body) : [];
           if (Array.isArray(data)) {
-            restaurants=data;
+            setRestaurants(data);
           } else {
             console.error("Unexpected data format:", data);
+            setRestaurants([]);
           }
         } catch (error) {
           console.error("Failed to parse response body:", error);
+          setRestaurants([]);
         }
       })
       .catch((error) => {
         console.error("Failed to fetch restaurants:", error);
+      })
+      .finally(()=>{
+        setLoading(false);
       })
 }
 
@@ -150,6 +156,10 @@ export default function RestaurantTable({
   useEffect(() => {
     fetchRestaurants(numberToList);
   }, [numberToList]); // to not have an infinite loop of rendering
+
+  useEffect(() => {
+    searchNameDate(name,dateTime)
+  },[searchNameDayTrigger]);
 
   // Handle Load More Button
   const handleLoadMore = () => {

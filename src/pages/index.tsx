@@ -11,7 +11,7 @@ import CreateRest from "@/app/components/CreateRest";
 // Material UI components
 import MenuIcon from "@mui/icons-material/Menu";
 import Slider from "@mui/material/Slider";
-import { Box, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 
 // For time and date picking
 import { Search } from "@mui/icons-material";

@@ -11,7 +11,7 @@ export const handler = async (event) => {
 
     
     const e_mail = event.email;
-    const confirmation_code = event.confirmation_code;
+    const confirmation_code = event.confCode;
 
 
     const findResevation = (e_mail, confirmation_code) => {

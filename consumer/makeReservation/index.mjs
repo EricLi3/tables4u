@@ -32,17 +32,17 @@ export const handler = async (event) => {
     };
 
     // Function to update the bench to be reserved
-    const updateBenchStatus = (benchUUID) => {
-        return new Promise((resolve, reject) => {
-            const query = "UPDATE Benches SET isReserved = ? WHERE benchUUID = ?";
-            pool.query(query, [true, benchUUID], (error, result) => {
-                if (error) {
-                    return reject(error);
-                }
-                return resolve(result);
-            });
-        });
-    };
+    // const updateBenchStatus = (benchUUID) => {
+    //     return new Promise((resolve, reject) => {
+    //         const query = "UPDATE Benches SET isReserved = ? WHERE benchUUID = ?";
+    //         pool.query(query, [true, benchUUID], (error, result) => {
+    //             if (error) {
+    //                 return reject(error);
+    //             }
+    //             return resolve(result);
+    //         });
+    //     });
+    // };
 
     let response;
 

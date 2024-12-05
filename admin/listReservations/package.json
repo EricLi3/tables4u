@@ -1,0 +1,14 @@
+{
+    "name": "listReservations",
+    "version": "1.0.0",
+    "description": "list all reseravtions associatesd with a restraunt",
+    "main": "index.mjs",
+    "repository": "TBA",
+    "author": "Eric Li",
+    "license": "MIT",
+    "dependencies": {
+        "mysql": "^2.18.1"
+    },
+    "scripts": {},
+    "devDependencies": {}
+}

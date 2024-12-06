@@ -14,7 +14,7 @@ export const handler = async (event) => {
 
     const GetActiveRests = (limit) => {
         return new Promise((resolve, reject) => {
-            pool.query("SELECT * FROM Restaurants WHERE isActive = 1 LIMIT ?", [limit], (error, rows) => {
+            pool.query("SELECT restUUID, restName, address, openingHour, closingHour, isActive FROM Restaurants WHERE isActive = 1 LIMIT ?", [limit], (error, rows) => {
                 if (error) {
                     return reject(error);
                 }

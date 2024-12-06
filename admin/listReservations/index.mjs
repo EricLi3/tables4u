@@ -9,32 +9,29 @@ export const handler = async (event) => {
         database: "tables4u"
     });
 
-    const e_mail = event.email;
-    const confirmation_code = event.confirmation_code;
+    const restUUID = event.restUUID; // Default to 5 records
 
 
-
-    const deleteReservation = (e_mail, confirmation_code) => {
+    const GetReservations = (rest_uuid) => {
         return new Promise((resolve, reject) => {
-            const query = "DELETE FROM Reservations WHERE email=? AND confirmationCode=?";
-            pool.query(query, [e_mail, confirmation_code], (error, result) => {
+            pool.query("SELECT * FROM Reservations WHERE restUUID=?", [rest_uuid], (error, rows) => {
                 if (error) {
                     return reject(error);
                 }
-                return resolve(result);
+                return resolve(rows); // Return rows if successful
             });
         });
     };
 
     let response;
-
     try {
-        // Execute delete queries sequentially
-        await deleteReservation(e_mail, confirmation_code);
+        // Wait for the query result
+        const rows = await GetReservations(restUUID);
+        console.log('Query result:', rows);
 
         response = {
             statusCode: 200,
-            body: JSON.stringify({ message: 'cancelled' })
+            body: JSON.stringify(rows)
         };
     } catch (error) {
         console.error("ERROR:", error);

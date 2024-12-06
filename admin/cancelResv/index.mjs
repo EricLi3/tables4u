@@ -8,16 +8,15 @@ export const handler = async (event) => {
         password: "Netro7887",
         database: "tables4u"
     });
-
-    const e_mail = event.email;
-    const confirmation_code = event.confirmation_code;
-
+    // TODO: Change me.
+    const deleted_reservation_uuid = event.reservation_uuid;
 
 
-    const deleteReservation = (e_mail, confirmation_code) => {
+    const deleteReservation = (restID) => {
         return new Promise((resolve, reject) => {
-            const query = "DELETE FROM Reservations WHERE email=? AND confirmationCode=?";
-            pool.query(query, [e_mail, confirmation_code], (error, result) => {
+            const query = `DELETE FROM Reservations WHERE reservationUUID=?`;
+            
+            pool.query(query, [restID], (error, result) => {
                 if (error) {
                     return reject(error);
                 }
@@ -30,11 +29,11 @@ export const handler = async (event) => {
 
     try {
         // Execute delete queries sequentially
-        await deleteReservation(e_mail, confirmation_code);
+        await deleteReservation('Reservations', deleted_reservation_uuid);
 
         response = {
             statusCode: 200,
-            body: JSON.stringify({ message: 'cancelled' })
+            body: JSON.stringify({ message: 'Deletion successful' })
         };
     } catch (error) {
         console.error("ERROR:", error);

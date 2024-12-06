@@ -36,7 +36,6 @@ export const handler = async (event) => {
     try {
         // Execute delete queries sequentially
         await newReservation(reservation_uuid, rest_uuid, bench_uuid, reservation_date_time, start_time, e_mail, confirmation_code, group_size);
-
         response = {
             statusCode: 200,
             body: JSON.stringify({ message: 'Reservation Succesfull' })

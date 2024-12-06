@@ -20,11 +20,11 @@ export const ReservationProvider: React.FC<{ children: ReactNode }> = ({ childre
 
 
   // Log the context values to ensure they are being passed
-  console.log("ReservationProvider State:", {
-    numberOfPeople,
-    reservationDate,
-    reservationTime,
-  });
+  // console.log("ReservationProvider State:", {
+  //   numberOfPeople,
+  //   reservationDate,
+  //   reservationTime,
+  // });
 
   return (
     <ReservationContext.Provider

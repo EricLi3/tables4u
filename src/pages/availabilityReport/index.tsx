@@ -49,8 +49,6 @@ function AvailabilityReport() {
 
   // Fetch existing data on component mount
   const fetchRestaurantData = async () => {
-    setLoading(true);
-    if (!restUUID) return; // Wait for restUUID to be available
     try {
       const response = await instance.post("/rest", { rest_uuid: restUUID });
       const data = response.data.body ? JSON.parse(response.data.body) : {}; // Parse the response body as JSON if defined
@@ -81,17 +79,87 @@ function AvailabilityReport() {
       }
     } catch (error) {
       console.error("Error fetching restaurant data:", error);
-    } finally {
-      setLoading(false);
+    }
+  };
+
+  const [availabilityData, setAvailabilityData] = useState<{
+    startTime: number;
+    endTime: number;
+    usage: {
+      day: string;
+      state: boolean;
+      tables: {
+        name: string;
+        seats: string;
+        times: { time: string; people: string }[];
+      }[];
+    }[];
+  }>({
+    startTime: 8,
+    endTime: 17,
+    usage: [],
+  });
+
+  const fetchAvailabilityData = async () => {
+    try {
+      const response = await instance.post("/generateReportAdmin", {
+        restUUID: restUUID,
+        dateRangeStart: dateRangeStart.toISOString(),
+        dateRangeEnd: dateRangeEnd.toISOString(),
+      });
+      const data = response.data ? response.data : {}; // Directly access the response data
+      console.log("Data:", data);
+      if (
+        data &&
+        data.availability &&
+        data.availability.usage &&
+        Array.isArray(data.availability.usage)
+      ) {
+        setAvailabilityData({
+          startTime: data.availability.startTime || 8,
+          endTime: data.availability.endTime || 17,
+          usage: data.availability.usage || [],
+        });
+
+        console.log("Availability Data:", data.availability);
+      }
+    } catch (error) {
+      console.error("Error fetching availability data:", error);
     }
   };
 
   useEffect(() => {
-    fetchRestaurantData();
-  }, [restUUID]);
+    const fetchData = async () => {
+      await fetchRestaurantData();
+      await fetchAvailabilityData();
+      setLoading(false);
+    };
+
+    if (loading) {
+      fetchData();
+    }
+  }, [loading, restUUID, dateRangeStart, dateRangeEnd]);
 
   const makeDays = () => {
-    //TODO TODO
+    return availabilityData.usage.map((day) => (
+      <div key={day.day}>
+        <h1>{dayjs(day.day).format("DD/MM/YYYY")}</h1>
+        <DayAvailability
+          date={day.day}
+          state={day.state}
+          openingTime={availabilityData.startTime}
+          closingTime={availabilityData.endTime}
+          benchesAndReservations={day.tables.map((table) => ({
+            benchName: table.name,
+            numSeats: parseInt(table.seats),
+            reservations: table.times.map((time) => ({
+              time: parseInt(time.time),
+              numOfPeople: parseInt(time.people),
+            })),
+          }))}
+        />
+      </div>
+    ));
   };
 
   if (loading) {
@@ -151,45 +219,7 @@ function AvailabilityReport() {
       </Box>
 
       <div className="centering-div">
-        <DayAvailability
-          date={dayjs().toISOString()}
-          state={false}
-          openingTime={0}
-          closingTime={23}
-          benchesAndReservations={[]}
-        />
-        <DayAvailability
-          date={dayjs().toISOString()}
-          state={true}
-          openingTime={0}
-          closingTime={23}
-          benchesAndReservations={[
-            {
-              benchName: "Table 1",
-              numSeats: 4,
-              reservations: [
-                { time: 10, numOfPeople: 2 },
-                { time: 12, numOfPeople: 4 },
-              ],
-            },
-            {
-              benchName: "Table 2",
-              numSeats: 2,
-              reservations: [
-                { time: 9, numOfPeople: 2 },
-                { time: 14, numOfPeople: 2 },
-              ],
-            },
-            {
-              benchName: "Table 3",
-              numSeats: 6,
-              reservations: [
-                { time: 11, numOfPeople: 6 },
-                { time: 15, numOfPeople: 3 },
-              ],
-            },
-          ]}
-        />
+        {makeDays()}
       </div>
     </main>
   );

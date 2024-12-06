@@ -74,7 +74,7 @@ button {
   /* Add padding to ensure space around the text */
 }
 
-button {
+button:disabled {
   background-color: var(--gray);
   color: var(--color3);
 }

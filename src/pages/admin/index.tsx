@@ -249,7 +249,7 @@ function RestaurantTable() {
     dayjs().set("hour", 0).set("minute", 0).set("second", 0)
   );
   const [dateRangeEnd, setDateRangeEnd] = useState(
-    dayjs().add(7, "day").set("hour", 0).set("minute", 0).set("second", 0)
+    dayjs().add(7, "day").set("hour", 23).set("minute", 59).set("second", 0)
   );
 
   const fetchRestaurants = (numToList: number) => {
@@ -336,7 +336,7 @@ function RestaurantTable() {
             format="ddd DD/MM/YYYY"
             value={dateRangeStart}
             onChange={(newDate) => {
-              setDateRangeStart(dayjs(newDate));
+              setDateRangeStart(dayjs(newDate).set("hour", 0).set("minute", 0).set("second", 0));
             }}
             maxDate={dateRangeEnd}
             sx={{
@@ -352,7 +352,7 @@ function RestaurantTable() {
             format="ddd DD/MM/YYYY"
             value={dateRangeEnd}
             onChange={(newDate) => {
-              setDateRangeEnd(dayjs(newDate));
+              setDateRangeEnd(dayjs(newDate).set("hour", 23).set("minute", 59).set("second", 0));
             }}
             minDate={dateRangeStart}
             sx={{

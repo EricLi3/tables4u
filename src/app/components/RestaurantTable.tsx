@@ -28,8 +28,8 @@ const instance = axios.create({
 
 interface Restaurant {
   restUUID: string;
-  userName: string;
-  pass: string;
+  // userName: string;
+  // pass: string;
   restName: string;
   address: string;
   openingHour: string;

@@ -91,10 +91,17 @@ export default function RestaurantTable({
   searchNameDayTrigger=false,
   name="",
 }) {
+  const searchState ={
+    searchDefault: 0,
+    searchNameDay: 1,
+    searchDateTime: 2
+  };
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [numberToList, setNumberToList] = useState(5);
+  const [state,setState] = useState(searchState.searchDefault);
+
 
   const fetchRestaurants = (numToList: number) => {
     setLoading(true);
@@ -125,10 +132,10 @@ export default function RestaurantTable({
   };
 
   //need to implement numToList
-  const searchNameDate=(name:string,dateTime:string)=>{
+  const searchNameDate=(name:string,dateTime:string,numberToList:number)=>{
     setLoading(true);
     instance
-      .post("/searchNameDate", {restName:name,dateTime:dateTime,numSeats:0})
+      .post("/searchNameDate", {restName:name,dateTime:dateTime,numberToList:numberToList})
       .then((response) => {
         try {
           const body = response.data.body;
@@ -154,12 +161,29 @@ export default function RestaurantTable({
 
   // Effect to load restaurants initially
   useEffect(() => {
-    fetchRestaurants(numberToList);
-  }, [numberToList]); // to not have an infinite loop of rendering
+    switch (state) {
+      case searchState.searchDefault:
+        fetchRestaurants(numberToList);
+        break;
+      
+      case searchState.searchNameDay:
+        searchNameDate(name,dateTime,numberToList);
+        break;
+      case searchState.searchDateTime:
+
+        break;
+    }
+  }, [numberToList,state,name,dateTime]); // to not have an infinite loop of rendering
 
   useEffect(() => {
-    searchNameDate(name,dateTime)
-  },[searchNameDayTrigger]);
+    setState(searchState.searchNameDay),
+    setNumberToList(5);
+  },[searchNameDayTrigger,name]);
+  
+  useEffect(() =>{
+    name=="" ? setState(searchState.searchDefault) : {},
+    setNumberToList(5);
+  },[name]);
 
   // Handle Load More Button
   const handleLoadMore = () => {

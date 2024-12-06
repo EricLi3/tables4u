@@ -1,0 +1,18 @@
+{
+    "name": "searchDayTime",
+    "version": "1.0.0",
+    "description": "Search Restaurants by Day and Time",
+    "main": "index.mjs",
+    "repository": "TBA",
+    "author": "Carlos",
+    "license": "MIT",
+    "dependencies": {
+      "mysql": "^2.18.1"
+    },
+    "scripts": {
+      
+    },
+    "devDependencies": {
+      
+    }
+  }

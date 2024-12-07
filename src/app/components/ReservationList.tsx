@@ -28,7 +28,6 @@ export default function ReservationList({
   const router = useRouter();
   const [blockedTimes, setBlockedTimes] = useState<number[]>([]);
   const [clickedBox, setClickedBox] = useState<number | null>(null);
-
   const { numberOfPeople, reservationDate, reservationTime } = useReservation();
 
   useEffect(() => {
@@ -64,7 +63,11 @@ export default function ReservationList({
   };
 
   const handleBoxClick = (hour: number) => {
-    setClickedBox(hour);
+    if (reservationDate && reservationTime) {
+      setClickedBox(hour);
+    } else {
+      alert("Please select a date and time first");
+    }
   };
 
   const confirmReservation = () => {
@@ -90,7 +93,7 @@ export default function ReservationList({
             border: 1,
             borderRadius: 1,
             bgcolor: setBoxColor(openingHour + i, blockedTimes, clickedBox),
-            cursor: "pointer",
+            cursor: reservationDate && reservationTime ? "pointer" : "not-allowed",
           }}
           onClick={() => handleBoxClick(openingHour + i)}
         >
@@ -113,12 +116,7 @@ export default function ReservationList({
       </Grid2>
       {clickedBox !== null && (
         <Box mt={2}>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{ maxWidth: "120px" }}
-            onClick={confirmReservation}
-          >
+          <Button variant="contained" color="primary" sx={{ maxWidth: "120px" }} onClick={confirmReservation}>
             Confirm Reservation at {clickedBox}:00
           </Button>
         </Box>

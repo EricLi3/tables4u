@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import "@/app/globals.css";
 
@@ -36,6 +36,10 @@ export default function Home() {
     setReservationTime,
   } = useReservation();
 
+  const [restName, setRestName] = useState("");
+  const [searchNameDayTrigger, setSearchNameDayTrigger] = useState(false);
+  const [searchDateTimeTrigger, setSearchDateTimeTrigger] = useState(false);
+
   return (
     <main className="flex w-screen h-screen flex-col items-center justify-between p-24">
       <div className="top-left-button">
@@ -58,7 +62,7 @@ export default function Home() {
             marks
             min={1}
             max={8}
-            onChange={(e, value) => setNumberOfPeople(value as number)}
+            onChange={(_e, value) => setNumberOfPeople(value as number)}
           />
         </div>
        
@@ -74,13 +78,14 @@ export default function Home() {
                   opacity: 0.9,
                 },
               }}
+              onChange={(newName)=>{setRestName(newName.target.value)}}
             />
 
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
-                label="Reservation Date"
+                label="Pick Date"
                 format="ddd DD/MM/YYYY"
-                value={reservationDate ? dayjs(reservationDate) : dayjs()}
+                // value={dayjs(reservationDate)}
                 onChange={(newDate) => {
                   if (newDate) {
                     setReservationDate(newDate.format("YYYY-MM-DD"));
@@ -95,15 +100,16 @@ export default function Home() {
               />
 
               <MobileTimePicker
-                label="Reservation Time"
+                label="Choose Time"
                 format="HH:mm"
-                value={reservationTime ? dayjs(reservationTime, "HH:mm") : null}
+                // value={reservationTime ? dayjs(reservationTime, "HH:mm") : null}
                 views={["hours"]}
                 ampm={false}
-                defaultValue={dayjs().set("minute", 0)}
+                // defaultValue={dayjs().set("minute", 0)}
                 onChange={(newTime) => {
                   if (newTime) {
                     setReservationTime(newTime.format("HH:mm"));
+                    console.log(newTime)
                   }
                 }}
                 minTime={dayjs().set("hour", 0).set("minute", 0)}
@@ -118,18 +124,20 @@ export default function Home() {
             </LocalizationProvider>
           </div>
           <div className="centering-div div-horiz">
-            <button className="btn_secondary">
+            <button className="btn_secondary"
+            onClick={()=>setSearchNameDayTrigger(!searchNameDayTrigger)}>
               Name & Day
               <Search className="icon-padding" />
             </button>
-            <button className="btn_secondary">
+            <button className="btn_secondary"
+            onClick={()=>setSearchDateTimeTrigger(!searchDateTimeTrigger)}>
               Date & Time
               <Search className="icon-padding" />
             </button>
           </div>
         </div>
 
-        <RestaurantTable dateTime={`${reservationDate} ${reservationTime}`} />
+        <RestaurantTable dateTime={`${reservationDate} ${reservationTime}`} searchNameDayTrigger={searchNameDayTrigger} searchDateTimeTrigger={searchDateTimeTrigger} name={restName}/>
       </div>
 
       <div className="loginNav centering-div">

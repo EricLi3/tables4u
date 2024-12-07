@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import router, { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
 
 import "@/app/globals.css";
@@ -36,6 +36,8 @@ const createReservation = async (
     });
     console.log("Reservation created:", response.data);
     alert("Reservation created successfully! \nConfirmation code: " + confirmation_code);
+    router.push("/");
+
   } catch (error) {
     console.error("Failed to create reservation:", error);
     alert("Failed to create reservation. Please try again later.");

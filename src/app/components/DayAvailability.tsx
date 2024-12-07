@@ -19,7 +19,7 @@ export default function DayAvailability({
   benchesAndReservations,
 }: {
   date: string;
-  state: boolean;
+  state: string;
   openingTime: number;
   closingTime: number;
   benchesAndReservations: {
@@ -109,7 +109,7 @@ export default function DayAvailability({
       }}
     >
       <h2>{dayjs(date).format("ddd DD/MM/YYYY")}</h2>
-      <h3>Status: {state ? "✅" : "❌"}</h3>
+      <h3>Status: {(state === "true") ? "✅" : "❌"}</h3>
       <table
         style={{
           width: "100%",
@@ -129,7 +129,7 @@ export default function DayAvailability({
             <th>Availability</th>
           </tr>
         </thead>
-        {state && <tbody>{makeRows()}</tbody>}
+        {(state === "true") && <tbody>{makeRows()}</tbody>}
       </table>
     </Box>
   );

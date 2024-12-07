@@ -143,7 +143,6 @@ function AvailabilityReport() {
   const makeDays = () => {
     return availabilityData.usage.map((day) => (
       <div key={day.day}>
-        <h1>{dayjs(day.day).format("DD/MM/YYYY")}</h1>
         <DayAvailability
           date={day.day}
           state={day.state}

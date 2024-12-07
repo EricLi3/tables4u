@@ -88,11 +88,21 @@ function Row({
 
 export default function RestaurantTable({
   dateTime = "2024-11-24T21:00:00.000-0500",
+  searchNameDayTrigger = false,
+  searchDateTimeTrigger = false,
+  name = "",
 }) {
+  const searchState = {
+    searchDefault: 0,
+    searchNameDay: 1,
+    searchDateTime: 2
+  };
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [numberToList, setNumberToList] = useState(5);
+  const [state, setState] = useState(searchState.searchDefault);
+
 
   const fetchRestaurants = (numToList: number) => {
     setLoading(true);
@@ -122,10 +132,97 @@ export default function RestaurantTable({
       });
   };
 
+  const searchNameDate = (name: string, dateTime: string, numberToList: number) => {
+    setLoading(true);
+    instance
+      .post("/searchNameDate", { restName: name, dateTime: dateTime, numberToList: numberToList })
+      .then((response) => {
+        try {
+          const body = response.data.body;
+          const data = body ? JSON.parse(body) : [];
+          if (Array.isArray(data)) {
+            setRestaurants(data);
+          } else {
+            console.error("Unexpected data format:", data);
+            setRestaurants([]);
+          }
+        } catch (error) {
+          console.error("Failed to parse response body:", error);
+          setRestaurants([]);
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to fetch restaurants:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      })
+  }
+
+  //FOR CARLOS :)
+  const searchDateTime = (dateTime: string, chosenHour: number, numSeats: number, numberToList: number) => {
+    setLoading(true);
+    instance
+      //might need to adjust the api call name and variables passed in
+      .post("/searchDateTime", { dateTime: dateTime, chosenHour: chosenHour, numSeats: numSeats, numberToList: numberToList })
+      .then((response) => {
+        try {
+          const body = response.data.body;
+          const data = body ? JSON.parse(body) : [];
+          //might need to modify the data parsing
+          if (Array.isArray(data)) {
+            setRestaurants(data);
+          } else {
+            console.error("Unexpected data format:", data);
+            setRestaurants([]);
+          }
+        } catch (error) {
+          console.error("Failed to parse response body:", error);
+          setRestaurants([]);
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to fetch restaurants:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      })
+  }
+
   // Effect to load restaurants initially
   useEffect(() => {
-    fetchRestaurants(numberToList);
-  }, [numberToList]); // to not have an infinite loop of rendering
+    console.log("loading");
+    switch (state) {
+      case searchState.searchDefault:
+        fetchRestaurants(numberToList);
+        break;
+      case searchState.searchNameDay:
+        searchNameDate(name, dateTime, numberToList);
+        break;
+      case searchState.searchDateTime:
+        //need to grab information for selected hour and number of seats, or possibly modify arguments
+        searchDateTime(dateTime, 9, 4, numberToList);
+        break;
+    }
+  }, [numberToList, state, name, dateTime]); //refresh on selected hour and number of seats
+
+  useEffect(() => {
+    setState(searchState.searchNameDay);
+    setNumberToList(5);
+  }, [searchState.searchNameDay, searchNameDayTrigger]);
+
+  useEffect(() => {
+    setState(searchState.searchDateTime);
+    setNumberToList(5);
+  }, [searchState.searchDateTime, searchDateTimeTrigger]);
+
+  useEffect(() => {
+    if (name === "") {
+      setState(searchState.searchDefault);
+    }
+    setNumberToList(5);
+  }, [name, searchState.searchDefault]);
+
 
   // Handle Load More Button
   const handleLoadMore = () => {

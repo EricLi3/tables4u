@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import "@/app/globals.css";
 
@@ -35,6 +35,10 @@ export default function Home() {
     setReservationDate,
     setReservationTime,
   } = useReservation();
+
+  const [restName, setRestName] = useState("");
+  const [searchNameDayTrigger, setSearchNameDayTrigger] = useState(false);
+  const [searchDateTimeTrigger, setSearchDateTimeTrigger] = useState(false);
 
   return (
     <main className="flex w-screen h-screen flex-col items-center justify-between p-24">
@@ -74,6 +78,7 @@ export default function Home() {
                   opacity: 0.9,
                 },
               }}
+              onChange={(newName)=>{setRestName(newName.target.value)}}
             />
 
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -119,18 +124,20 @@ export default function Home() {
             </LocalizationProvider>
           </div>
           <div className="centering-div div-horiz">
-            <button className="btn_secondary">
+            <button className="btn_secondary"
+            onClick={()=>setSearchNameDayTrigger(!searchNameDayTrigger)}>
               Name & Day
               <Search className="icon-padding" />
             </button>
-            <button className="btn_secondary">
+            <button className="btn_secondary"
+            onClick={()=>setSearchDateTimeTrigger(!searchDateTimeTrigger)}>
               Date & Time
               <Search className="icon-padding" />
             </button>
           </div>
         </div>
 
-        <RestaurantTable dateTime={`${reservationDate} ${reservationTime}`} />
+        <RestaurantTable dateTime={`${reservationDate} ${reservationTime}`} searchNameDayTrigger={searchNameDayTrigger} searchDateTimeTrigger={searchDateTimeTrigger} name={restName}/>
       </div>
 
       <div className="loginNav centering-div">

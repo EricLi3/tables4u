@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import "@/app/globals.css";
 
+import CustomDialog from "@/app/components/CustomDialog";
+
 import axios from "axios";
 
 import { useState, useEffect } from "react";
@@ -313,6 +315,27 @@ function RestaurantTable() {
     setNumberToList((prev) => prev + 5); // Increment by 5
   };
 
+  const [openDialog, setOpenDialog] = useState(false);
+  const audio = new Audio("/Rick-Roll-Sound-Effect.mp3");
+
+  const handleEasterEgg = () => {
+    audio.play();
+
+    // and open the custom dialog
+    setOpenDialog(true);
+
+    // and close the dialog after 5 seconds
+    setTimeout(() => {
+      setOpenDialog(false);
+    }, 9000);
+  };
+
+  const stopAudio = () => {
+    audio.pause();
+    console.log("Stopping audio");
+    setOpenDialog(false);
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -329,6 +352,15 @@ function RestaurantTable() {
         </Link>
       </div>
 
+      <CustomDialog isOpen={openDialog} onClose={() => setOpenDialog(false)}>
+        <div className="centering-div">
+          <img src="rick_heineman.png" alt="Rick Roll" />
+          <button className="btn_secondary" onClick={stopAudio}>
+            Stop This!
+          </button>
+        </div>
+      </CustomDialog>
+
       <div className="centering-div div-horiz">
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
@@ -336,7 +368,9 @@ function RestaurantTable() {
             format="ddd DD/MM/YYYY"
             value={dateRangeStart}
             onChange={(newDate) => {
-              setDateRangeStart(dayjs(newDate).set("hour", 0).set("minute", 0).set("second", 0));
+              setDateRangeStart(
+                dayjs(newDate).set("hour", 0).set("minute", 0).set("second", 0)
+              );
             }}
             maxDate={dateRangeEnd}
             sx={{
@@ -352,7 +386,12 @@ function RestaurantTable() {
             format="ddd DD/MM/YYYY"
             value={dateRangeEnd}
             onChange={(newDate) => {
-              setDateRangeEnd(dayjs(newDate).set("hour", 23).set("minute", 59).set("second", 0));
+              setDateRangeEnd(
+                dayjs(newDate)
+                  .set("hour", 23)
+                  .set("minute", 59)
+                  .set("second", 0)
+              );
             }}
             minDate={dateRangeStart}
             sx={{
@@ -364,12 +403,7 @@ function RestaurantTable() {
           />
         </LocalizationProvider>
 
-        <button
-          className="btn_secondary"
-          onClick={() =>
-            console.log("This is a placebo button for the user to smash")
-          }
-        >
+        <button className="btn_secondary" onClick={() => handleEasterEgg()}>
           <Search />
         </button>
       </div>

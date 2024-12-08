@@ -129,9 +129,9 @@ function AvailabilityReport() {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(false);
       await fetchRestaurantData();
       await fetchAvailabilityData();
-      setLoading(false);
     };
 
     if (loading) {

@@ -2,7 +2,7 @@ import React from "react";
 import "@/app/globals.css";
 import "./DayAvailability.css"; // Import the CSS file
 
-import { useState, useEffect } from "react";
+// import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 
 import { Box } from "@mui/material";
@@ -19,7 +19,7 @@ export default function DayAvailability({
   benchesAndReservations,
 }: {
   date: string;
-  state: string;
+  state: boolean;
   openingTime: number;
   closingTime: number;
   benchesAndReservations: {
@@ -109,7 +109,7 @@ export default function DayAvailability({
       }}
     >
       <h2>{dayjs(date).format("ddd DD/MM/YYYY")}</h2>
-      <h3>Status: {(state === "true") ? "✅" : "❌"}</h3>
+      <h3>Status: {state ? "✅" : "❌"}</h3>
       <table
         style={{
           width: "100%",
@@ -129,7 +129,7 @@ export default function DayAvailability({
             <th>Availability</th>
           </tr>
         </thead>
-        {(state === "true") && <tbody>{makeRows()}</tbody>}
+        {state && <tbody>{makeRows()}</tbody>}
       </table>
     </Box>
   );

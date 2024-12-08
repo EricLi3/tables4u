@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import router, { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
+  import dayjs from "dayjs";
 
 import "@/app/globals.css";
 import TextField from "@mui/material/TextField";
@@ -27,6 +28,11 @@ const findOpenTable = async (
       start_time,
       end_time,
     });
+
+// TODO - Modify to take in Start and End time as parameters. 
+const findOpenTable = async (rest_uuid: string, group_size: string, start_time: number, end_time: number) => {
+  try {
+    const response = await instance.post("/findTable", { rest_uuid, group_size, start_time, end_time });
     console.log("Open table found:", response.data);
     return response.data;
   } catch (error) {
@@ -131,12 +137,18 @@ function ConfirmReservation() {
   }, [restUUID]);
 
   useEffect(() => {
-    const reservationDate = router.query.reservationDate as string;
-    const reservationTime = router.query.reservationTime as string;
-    if (reservationDate && reservationTime) {
-      setReservationDateTime(`${reservationDate} ${reservationTime}`);
-      const [hours] = reservationTime.split(":").map(Number);
-      setStartTime(hours);
+    // const reservationDate = router.query.reservationDate as string;
+    // const reservationTime = router.query.reservationTime as string;
+    const urlParams = new URLSearchParams(window.location.search);
+    const reservationDate = urlParams.get('reservationDate');
+    console.log("reservationDate: ", reservationDate);
+    const selectedTime = urlParams.get('selectedTime');
+    console.log("selectedTime: ", selectedTime);
+
+    if (reservationDate && selectedTime) {
+      const formattedReservationDate = dayjs(reservationDate).format("DD-MM-YYYY");
+      setReservationDateTime(`${formattedReservationDate}`);
+      setStartTime(parseInt(selectedTime, 10));
     }
   }, [router.query.reservationDate, router.query.reservationTime]);
 
@@ -164,8 +176,8 @@ function ConfirmReservation() {
       <div className="centering-div login-fields">
         <h1>{restaurantInfo.name}</h1>
         <p>{restaurantInfo.address}</p>
-        <p>Day: {router.query.reservationDate}</p>
-        <p>Time: {router.query.reservationTime}</p>
+        <p>Day: {reservationDateTime}</p>
+        <p>Time: {startTime !== null ? `${startTime}:00` : ""}</p>
         <p>Group Size: {router.query.numberOfPeople}</p>
 
         <br />
@@ -190,6 +202,7 @@ function ConfirmReservation() {
               const fetchAndCreateReservation = async () => {
                 if (startTime === null) {
                   alert("Invalid start time");
+                  router.push("/");
                   return;
                 }
                 const data = await findOpenTable(
@@ -261,3 +274,7 @@ function ConfirmReservation() {
 }
 
 export default ConfirmReservation;
+// function dayjs(reservationDate: string) {
+//   throw new Error("Function not implemented.");
+// }
+

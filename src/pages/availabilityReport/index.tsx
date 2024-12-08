@@ -144,7 +144,7 @@ function AvailabilityReport() {
       <div key={day.day}>
         <DayAvailability
           date={day.day}
-          state={day.state}
+          state={day.state ? true : false}
           openingTime={availabilityData.startTime}
           closingTime={availabilityData.endTime}
           benchesAndReservations={day.tables.map((table) => ({

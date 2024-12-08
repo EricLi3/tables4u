@@ -87,7 +87,7 @@ function Row({
 }
 
 export default function RestaurantTable({
-  dateTime = "2024-11-24T21:00:00.000-0500",
+  dateTime = new Date().toISOString(),
   searchNameDayTrigger = false,
   searchDateTimeTrigger = false,
   name = "",

@@ -45,7 +45,6 @@ function AvailabilityReport() {
   });
 
   const [isActive, setIsActive] = useState(true);
-  const [isDayOpen, setIsDayOpen] = useState(true);
 
   // Fetch existing data on component mount
   const fetchRestaurantData = async () => {

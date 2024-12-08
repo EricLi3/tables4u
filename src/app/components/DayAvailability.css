@@ -1,0 +1,16 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+th, td {
+  border: 1px solid darkgray;
+  padding: 8px;
+  text-align: left;
+}
+
+/* th:nth-child(1), td:nth-child(1) {
+  border-right: 5px solid darkgray; 
+}
+ */

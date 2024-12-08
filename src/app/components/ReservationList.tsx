@@ -101,6 +101,7 @@ export default function ReservationList({
   }
 
   return (
+
     <div>
       <div className="centering-div div-horiz">
         {dateTime.slice(8,10) + '/' + dateTime.slice(5,7)}

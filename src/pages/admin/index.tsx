@@ -1,10 +1,10 @@
+"use client";
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import "@/app/globals.css";
-// import { useRouter } from "next/router";
 
 import axios from "axios";
-
 
 import { useState, useEffect } from "react";
 import {
@@ -22,8 +22,13 @@ import {
 } from "@mui/material";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
+// For time and date picking
+import { Search } from "@mui/icons-material";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import withAuthAdmin from "@/withAuthAdmin";
-
 
 const instance = axios.create({
   baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/initial",
@@ -48,8 +53,18 @@ interface Reservation {
   groupSize: number;
 }
 
-function Row({ restaurant, deleteRestaurant }: { restaurant: Restaurant, deleteRestaurant: (restUUID: string) => void }) {
-  // const router = useRouter();
+function Row({
+  restaurant,
+  deleteRestaurant,
+  dateRangeStart,
+  dateRangeEnd,
+}: {
+  restaurant: Restaurant;
+  deleteRestaurant: (restUUID: string) => void;
+  dateRangeStart: dayjs.Dayjs;
+  dateRangeEnd: dayjs.Dayjs;
+}) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isActive, setIsActive] = useState(true);
   const [reservations, setReservations] = useState<Reservation[]>([]);
@@ -61,7 +76,9 @@ function Row({ restaurant, deleteRestaurant }: { restaurant: Restaurant, deleteR
   // Fetch reservations for the restaurant
   const fetchReservations = async () => {
     try {
-      const response = await instance.post("/listReservations", { restUUID: restaurant.restUUID });
+      const response = await instance.post("/listReservations", {
+        restUUID: restaurant.restUUID,
+      });
       const data = response.data.body ? JSON.parse(response.data.body) : [];
       setReservations(data);
     } catch (error) {
@@ -75,8 +92,7 @@ function Row({ restaurant, deleteRestaurant }: { restaurant: Restaurant, deleteR
     }
   }, [open]);
 
-
-  const cancelReservation = async (email:string, confCode:string) => {
+  const cancelReservation = async (email: string, confCode: string) => {
     try {
       const response = await instance.post("/cancelReservation", {
         email: email,
@@ -90,6 +106,17 @@ function Row({ restaurant, deleteRestaurant }: { restaurant: Restaurant, deleteR
       alert("Failed to cancel reservation. Please try again later.");
     }
   };
+  const generateAvailabilityReport = () => {
+    router.push({
+      pathname: "/availabilityReport",
+      query: {
+        restUUID: restaurant.restUUID,
+        dateRangeStart: dateRangeStart.toISOString(),
+        dateRangeEnd: dateRangeEnd.toISOString(),
+      },
+    });
+  };
+
   return (
     <>
       <TableRow>
@@ -103,15 +130,17 @@ function Row({ restaurant, deleteRestaurant }: { restaurant: Restaurant, deleteR
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
+          {isActive ? "✅ " : "❌ "}
           {restaurant.restName}
-          {isActive ? "✅" : "❌"}
         </TableCell>
         <TableCell>{restaurant.address}</TableCell>
 
-        <button className="btn_primary" onClick={() => deleteRestaurant(restaurant.restUUID)}>
+        <button
+          className="btn_primary"
+          onClick={() => deleteRestaurant(restaurant.restUUID)}
+        >
           <DeleteIcon className="icon-padding" />
         </button>
-
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -121,33 +150,87 @@ function Row({ restaurant, deleteRestaurant }: { restaurant: Restaurant, deleteR
                 Details
               </Typography>
               <Typography variant="body2">
-                Opening Hours: {restaurant.openingHour} -{" "}
-                {restaurant.closingHour}
+                Opening hours: {restaurant.openingHour}
+                {":00"} - {restaurant.closingHour}
+                {":00"}
+                <br />
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Typography variant="h6" component="div">
+                    Reservations
+                  </Typography>
 
-                <Typography variant="h6" gutterBottom component="div">
-                  Reservations
-                </Typography>
-                {reservations.length > 0 ? (
+                  <button
+                    className="btn_secondary btn_small"
+                    onClick={generateAvailabilityReport}
+                  >
+                    Generate Availability Report
+                  </button>
+                </Box>
+                {reservations.filter((reservation) => {
+                  const reservationDate = dayjs(
+                    reservation.reservationDateTime
+                  );
+                  return (
+                    reservationDate.isAfter(dateRangeStart) &&
+                    reservationDate.isBefore(dateRangeEnd)
+                  );
+                }).length > 0 ? (
                   <ul>
-                    {reservations.map((reservation) => (
-                      <li key={reservation.reservationUUID}>
-                        {reservation.reservationDateTime} - {reservation.email} - {reservation.groupSize} people
-                        <button
-                          className="btn_primary"
-                          onClick={() => {
-                            cancelReservation(reservation.email, reservation.confirmationCode);
+                    {reservations
+                      .filter((reservation) => {
+                        const reservationDate = dayjs(
+                          reservation.reservationDateTime
+                        );
+                        return (
+                          reservationDate.isAfter(dateRangeStart) &&
+                          reservationDate.isBefore(dateRangeEnd)
+                        );
+                      })
+                      .map((reservation) => (
+                        <li
+                          key={reservation.reservationUUID}
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
                           }}
                         >
-                          Delete Reservation
-                        </button>
-                      </li>
-
-                    ))}
+                          <span>
+                            {dayjs(reservation.reservationDateTime).format(
+                              "DD/MM/YYYY"
+                            )}
+                            {" - "}
+                            {reservation.startTime}
+                            {":00"}
+                            {" - "}
+                            {reservation.email}
+                            {" - "}
+                            {reservation.groupSize}{" "}
+                            {reservation.groupSize > 1 ? "people" : "person"}
+                          </span>
+                          <button
+                            className="btn_dark btn_small"
+                            onClick={() => {
+                              cancelReservation(
+                                reservation.email,
+                                reservation.confirmationCode
+                              );
+                            }}
+                          >
+                            Delete Reservation
+                          </button>
+                        </li>
+                      ))}
                   </ul>
                 ) : (
-                  <Typography>No reservations found.</Typography>
+                  <Typography>
+                    No reservations found within the specified date range.
+                  </Typography>
                 )}
-
               </Typography>
             </Box>
           </Collapse>
@@ -162,7 +245,12 @@ function RestaurantTable() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [numberToList, setNumberToList] = useState(5);
-
+  const [dateRangeStart, setDateRangeStart] = useState(
+    dayjs().set("hour", 0).set("minute", 0).set("second", 0)
+  );
+  const [dateRangeEnd, setDateRangeEnd] = useState(
+    dayjs().add(7, "day").set("hour", 23).set("minute", 59).set("second", 0)
+  );
 
   const fetchRestaurants = (numToList: number) => {
     setLoading(true);
@@ -178,7 +266,6 @@ function RestaurantTable() {
             console.error("Unexpected data format:", data);
             setRestaurants([]);
           }
-
         } catch (error) {
           console.error("Failed to parse response body:", error);
           setRestaurants([]);
@@ -202,7 +289,9 @@ function RestaurantTable() {
           console.log(body);
 
           setRestaurants((prevRestaurants) =>
-            prevRestaurants.filter((restaurant) => restaurant.restUUID !== uuidToDelete)
+            prevRestaurants.filter(
+              (restaurant) => restaurant.restUUID !== uuidToDelete
+            )
           );
         } catch (error) {
           console.error("Failed to parse response body:", error);
@@ -211,8 +300,7 @@ function RestaurantTable() {
       .catch((error) => {
         console.error("Failed to fetch restaurant:", error);
       })
-      .finally(() => {
-      });
+      .finally(() => {});
   };
 
   // Effect to load restaurants initially
@@ -234,27 +322,82 @@ function RestaurantTable() {
   }
 
   return (
-    <main className="flex w-screen h-screen flex-col items-center justify-between p-24">
-
+    <main className="flex w-screen h-screen flex-col items-center p-24">
       <div className="top-left-button">
         <Link href="/">
           <img src="logo.png" alt="Home Button" className="logo" />
         </Link>
       </div>
-      <Box>
-        <TableContainer component={Paper}>
+
+      <div className="centering-div div-horiz">
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            label="Reservation Date"
+            format="ddd DD/MM/YYYY"
+            value={dateRangeStart}
+            onChange={(newDate) => {
+              setDateRangeStart(dayjs(newDate).set("hour", 0).set("minute", 0).set("second", 0));
+            }}
+            maxDate={dateRangeEnd}
+            sx={{
+              "& .MuiInputBase-root": {
+                backgroundColor: "white",
+                opacity: 0.9,
+              },
+            }}
+          />
+
+          <DatePicker
+            label="Reservation Date"
+            format="ddd DD/MM/YYYY"
+            value={dateRangeEnd}
+            onChange={(newDate) => {
+              setDateRangeEnd(dayjs(newDate).set("hour", 23).set("minute", 59).set("second", 0));
+            }}
+            minDate={dateRangeStart}
+            sx={{
+              "& .MuiInputBase-root": {
+                backgroundColor: "white",
+                opacity: 0.9,
+              },
+            }}
+          />
+        </LocalizationProvider>
+
+        <button
+          className="btn_secondary"
+          onClick={() =>
+            console.log("This is a placebo button for the user to smash")
+          }
+        >
+          <Search />
+        </button>
+      </div>
+
+      <Box className="table mt-5">
+        <TableContainer component={Paper} sx={{ borderRadius: 3 }}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell />
-                <TableCell><b>Restaurant Name</b></TableCell>
-                <TableCell><b>Address</b></TableCell>
+                <TableCell>
+                  <h2>Restaurant Name</h2>
+                </TableCell>
+                <TableCell>
+                  <h2>Address</h2>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {restaurants?.length > 0 ? (
                 restaurants.map((restaurant) => (
-                  <Row key={restaurant.restUUID} restaurant={restaurant} deleteRestaurant={deleteRestaurant} />
+                  <Row
+                    key={restaurant.restUUID}
+                    restaurant={restaurant}
+                    deleteRestaurant={deleteRestaurant}
+                    dateRangeStart={dateRangeStart}
+                    dateRangeEnd={dateRangeEnd}
+                  />
                 ))
               ) : (
                 <TableRow>

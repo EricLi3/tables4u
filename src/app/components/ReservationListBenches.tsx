@@ -86,7 +86,7 @@ export default function ReservationListBenches({
       <Grid2 container columns={closingHour - openingHour+1} width={1}>
         {list.slice(0, closingHour - openingHour+1).map((key) => (
           <Grid2 key={key.key} size={1}>
-            <Box>{key.key != '24' ? openingHour + Number(key.key) : dateTime.slice(5,10)}</Box>
+            <Box>{key.key != '24' ? openingHour + Number(key.key) : dateTime.slice(8,10) + '/' + dateTime.slice(5,7)}</Box>
           </Grid2>
         ))}
         {list}

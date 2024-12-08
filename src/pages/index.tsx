@@ -65,7 +65,7 @@ export default function Home() {
             onChange={(_e, value) => setNumberOfPeople(value as number)}
           />
         </div>
-        {/* Search navigation */}
+       
         <div className="centering-div">
           <div className="centering-div div-horiz">
             <TextField

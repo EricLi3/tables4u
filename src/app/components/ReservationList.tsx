@@ -28,7 +28,11 @@ export default function ReservationList({
   const [blockedTimes, setBlockedTimes] = useState<number[]>([]);
   const [clickedBox, setClickedBox] = useState<number | null>(null);
 
-  const { numberOfPeople, reservationDate, reservationTime } = useReservation();
+  const {
+    numberOfPeople,
+    reservationDate,
+    reservationTime,
+  } = useReservation();
 
   useEffect(() => {
     const fetchRestaurantInfo = async (restUUID: string, dateTime: string) => {
@@ -67,6 +71,9 @@ export default function ReservationList({
   };
 
   const confirmReservation = () => {
+    console.log("clickedBox: ", clickedBox);
+    console.log("reservationTime: ", reservationTime);
+
     router.push({
       pathname: "/confirmReservation",
       query: {

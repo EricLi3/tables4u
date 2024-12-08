@@ -129,9 +129,9 @@ function AvailabilityReport() {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(false);
       await fetchRestaurantData();
       await fetchAvailabilityData();
-      setLoading(false);
     };
 
     if (loading) {
@@ -144,7 +144,7 @@ function AvailabilityReport() {
       <div key={day.day}>
         <DayAvailability
           date={day.day}
-          state={day.state ? true : false}
+          state={day.state}
           openingTime={availabilityData.startTime}
           closingTime={availabilityData.endTime}
           benchesAndReservations={day.tables.map((table) => ({

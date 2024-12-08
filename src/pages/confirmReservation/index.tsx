@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
   import dayjs from "dayjs";
 
@@ -14,22 +14,6 @@ const instance = axios.create({
   baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/initial",
 });
 
-// TODO - Modify to take in Start and End time as parameters.
-const findOpenTable = async (
-  rest_uuid: string,
-  group_size: string,
-  start_time: number,
-  end_time: number
-) => {
-  try {
-    const response = await instance.post("/findTable", {
-      rest_uuid,
-      group_size,
-      start_time,
-      end_time,
-    });
-
-// TODO - Modify to take in Start and End time as parameters. 
 const findOpenTable = async (rest_uuid: string, group_size: string, start_time: number, end_time: number) => {
   try {
     const response = await instance.post("/findTable", { rest_uuid, group_size, start_time, end_time });
@@ -39,6 +23,8 @@ const findOpenTable = async (rest_uuid: string, group_size: string, start_time: 
     console.error("Failed to find open table:", error);
   }
 };
+
+
 const generateConfirmationCode = () => {
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -274,7 +260,4 @@ function ConfirmReservation() {
 }
 
 export default ConfirmReservation;
-// function dayjs(reservationDate: string) {
-//   throw new Error("Function not implemented.");
-// }
 

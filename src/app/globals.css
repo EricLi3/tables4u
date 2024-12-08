@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 /* DEBUGGING */
-*:hover {
+/* *:hover {
   outline: 1px blue solid;
-}
+} */
 
 :root {
   --background: #FEF7FF;

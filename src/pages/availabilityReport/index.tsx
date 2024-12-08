@@ -76,7 +76,7 @@ function AvailabilityReport() {
 
         console.log("Restaurant Name:", restaurant.restName);
       }
-    } catch (error) {
+    } catch (error) { 
       console.error("Error fetching restaurant data:", error);
     }
   };

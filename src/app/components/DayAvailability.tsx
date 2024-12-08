@@ -1,4 +1,4 @@
-import React, { use } from "react";
+import React from "react";
 import "@/app/globals.css";
 import "./DayAvailability.css"; // Import the CSS file
 
@@ -28,11 +28,11 @@ export default function DayAvailability({
     reservations: { time: number; numOfPeople: number }[];
   }[];
 }) {
-  const [numTables, setNumTables] = useState(0);
+  // const [numTables, setNumTables] = useState(0);
 
-  useEffect(() => {
-    setNumTables(benchesAndReservations.length);
-  }, [benchesAndReservations]);
+  // useEffect(() => {
+  //   // setNumTables(benchesAndReservations.length);
+  // }, [benchesAndReservations]);
 
   const makeHeaders = () => {
     return benchesAndReservations.map((bench) => (

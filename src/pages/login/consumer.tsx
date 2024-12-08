@@ -100,7 +100,7 @@ function ConsumerLogin() {
           <img src="../logo.png" alt="Home Button" className="logo" />
         </Link>
       </div>
-
+      <h1>Find/Cancel Reservation</h1>
       <div className="centering-div login-fields">
         <TextField
           required

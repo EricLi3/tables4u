@@ -28,8 +28,8 @@ const instance = axios.create({
 
 interface Restaurant {
   restUUID: string;
-  userName: string;
-  pass: string;
+  // userName: string;
+  // pass: string;
   restName: string;
   address: string;
   openingHour: string;
@@ -87,7 +87,7 @@ function Row({
 }
 
 export default function RestaurantTable({
-  dateTime = "2024-11-24T21:00:00.000-0500",
+  dateTime = new Date().toISOString(),
   searchNameDayTrigger = false,
   searchDateTimeTrigger = false,
   name = "",

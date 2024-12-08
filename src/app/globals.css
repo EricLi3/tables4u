@@ -124,6 +124,10 @@ button:disabled {
   min-height: 50px;
 }
 
+.btn_small {
+  font-size: 14px;
+}
+
 h1{
   font-size: 28px;
 }

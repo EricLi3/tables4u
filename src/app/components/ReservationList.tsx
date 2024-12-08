@@ -7,7 +7,7 @@ import "@/app/globals.css";
 import { Grid2 } from "@mui/material";
 import { Box } from "@mui/system";
 import { Button } from "@mui/material";
-// access global state. 
+// access global state.
 import { useReservation } from "@/app/context/ReservationContext";
 
 const instance = axios.create({
@@ -28,12 +28,16 @@ export default function ReservationList({
   const router = useRouter();
   const [blockedTimes, setBlockedTimes] = useState<number[]>([]);
   const [clickedBox, setClickedBox] = useState<number | null>(null);
+
   const { numberOfPeople, reservationDate, reservationTime } = useReservation();
 
   useEffect(() => {
     const fetchRestaurantInfo = async (restUUID: string, dateTime: string) => {
       try {
-        const response = await instance.post("/restaurantInfo", { restUUID, dateTime });
+        const response = await instance.post("/restaurantInfo", {
+          restUUID,
+          dateTime,
+        });
         const body = response.data.body;
         const data = body ? JSON.parse(body) : [];
         if (Array.isArray(data)) {
@@ -48,19 +52,19 @@ export default function ReservationList({
     fetchRestaurantInfo(restUUID, dateTime);
   }, [restUUID, dateTime]);
 
-  const setBoxColor = (hour: number, blockedTimes: Array<number>, clickedBox: number | null) => {
+  const setBoxColor = (
+    hour: number,
+    blockedTimes: Array<number>,
+    clickedBox: number | null
+  ) => {
     if (clickedBox === hour) {
-      return "#000000"; // Black color for clicked box
+      return "var(--color2)"; // Black color for clicked box
     }
-    return blockedTimes.includes(hour) ? "#0F0F0F" : "#FFFFFF";
+    return blockedTimes.includes(hour) ? "var(--foreground)" : "#var(--background)";
   };
 
   const handleBoxClick = (hour: number) => {
-    if (reservationDate && reservationTime) {
-      setClickedBox(hour);
-    } else {
-      alert("Please select a date and time first");
-    }
+    setClickedBox(hour);
   };
 
   const confirmReservation = () => {
@@ -86,7 +90,7 @@ export default function ReservationList({
             border: 1,
             borderRadius: 1,
             bgcolor: setBoxColor(openingHour + i, blockedTimes, clickedBox),
-            cursor: reservationDate && reservationTime ? "pointer" : "not-allowed",
+            cursor: "pointer",
           }}
           onClick={() => handleBoxClick(openingHour + i)}
         >
@@ -97,23 +101,26 @@ export default function ReservationList({
   }
 
   return (
-    <div className="centering-div div-horiz">
-      <Box>{dateTime.slice(5, 10)}</Box>
-      <Grid2 container columns={closingHour - openingHour} width={1}>
-        {list.slice(0, closingHour - openingHour).map((key) => (
-          <Grid2 key={key.key} size={1}>
-            <Box>{openingHour + Number(key.key)}</Box>
-          </Grid2>
-        ))}
-        {list}
-      </Grid2>
-      {clickedBox !== null && (
-        <Box mt={2}>
-          <Button variant="contained" color="primary" sx={{ maxWidth: "120px" }} onClick={confirmReservation}>
+    <div>
+      <div className="centering-div div-horiz">
+        {dateTime.slice(8,10) + '/' + dateTime.slice(5,7)}
+        <Grid2 container columns={closingHour - openingHour} width={1}>
+          {list.slice(0, closingHour - openingHour).map((key) => (
+            <Grid2 key={key.key} size={1}>
+              <Box>{openingHour + Number(key.key)}</Box>
+            </Grid2>
+          ))}
+          {list}
+        </Grid2>
+      </div>
+        {clickedBox !== null && (
+          <Box>
+            <br />
+            <button className="btn_secondary btn_small" onClick={confirmReservation}>
             Confirm Reservation at {clickedBox}:00
-          </Button>
-        </Box>
-      )}
+            </button>
+          </Box>
+        )}
     </div>
   );
 }

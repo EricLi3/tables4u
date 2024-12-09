@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
-  import dayjs from "dayjs";
+import dayjs from "dayjs";
 
 import "@/app/globals.css";
 import TextField from "@mui/material/TextField";
@@ -79,7 +79,7 @@ function ConfirmReservation() {
 
   const router = useRouter();
   const restUUID = router.query.restUUID as string;
-  
+
   const [openDialog, setOpenDialog] = useState(false);
   const [confirmation_code, setConfirmationCode] = useState("");
 
@@ -146,13 +146,13 @@ function ConfirmReservation() {
         </Link>
       </div>
 
-      <CustomDialog isOpen={openDialog} onClose={() => {setOpenDialog(false); router.push("/");}}>
+      <CustomDialog isOpen={openDialog} onClose={() => { setOpenDialog(false); router.push("/"); }}>
         <div className="centering-div">
           <h1>Reservation created successfully!</h1>
           <h2>Confirmation code: <strong>{confirmation_code}</strong></h2>
           <button
             className="btn_secondary"
-            onClick={() => {setOpenDialog(false); router.push("/");}}
+            onClick={() => { setOpenDialog(false); router.push("/"); }}
           >
             Okay
           </button>
@@ -250,12 +250,12 @@ function ConfirmReservation() {
             Reserve
           </button>
           <span style={{ margin: "0 10px" }}></span>
-          <button className="btn_primary" onClick={() => {}}>
-            Cancel
-          </button>
-        </div>
+          <button className="btn_primary" onClick={() => { router.push("/"); }}>
+          Cancel
+        </button>
       </div>
-    </main>
+    </div>
+    </main >
   );
 }
 

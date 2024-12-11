@@ -21,8 +21,8 @@ function ConsumerLogin() {
   const [reservationData, setReservationData] = React.useState({
     restUUID: "",
     reservationUUID: "",
-    restName: "Alice's Restaurant",
-    restAddr: "Buy me a hot cocoa",
+    restName: "",
+    restAddr: "",
     reservationDateTime: dayjs(),
     reservationStartTime: 12,
     groupSize: 1,
@@ -55,10 +55,12 @@ function ConsumerLogin() {
         email: email,
         confCode: confCode,
       });
+  
       const data = response.data.body ? JSON.parse(response.data.body) : {}; // Parse the response body as JSON if defined
       console.log("Data:", data);
-      {
-        const reservation = data.result[0]; // Assuming you want the first restaurant in the array
+  
+      if (Array.isArray(data.result) && data.result.length > 0 && Array.isArray(data.restInfo) && data.restInfo.length > 0) {
+        const reservation = data.result[0]; // Assuming you want the first reservation in the array
         const restInfo = data.restInfo[0];
         setReservationData({
           restUUID: reservation.restUUID,
@@ -69,11 +71,16 @@ function ConsumerLogin() {
           reservationStartTime: reservation.startTime,
           groupSize: reservation.groupSize,
         });
+      } else {
+        console.warn("No reservation data found.");
+        router.push("/login/consumer")
       }
     } catch (error) {
-      console.error("Error fetching restaurant data:", error);
+      console.error("Error fetching reservation data:", error);
+      alert("Failed to fetch reservation data. Please try again.");
     }
   };
+  
 
   const cancelReservation = async () => {
     try {

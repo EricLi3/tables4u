@@ -12,24 +12,25 @@ export const handler = async (event) => {
     const rest_uuid = event.rest_uuid;
     const group_size = event.group_size;
     const start_time = event.start_time;
-    const end_time = event.end_time;
+    const reservationDateTime = event.reservationDateTime;
 
-    const ReserveBench = (rest_uuid, group_size, start_time, end_time) => {
+    const ReserveBench = (rest_uuid, group_size, start_time, reservationDateTime) => {
         return new Promise((resolve, reject) => {
             const query = `
                 SELECT b.benchUUID, b.benchName, b.numSeats
                 FROM Benches b
                 LEFT JOIN Reservations r 
-                    ON b.benchUUID = r.benchUUID 
-                    AND r.startTime >= ? 
-                    AND r.startTime <= ?
+                    ON b.benchUUID = r.benchUUID
+                    AND r.reservationDateTime LIKE ?
+                    AND r.startTime LIKE ?
                 WHERE b.restUUID = ?
                     AND b.numSeats >= ?
-                    AND r.reservationUUID IS NULL
-                    LIMIT 1;
+                    AND r.benchUUID IS NULL
+				ORDER BY b.numSeats
+                LIMIT 1
             `;
 
-            pool.query(query, [start_time, end_time, rest_uuid, group_size], (error, rows) => {
+            pool.query(query, [reservationDateTime.slice(0,10)+'%', start_time+'%', rest_uuid, group_size], (error, rows) => {
                 if (error) {
                     return reject(error);
                 }
@@ -42,7 +43,7 @@ export const handler = async (event) => {
 
     try {
         // Wait for the query result
-        const rows = await ReserveBench(rest_uuid, group_size, start_time, end_time);
+        const rows = await ReserveBench(rest_uuid, group_size, start_time, reservationDateTime);
         console.log('Query result:', rows);
 
         response = {
@@ -62,3 +63,10 @@ export const handler = async (event) => {
 
     return response;
 };
+
+console.log(await handler({
+    rest_uuid: "123e4567-e89b-12d3-a456-426614174004",
+    group_size: '4',
+    start_time: '15',
+    reservationDateTime: "2024-12-12",
+}));

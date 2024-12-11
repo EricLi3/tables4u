@@ -19,10 +19,10 @@ function ConsumerLogin() {
   const [showBox, setShowBox] = React.useState(false);
 
   const [reservationData, setReservationData] = React.useState({
-    restUUID: "",
-    reservationUUID: "",
-    restName: "",
-    restAddr: "",
+    restUUID: "loading...",
+    reservationUUID: "loading...",
+    restName: "loading...",
+    restAddr: "loading...",
     reservationDateTime: dayjs(),
     reservationStartTime: 12,
     groupSize: 1,
@@ -37,7 +37,7 @@ function ConsumerLogin() {
     fetchReservationData();
 
     if (reservationData.restName === "") {
-      alert("No reservation found with the provided details");
+      // alert("No reservation found with the provided details");
       return;
     } else {
       setShowBox(true);

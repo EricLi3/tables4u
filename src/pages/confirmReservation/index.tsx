@@ -123,8 +123,6 @@ function ConfirmReservation() {
   }, [restUUID]);
 
   useEffect(() => {
-    // const reservationDate = router.query.reservationDate as string;
-    // const reservationTime = router.query.reservationTime as string;
     const urlParams = new URLSearchParams(window.location.search);
     const reservationDate = urlParams.get('reservationDate');
     console.log("reservationDate: ", reservationDate);
@@ -132,8 +130,9 @@ function ConfirmReservation() {
     console.log("selectedTime: ", selectedTime);
 
     if (reservationDate && selectedTime) {
-      const formattedReservationDate = dayjs(reservationDate).format("DD-MM-YYYY");
-      setReservationDateTime(`${formattedReservationDate}`);
+      const formattedReservationDate = dayjs(reservationDate).format("YYYY-MM-DD");
+      const formattedReservationDateTime = `${formattedReservationDate} ${selectedTime}:00:00`;
+      setReservationDateTime(`${formattedReservationDateTime}`);
       setStartTime(parseInt(selectedTime, 10));
     }
   }, [router.query.reservationDate, router.query.reservationTime]);
@@ -251,10 +250,10 @@ function ConfirmReservation() {
           </button>
           <span style={{ margin: "0 10px" }}></span>
           <button className="btn_primary" onClick={() => { router.push("/"); }}>
-          Cancel
-        </button>
+            Cancel
+          </button>
+        </div>
       </div>
-    </div>
     </main >
   );
 }

@@ -33,15 +33,7 @@ function ConsumerLogin() {
       alert("Please fill in all fields");
       return;
     }
-
     fetchReservationData();
-
-    if (reservationData.restName === "") {
-      // alert("No reservation found with the provided details");
-      return;
-    } else {
-      setShowBox(true);
-    }
   };
 
   const handleDelete = () => {
@@ -71,9 +63,14 @@ function ConsumerLogin() {
           reservationStartTime: reservation.startTime,
           groupSize: reservation.groupSize,
         });
+  
+        // Show the reservation data if available
+        setShowBox(true);
+  
       } else {
         console.warn("No reservation data found.");
-        router.push("/login/consumer")
+        alert("No reservation found with the provided details");
+        router.push("/login/consumer");
       }
     } catch (error) {
       console.error("Error fetching reservation data:", error);

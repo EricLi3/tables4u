@@ -14,9 +14,9 @@ const instance = axios.create({
   baseURL: "https://jz4oihez68.execute-api.us-east-2.amazonaws.com/initial",
 });
 
-const findOpenTable = async (rest_uuid: string, group_size: string, start_time: number, end_time: number) => {
+const findOpenTable = async (rest_uuid: string, group_size: string, start_time: number, reservation_date_time: string) => {
   try {
-    const response = await instance.post("/findTable", { rest_uuid, group_size, start_time, end_time });
+    const response = await instance.post("/findTable", { rest_uuid, group_size, start_time, reservation_date_time });
     console.log("Open table found:", response.data);
     return response.data;
   } catch (error) {
@@ -194,7 +194,7 @@ function ConfirmReservation() {
                   restUUID,
                   router.query.numberOfPeople as string,
                   startTime,
-                  startTime + 1
+                  reservationDateTime
                 ); // modify to get benchUUID of a bench that can be reserved.
                 if (!data || !data.body) {
                   alert("No table available");

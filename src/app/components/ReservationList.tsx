@@ -40,6 +40,7 @@ export default function ReservationList({
         const response = await instance.post("/restaurantInfo", {
           restUUID,
           dateTime,
+          numberOfPeople
         });
         const body = response.data.body;
         const data = body ? JSON.parse(body) : [];
@@ -88,6 +89,7 @@ export default function ReservationList({
 
   const list = [];
   for (let i = 0; i < closingHour - openingHour; i++) {
+    console.log(blockedTimes);
     list.push(
       <Grid2 key={i} size={1}>
         <Box
@@ -96,7 +98,9 @@ export default function ReservationList({
             border: 1,
             borderRadius: 1,
             bgcolor: setBoxColor(openingHour + i, blockedTimes, clickedBox),
-            cursor: "pointer",
+            cursor: blockedTimes.includes(openingHour+i) ? "not-allowed" : "pointer",
+            opacity: blockedTimes.includes(openingHour+i) ? 0.5 : 1,
+            pointerEvents: blockedTimes.includes(openingHour+i) ? "none" : "auto",
           }}
           onClick={() => handleBoxClick(openingHour + i)}
         >

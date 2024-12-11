@@ -40,9 +40,11 @@ interface Restaurant {
 function Row({
   restaurant,
   dateTime,
+  numSeats,
 }: {
   restaurant: Restaurant;
   dateTime: string;
+  numSeats: number;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -77,6 +79,7 @@ function Row({
                 closingHour={Number(restaurant.closingHour)}
                 restUUID={restaurant.restUUID}
                 dateTime={dateTime}
+                numSeats_i={numSeats}
               />
             </Box>
           </Collapse>
@@ -91,6 +94,7 @@ export default function RestaurantTable({
   searchNameDayTrigger = false,
   searchDateTimeTrigger = false,
   name = "",
+  numSeats = 1,
 }) {
   const searchState = {
     searchDefault: 0,
@@ -204,7 +208,7 @@ export default function RestaurantTable({
         searchDateTime(dateTime, 9, 4, numberToList);
         break;
     }
-  }, [numberToList, state, name, dateTime]); //refresh on selected hour and number of seats
+  }, [numberToList, state, name, dateTime, numSeats]); //refresh on selected hour and number of seats
 
   useEffect(() => {
     setState(searchState.searchNameDay);
@@ -261,6 +265,7 @@ export default function RestaurantTable({
                     key={restaurant.restUUID}
                     restaurant={restaurant}
                     dateTime={dateTime}
+                    numSeats={numSeats}
                   />
                 ))
             ) : (

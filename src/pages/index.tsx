@@ -137,7 +137,7 @@ export default function Home() {
           </div>
         </div>
 
-        <RestaurantTable dateTime={`${reservationDate} ${reservationTime}`} searchNameDayTrigger={searchNameDayTrigger} searchDateTimeTrigger={searchDateTimeTrigger} name={restName}/>
+        <RestaurantTable dateTime={`${reservationDate} ${reservationTime}`} searchNameDayTrigger={searchNameDayTrigger} searchDateTimeTrigger={searchDateTimeTrigger} name={restName} numSeats={numberOfPeople}/>
       </div>
 
       <div className="loginNav centering-div">

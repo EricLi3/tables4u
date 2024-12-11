@@ -18,15 +18,18 @@ export default function ReservationList({
   closingHour,
   restUUID,
   dateTime,
+  numSeats_i,
 }: {
   openingHour: number;
   closingHour: number;
   restUUID: string;
   dateTime: string;
+  numSeats_i: number;
 }) {
   const router = useRouter();
   const [blockedTimes, setBlockedTimes] = useState<number[]>([]);
   const [clickedBox, setClickedBox] = useState<number | null>(null);
+  const [numSeats, setNumSeats] = useState<number | null>(numSeats_i);
 
   const {
     numberOfPeople,
@@ -54,7 +57,7 @@ export default function ReservationList({
     };
 
     fetchRestaurantInfo(restUUID, dateTime);
-  }, [restUUID, dateTime]);
+  }, [restUUID, dateTime,numSeats]);
 
   const setBoxColor = (
     hour: number,

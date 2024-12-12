@@ -5,6 +5,7 @@ import "@/app/globals.css";
 import axios from "axios";
 import ReservationList from "./ReservationList";
 // import ReservationListBenches from "./ReservationListBenches";
+import { useReservation } from "@/app/context/ReservationContext";
 
 import { useState, useEffect } from "react";
 import {
@@ -97,6 +98,11 @@ export default function RestaurantTable({
     searchNameDay: 1,
     searchDateTime: 2
   };
+
+  const {
+    numberOfPeople,
+  } = useReservation();
+
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -204,7 +210,7 @@ export default function RestaurantTable({
         searchDateTime(dateTime, 9, 4, numberToList);
         break;
     }
-  }, [numberToList, state, name, dateTime]); //refresh on selected hour and number of seats
+  }, [numberToList, state, name, dateTime,numberOfPeople]); //refresh on selected hour and number of seats
 
   useEffect(() => {
     setState(searchState.searchNameDay);

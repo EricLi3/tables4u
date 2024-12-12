@@ -101,8 +101,6 @@ export default function RestaurantTable({
 
   const {
     numberOfPeople,
-    reservationDate,
-    reservationTime,
   } = useReservation();
 
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);

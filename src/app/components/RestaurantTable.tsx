@@ -1,6 +1,8 @@
 import React from "react";
 // import Link from "next/link";
 import "@/app/globals.css";
+import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone"
 
 import axios from "axios";
 import ReservationList from "./ReservationList";
@@ -169,19 +171,21 @@ export default function RestaurantTable({
 
   //FOR CARLOS :)
   const searchDateTime = (dateTime: string, chosenHour: string, numSeats: number, numberToList: number) => {
+    const KarlWhy = dateTime + " " + chosenHour + ":00";
     setLoading(true);
     instance
       //might need to adjust the api call name and variables passed in
-      .post("/searchDateTime", { dateTime: dateTime, chosenHour: chosenHour, numSeats: numSeats, numberToList: numberToList })
+      .post("/searchDateTime", { dateTime: KarlWhy, numSeats: numSeats, numberToList: numberToList })
       .then((response) => {
         try {
           const body = response.data.body;
           const data = body ? JSON.parse(body) : [];
-          //might need to modify the data parsing
-          if (Array.isArray(data)) {
-            setRestaurants(data);
+          const restaurants = data.Restaurants;
+
+          if (Array.isArray(restaurants)) {
+            setRestaurants(restaurants);
           } else {
-            console.error("Unexpected data format:", data);
+            console.error("Unexpected data format:", restaurants);
             setRestaurants([]);
           }
         } catch (error) {

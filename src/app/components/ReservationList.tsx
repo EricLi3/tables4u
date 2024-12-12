@@ -89,7 +89,6 @@ export default function ReservationList({
 
   const list = [];
   for (let i = 0; i < closingHour - openingHour; i++) {
-    console.log(blockedTimes);
     list.push(
       <Grid2 key={i} size={1}>
         <Box

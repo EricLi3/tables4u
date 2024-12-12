@@ -1,8 +1,6 @@
 import React from "react";
 // import Link from "next/link";
 import "@/app/globals.css";
-import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone"
 
 import axios from "axios";
 import ReservationList from "./ReservationList";
@@ -229,7 +227,11 @@ export default function RestaurantTable({
   }, [searchDateTimeTrigger]);
 
   useEffect(() => {
-    name === "" ? setState(searchState.searchDefault) : setState(searchState.searchNameDay);
+    if (name === "") {
+      setState(searchState.searchDefault);
+    } else {
+      setState(searchState.searchNameDay);
+    }
     setNumberToList(5);
   }, [name]);
 

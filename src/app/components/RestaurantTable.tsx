@@ -5,6 +5,7 @@ import "@/app/globals.css";
 import axios from "axios";
 import ReservationList from "./ReservationList";
 // import ReservationListBenches from "./ReservationListBenches";
+import { useReservation } from "@/app/context/ReservationContext";
 
 import { useState, useEffect } from "react";
 import {
@@ -40,11 +41,9 @@ interface Restaurant {
 function Row({
   restaurant,
   dateTime,
-  numSeats,
 }: {
   restaurant: Restaurant;
   dateTime: string;
-  numSeats: number;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -93,13 +92,19 @@ export default function RestaurantTable({
   searchNameDayTrigger = false,
   searchDateTimeTrigger = false,
   name = "",
-  numSeats = 1,
 }) {
   const searchState = {
     searchDefault: 0,
     searchNameDay: 1,
     searchDateTime: 2
   };
+
+  const {
+    numberOfPeople,
+    reservationDate,
+    reservationTime,
+  } = useReservation();
+
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -207,7 +212,7 @@ export default function RestaurantTable({
         searchDateTime(dateTime, 9, 4, numberToList);
         break;
     }
-  }, [numberToList, state, name, dateTime, numSeats]); //refresh on selected hour and number of seats
+  }, [numberToList, state, name, dateTime,numberOfPeople]); //refresh on selected hour and number of seats
 
   useEffect(() => {
     setState(searchState.searchNameDay);
@@ -264,7 +269,6 @@ export default function RestaurantTable({
                     key={restaurant.restUUID}
                     restaurant={restaurant}
                     dateTime={dateTime}
-                    numSeats={numSeats}
                   />
                 ))
             ) : (

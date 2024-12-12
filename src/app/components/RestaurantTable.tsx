@@ -79,7 +79,6 @@ function Row({
                 closingHour={Number(restaurant.closingHour)}
                 restUUID={restaurant.restUUID}
                 dateTime={dateTime}
-                numSeats_i={numSeats}
               />
             </Box>
           </Collapse>

@@ -101,6 +101,8 @@ export default function RestaurantTable({
 
   const {
     numberOfPeople,
+    reservationDate,
+    reservationTime,
   } = useReservation();
 
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
@@ -166,7 +168,7 @@ export default function RestaurantTable({
   }
 
   //FOR CARLOS :)
-  const searchDateTime = (dateTime: string, chosenHour: number, numSeats: number, numberToList: number) => {
+  const searchDateTime = (dateTime: string, chosenHour: string, numSeats: number, numberToList: number) => {
     setLoading(true);
     instance
       //might need to adjust the api call name and variables passed in
@@ -203,31 +205,29 @@ export default function RestaurantTable({
         fetchRestaurants(numberToList);
         break;
       case searchState.searchNameDay:
-        searchNameDate(name, dateTime, numberToList);
+        searchNameDate(name, reservationDate, numberToList);
         break;
       case searchState.searchDateTime:
         //need to grab information for selected hour and number of seats, or possibly modify arguments
-        searchDateTime(dateTime, 9, 4, numberToList);
+        searchDateTime(reservationDate, reservationTime, numberOfPeople, numberToList);
         break;
     }
-  }, [numberToList, state, name, dateTime,numberOfPeople]); //refresh on selected hour and number of seats
+  }, [numberToList, state, name, dateTime, numberOfPeople]); //refresh on selected hour and number of seats
 
   useEffect(() => {
     setState(searchState.searchNameDay);
     setNumberToList(5);
-  }, [searchState.searchNameDay, searchNameDayTrigger]);
+  }, [searchNameDayTrigger]);
 
   useEffect(() => {
     setState(searchState.searchDateTime);
     setNumberToList(5);
-  }, [searchState.searchDateTime, searchDateTimeTrigger]);
+  }, [searchDateTimeTrigger]);
 
   useEffect(() => {
-    if (name === "") {
-      setState(searchState.searchDefault);
-    }
+    name === "" ? setState(searchState.searchDefault) : setState(searchState.searchNameDay);
     setNumberToList(5);
-  }, [name, searchState.searchDefault]);
+  }, [name]);
 
 
   // Handle Load More Button

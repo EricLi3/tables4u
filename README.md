@@ -1,4 +1,5 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Introduction:
+Tables4U is a cutting-edge, full-stack, restaurant management platform, and booking application designed to streamline managerial operations while facilitating customer-restaurants connections.  Developed with modern technologies in mind, the application provides restaurant owners and managers with a powerful tool to supervise bookings, oversee daily operations, and ensure smooth customer interactions. Patrons benefit from a seamless and responsive interface that meets the high standards expected in 2025, making reservations effortless, and allowing for easy modification if the necessity arises.  The platform also features secure token-based authentication for manager logins, ensuring robust access control. Furthermore, the entire system can be monitored by our elite on-site administrators through their unique and secure accounts, adding another level of security. With their abilities to both manage the platform as required (i.e. deleting restaurants, reservations, etc.) and produce comprehensive availability reports of underperforming restaurants, they form an invaluable part of the ecosystem the application brings to market.
 
 ## Getting Started :)
 First, download the dependencies:
